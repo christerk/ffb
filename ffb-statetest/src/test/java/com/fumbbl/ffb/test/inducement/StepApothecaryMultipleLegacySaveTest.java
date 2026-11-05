@@ -24,6 +24,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
@@ -40,10 +41,14 @@ import com.eclipsesource.json.JsonValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -230,6 +235,81 @@ public class StepApothecaryMultipleLegacySaveTest {
 		assertTrue(saved.get(IServerJsonOption.INJURY_RESULTS_GETTING_EVEN.getKey()).asArray().isEmpty());
 	}
 
+	@Test
+	public void legacySavesWithoutInjuriesTakeTheirTeamFromTheStackWhenTheFirstInjuryArrives() {
+		// saved while an earlier step of the sequence waited for input, so neither step holds an injury yet
+		StepApothecaryMultiple otherTeamStep = legacyStepWithoutInjuries(false);
+		StepApothecaryMultiple actingTeamStep = legacyStepWithoutInjuries(true);
+		state.getStepStack().push(Arrays.<IStep>asList(otherTeamStep, actingTeamStep));
+
+		InjuryResult awayInjury = injury("away1", PlayerState.KNOCKED_OUT);
+		InjuryResult homeInjury = injury("home1", PlayerState.KNOCKED_OUT);
+
+		assertTrue(otherTeamStep.setParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, awayInjury)));
+		assertFalse(actingTeamStep.setParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, awayInjury)));
+		assertFalse(otherTeamStep.setParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, homeInjury)));
+		assertTrue(actingTeamStep.setParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, homeInjury)));
+		assertEquals(state.getGame().getTeamAway().getId(),
+			IServerJsonOption.TEAM_ID.getFrom(state.getGame().getRules(), otherTeamStep.toJsonValue()));
+		assertEquals(state.getGame().getTeamHome().getId(),
+			IServerJsonOption.TEAM_ID.getFrom(state.getGame().getRules(), actingTeamStep.toJsonValue()));
+	}
+
+	@Test
+	public void legacySaveWithoutInjuriesOfTheActingTeamStepAloneOnTheStackTakesTheActingTeam() {
+		// the step for the other team already ran, only the acting team's step is left
+		StepApothecaryMultiple actingTeamStep = legacyStepWithoutInjuries(true);
+		state.getStepStack().push(actingTeamStep);
+
+		assertTrue(actingTeamStep.setParameter(
+			StepParameter.from(StepParameterKey.INJURY_RESULT, injury("home1", PlayerState.KNOCKED_OUT))));
+		assertFalse(actingTeamStep.setParameter(
+			StepParameter.from(StepParameterKey.INJURY_RESULT, injury("away1", PlayerState.KNOCKED_OUT))));
+	}
+
+	@Test
+	public void legacyCopiesWithNoOrDeclinedApothecaryRankWithAUsedApothecaryAndBelowAPastriesOffer() {
+		// no apothecary, apothecary declined and apothecary used share a stage, on a tie the copy is kept
+		assertEquals(ApothecaryStatus.DO_NOT_USE_APOTHECARY,
+			reconciledStatus(ApothecaryStatus.NO_APOTHECARY, ApothecaryStatus.DO_NOT_USE_APOTHECARY));
+		assertEquals(ApothecaryStatus.NO_APOTHECARY,
+			reconciledStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY, ApothecaryStatus.NO_APOTHECARY));
+		assertEquals(ApothecaryStatus.USE_APOTHECARY,
+			reconciledStatus(ApothecaryStatus.NO_APOTHECARY, ApothecaryStatus.USE_APOTHECARY));
+		// they are further along than an undecided apothecary use
+		assertEquals(ApothecaryStatus.DO_NOT_USE_APOTHECARY,
+			reconciledStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE, ApothecaryStatus.DO_NOT_USE_APOTHECARY));
+		assertEquals(ApothecaryStatus.NO_APOTHECARY,
+			reconciledStatus(ApothecaryStatus.DO_REQUEST, ApothecaryStatus.NO_APOTHECARY));
+		// and not as far as a pastries offer
+		assertEquals(ApothecaryStatus.WAIT_FOR_PASTRIES_USE,
+			reconciledStatus(ApothecaryStatus.WAIT_FOR_PASTRIES_USE, ApothecaryStatus.NO_APOTHECARY));
+		assertEquals(ApothecaryStatus.WAIT_FOR_PASTRIES_USE,
+			reconciledStatus(ApothecaryStatus.WAIT_FOR_PASTRIES_USE, ApothecaryStatus.DO_NOT_USE_APOTHECARY));
+		assertEquals(ApothecaryStatus.WAIT_FOR_PASTRIES_USE,
+			reconciledStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY, ApothecaryStatus.WAIT_FOR_PASTRIES_USE));
+	}
+
+	@Test
+	public void resultMissingFromTheMainListIsAppendedToItInTheSave() throws Exception {
+		StepApothecaryMultiple step = defenderStep(injury("away1", PlayerState.KNOCKED_OUT));
+		injuryList(step, "deadResults").add(injury("away2", PlayerState.RIP));
+
+		JsonObject saved = step.toJsonValue();
+
+		JsonArray mainInjuries = saved.get(IServerJsonOption.INJURY_RESULTS.getKey()).asArray();
+		assertEquals(2, mainInjuries.size());
+		assertEquals("away2",
+			new InjuryResult().initFrom(state.getGame().getRules(), mainInjuries.get(1)).injuryContext().getDefenderId());
+		assertArrayEquals(new int[]{1}, indexes(saved, IServerJsonOption.INJURY_RESULT_INDEXES_DEAD));
+		assertEquals(1, saved.get(IServerJsonOption.INJURY_RESULTS_DEAD.getKey()).asArray().size());
+		// saving leaves the step itself as it was
+		assertEquals(1, injuryList(step, "injuryResults").size());
+
+		StepApothecaryMultiple restored = load(saved);
+		assertEquals(saved, restored.toJsonValue());
+	}
+
 	/**
 	 * Converts a current save into the previous format, loads it, saves it again in the current format and loads that.
 	 */
@@ -250,6 +330,41 @@ public class StepApothecaryMultipleLegacySaveTest {
 		StepApothecaryMultiple restored = load(resaved);
 		assertEquals(resaved, restored.toJsonValue());
 		return restored;
+	}
+
+	private StepApothecaryMultiple legacyStepWithoutInjuries(boolean actingTeam) {
+		JsonObject legacy = step(actingTeam).toJsonValue();
+		stripIndexes(legacy);
+		return load(legacy);
+	}
+
+	/**
+	 * @return the status of the main injury after loading a legacy save whose regeneration list holds a copy of it
+	 * with a different status
+	 */
+	private ApothecaryStatus reconciledStatus(ApothecaryStatus mainStatus, ApothecaryStatus copyStatus) {
+		InjuryResult main = injury("away1", PlayerState.KNOCKED_OUT);
+		main.injuryContext().setApothecaryStatus(mainStatus);
+		JsonObject legacy = defenderStep(main).toJsonValue();
+		InjuryResult copy = injury("away1", PlayerState.KNOCKED_OUT);
+		copy.injuryContext().setApothecaryStatus(copyStatus);
+		legacy.set(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.getKey(), new JsonArray().add(copy.toJsonValue()));
+		stripIndexes(legacy);
+
+		JsonObject saved = load(legacy).toJsonValue();
+
+		assertArrayEquals(new int[]{0}, indexes(saved, IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED));
+		JsonArray mainInjuries = saved.get(IServerJsonOption.INJURY_RESULTS.getKey()).asArray();
+		assertEquals(1, mainInjuries.size());
+		return new InjuryResult().initFrom(state.getGame().getRules(), mainInjuries.get(0)).injuryContext()
+			.getApothecaryStatus();
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<InjuryResult> injuryList(StepApothecaryMultiple step, String fieldName) throws Exception {
+		Field field = StepApothecaryMultiple.class.getDeclaredField(fieldName);
+		field.setAccessible(true);
+		return (List<InjuryResult>) field.get(step);
 	}
 
 	private StepApothecaryMultiple load(JsonObject jsonObject) {

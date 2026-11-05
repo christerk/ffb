@@ -62,6 +62,7 @@ import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -372,8 +373,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 			if (parameter.getKey() == StepParameterKey.INJURY_RESULT) {
 				InjuryResult injuryResult = (InjuryResult) parameter.getValue();
 				if (injuryResult != null) {
+					if (teamId == null) {
+						teamId = legacyTeamId();
+					}
 					String defenderId = injuryResult.injuryContext().getDefenderId();
-					if (teamId.equals(getGameState().getGame().getPlayerById(defenderId).getTeam().getId())) {
+					if (teamId != null && teamId.equals(getGameState().getGame().getPlayerById(defenderId).getTeam().getId())) {
 						injuryResults.add(injuryResult);
 						return true;
 					}
@@ -382,6 +386,27 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Steps saved before the team id was serialized and before any injury arrived cannot take their team from the
+	 * injuries. The multi block sequence adds the step for the other team directly before the one for the acting team,
+	 * and steps are only ever pushed on top of the stack, so the step below this one tells which of the two it is.
+	 *
+	 * @return the id of the team this step handles, null if the step is not on the stack
+	 */
+	private String legacyTeamId() {
+		Game game = getGameState().getGame();
+		IStep[] steps = getGameState().getStepStack().toArray();
+		for (int index = 0; index < steps.length; index++) {
+			if (steps[index] == this) {
+				boolean followedByActingTeamStep = (index + 1 < steps.length)
+					&& (steps[index + 1].getId() == StepId.APOTHECARY_MULTIPLE);
+				Team actingTeam = game.getActingTeam();
+				return followedByActingTeamStep ? game.getOtherTeam(actingTeam).getId() : actingTeam.getId();
+			}
+		}
+		return null;
 	}
 
 	private void executeStep() {
@@ -906,14 +931,18 @@ public class StepApothecaryMultiple extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.TEAM_ID.addTo(jsonObject, teamId);
 		// every injury is serialized once, the other lists refer to it by index so they share the same objects
-		// after a reload
-		addInjuriesToJson(injuryResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
-		if (regenerationFailedResults != null) {
-			IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED.addTo(jsonObject,
-				injuryIndexes(regenerationFailedResults));
+		// after a reload; the indexes are determined first as they may add to the serialized main list
+		List<InjuryResult> serializedResults = new ArrayList<>(injuryResults);
+		int[] regenerationFailedIndexes = regenerationFailedResults != null
+			? injuryIndexes(regenerationFailedResults, serializedResults) : null;
+		int[] deadIndexes = injuryIndexes(deadResults, serializedResults);
+		int[] gettingEvenIndexes = injuryIndexes(gettingEvenResults, serializedResults);
+		addInjuriesToJson(serializedResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
+		if (regenerationFailedIndexes != null) {
+			IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED.addTo(jsonObject, regenerationFailedIndexes);
 		}
-		IServerJsonOption.INJURY_RESULT_INDEXES_DEAD.addTo(jsonObject, injuryIndexes(deadResults));
-		IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN.addTo(jsonObject, injuryIndexes(gettingEvenResults));
+		IServerJsonOption.INJURY_RESULT_INDEXES_DEAD.addTo(jsonObject, deadIndexes);
+		IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN.addTo(jsonObject, gettingEvenIndexes);
 		// the lists are also written in the previous format so servers not knowing the indexes can still read them
 		if (regenerationFailedResults != null) {
 			addInjuriesToJson(regenerationFailedResults, IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, jsonObject);
@@ -934,13 +963,28 @@ public class StepApothecaryMultiple extends AbstractStep {
 		jsonOption.addTo(jsonObject, injuriesAsJson);
 	}
 
-	private int[] injuryIndexes(List<InjuryResult> results) {
-		return results.stream().mapToInt(this::injuryIndex).filter(index -> index >= 0).toArray();
+	/**
+	 * A result that is not one of the serialized main list's objects is appended to that list, the same way a legacy
+	 * copy without a counterpart is added to the main list on load, so the indexes and the previous format keep the
+	 * same entries. The step's own main list is left as it is, saving does not change how the step goes on.
+	 */
+	private int[] injuryIndexes(List<InjuryResult> results, List<InjuryResult> serializedResults) {
+		int[] indexes = new int[results.size()];
+		for (int i = 0; i < results.size(); i++) {
+			InjuryResult result = results.get(i);
+			int index = injuryIndex(result, serializedResults);
+			if (index < 0) {
+				serializedResults.add(result);
+				index = serializedResults.size() - 1;
+			}
+			indexes[i] = index;
+		}
+		return indexes;
 	}
 
-	private int injuryIndex(InjuryResult result) {
-		for (int index = 0; index < injuryResults.size(); index++) {
-			if (injuryResults.get(index) == result) {
+	private int injuryIndex(InjuryResult result, List<InjuryResult> serializedResults) {
+		for (int index = 0; index < serializedResults.size(); index++) {
+			if (serializedResults.get(index) == result) {
 				return index;
 			}
 		}
@@ -975,7 +1019,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 		teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		if (teamId == null && !injuryResults.isEmpty()) {
-			// steps saved before the team id was serialized only hold injuries of the handled team
+			// steps saved before the team id was serialized only hold injuries of the handled team, without any injury
+			// the team is taken from the position on the stack once the first injury arrives (see legacyTeamId)
 			teamId = getGameState().getGame().getPlayerById(injuryResults.get(0).injuryContext().getDefenderId())
 				.getTeam().getId();
 		}
@@ -1052,9 +1097,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 	}
 
 	/**
-	 * @return how far the injury got in this step: undecided apothecary use, apothecary used, apothecary decided
-	 * (used with a pending choice, not used or not available) or pastries offered, final result (apothecary result
-	 * chosen, pastries used or declined); a passed regeneration counts as a little further
+	 * @return how far the injury got in this step, by stage: 0 apothecary use undecided; 1 apothecary use decided or
+	 * nothing to decide (used but not rolled yet, not used, not available, Igor used or declined), this includes
+	 * {@link ApothecaryStatus#NO_APOTHECARY}, which is also the status an injury without an apothecary decision starts
+	 * with; 2 apothecary result choice pending or pastries offered; 3 final result (apothecary result chosen, pastries
+	 * used or declined). A passed regeneration counts as a little further within its stage.
 	 */
 	private static int progress(InjuryResult injuryResult) {
 		ApothecaryStatus status = injuryResult.injuryContext().getApothecaryStatus();
