@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_DODGE_BLOCK;
 import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_BLITZING_PLAYER;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
@@ -65,6 +66,10 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 
 	private JMenu reRollBallAndChainPanelMenu;
+	private JRadioButtonMenuItem dodgeBlockAlwaysMenuItem;
+	private JRadioButtonMenuItem dodgeBlockWideZoneMenuItem;
+	private JRadioButtonMenuItem dodgeBlockSituationalMenuItem;
+	private JRadioButtonMenuItem dodgeBlockNeverMenuItem;
 
 	// Player Mode
 	private JRadioButtonMenuItem tzPlayerNoneMenuItem;
@@ -106,6 +111,7 @@ public class GamePlayMenu extends FfbMenu {
 		createGazePanelMenu();
 		createRightClickMenu();
 		createBallAndChainMenu();
+		createDodgeBlockMenu();
 		createRangegridMenu();
 		createMarkUsedPlayerMenu();
 		createMarkBlitzingPlayerMenu();
@@ -138,6 +144,12 @@ public class GamePlayMenu extends FfbMenu {
 		reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollBallAndChainSetting));
 		reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollBallAndChainSetting));
 		reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollBallAndChainSetting));
+
+		String dodgeBlockSetting = client.getProperty(CommonProperty.SETTING_DODGE_BLOCK);
+		dodgeBlockAlwaysMenuItem.setSelected(true);
+		dodgeBlockWideZoneMenuItem.setSelected(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE.equals(dodgeBlockSetting));
+		dodgeBlockSituationalMenuItem.setSelected(IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL.equals(dodgeBlockSetting));
+		dodgeBlockNeverMenuItem.setSelected(IClientPropertyValue.SETTING_DODGE_BLOCK_NEVER.equals(dodgeBlockSetting));
 
 		String rangeGridSetting = client.getProperty(CommonProperty.SETTING_RANGEGRID);
 		fRangeGridToggleMenuItem.setSelected(true);
@@ -248,6 +260,22 @@ public class GamePlayMenu extends FfbMenu {
 		}
 		if (source == reRollBallAndChainNeverMenuItem) {
 			client.setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
+			client.saveUserSettings(false);
+		}
+		if (source == dodgeBlockAlwaysMenuItem) {
+			client.setProperty(CommonProperty.SETTING_DODGE_BLOCK, IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
+			client.saveUserSettings(false);
+		}
+		if (source == dodgeBlockWideZoneMenuItem) {
+			client.setProperty(CommonProperty.SETTING_DODGE_BLOCK, IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE);
+			client.saveUserSettings(false);
+		}
+		if (source == dodgeBlockSituationalMenuItem) {
+			client.setProperty(CommonProperty.SETTING_DODGE_BLOCK, IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL);
+			client.saveUserSettings(false);
+		}
+		if (source == dodgeBlockNeverMenuItem) {
+			client.setProperty(CommonProperty.SETTING_DODGE_BLOCK, IClientPropertyValue.SETTING_DODGE_BLOCK_NEVER);
 			client.saveUserSettings(false);
 		}
 
@@ -466,6 +494,33 @@ public class GamePlayMenu extends FfbMenu {
 		reRollBallAndChainNeverMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
+	}
+
+	private void createDodgeBlockMenu() {
+		ButtonGroup dodgeBlockGroup = new ButtonGroup();
+		JMenu dodgeBlockMenu = new JMenu(dimensionProvider, SETTING_DODGE_BLOCK);
+		exposedMenus.put(CommonProperty.SETTING_DODGE_BLOCK, dodgeBlockMenu);
+		dodgeBlockMenu.setMnemonic(KeyEvent.VK_D);
+		add(dodgeBlockMenu);
+
+		dodgeBlockAlwaysMenuItem = createDodgeBlockMenuItem(dodgeBlockMenu, dodgeBlockGroup, "Always",
+			IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
+		dodgeBlockWideZoneMenuItem = createDodgeBlockMenuItem(dodgeBlockMenu, dodgeBlockGroup,
+			"Situational (whole wide zone)",
+			IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE);
+		dodgeBlockSituationalMenuItem = createDodgeBlockMenuItem(dodgeBlockMenu, dodgeBlockGroup, "Situational",
+			IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL);
+		dodgeBlockNeverMenuItem = createDodgeBlockMenuItem(dodgeBlockMenu, dodgeBlockGroup, "Never",
+			IClientPropertyValue.SETTING_DODGE_BLOCK_NEVER);
+	}
+
+	private JRadioButtonMenuItem createDodgeBlockMenuItem(JMenu menu, ButtonGroup group, String text, String value) {
+		JRadioButtonMenuItem item = new JRadioButtonMenuItem(dimensionProvider, text);
+		item.setName(value);
+		item.addActionListener(this);
+		group.add(item);
+		menu.add(item);
+		return item;
 	}
 
 	private void createRightClickMenu() {

@@ -1,5 +1,7 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
@@ -9,8 +11,8 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.mixed.StepBlockDodge;
-import com.fumbbl.ffb.server.step.mixed.StepBlockDodge.StepState;
+import com.fumbbl.ffb.server.step.bb2025.block.StepBlockDodge;
+import com.fumbbl.ffb.server.step.bb2025.block.StepBlockDodge.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 public abstract class AbstractDodgingBehaviour<T extends Skill> extends SkillBehaviour<T> {
@@ -44,8 +46,8 @@ public abstract class AbstractDodgingBehaviour<T extends Skill> extends SkillBeh
 				}
 
 				if (state.askForSkill && state.oldDefenderState.hasTacklezones()) {
-					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
-						true);
+					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0,
+						CommonProperty.SETTING_DODGE_BLOCK, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
 					return true;
 				} else {
 					step.getResult()

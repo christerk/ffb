@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.GameStatus;
@@ -60,6 +61,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private final StepStack fStepStack;
 	private final Set<String> zappedPlayerIds = new HashSet<>();
 	private int kickingSwarmers;
+	private final Map<String, String> gameplaySettingsHome = new HashMap<>();
+	private final Map<String, String> gameplaySettingsAway = new HashMap<>();
 
 	private transient FantasyFootballServer fServer;
 	private final transient DiceRoller fDiceRoller;
@@ -249,6 +252,31 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		this.kickingSwarmers = kickingSwarmers;
 	}
 
+	public void setGameplaySetting(boolean home, CommonProperty setting, String value) {
+		Map<String, String> settings = home ? gameplaySettingsHome : gameplaySettingsAway;
+		if (value != null) {
+			settings.put(setting.getKey(), value);
+		} else {
+			settings.remove(setting.getKey());
+		}
+	}
+
+	/**
+	 * Replaces all gameplay settings of the given side, settings missing from the map are reset to their default.
+	 */
+	public void setGameplaySettings(boolean home, Map<CommonProperty, String> settings) {
+		for (CommonProperty setting : CommonProperty._SERVER_GAMEPLAY_SETTINGS) {
+			setGameplaySetting(home, setting, settings.get(setting));
+		}
+	}
+
+	/**
+	 * @return the value the coach of the given side sent for the setting, or null if none was received
+	 */
+	public String getGameplaySetting(boolean home, CommonProperty setting) {
+		return (home ? gameplaySettingsHome : gameplaySettingsAway).get(setting.getKey());
+	}
+
 	public StepFactory getStepFactory() {
 		return stepFactory;
 	}
@@ -381,6 +409,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
 		IServerJsonOption.SWARMING_PLAYER_ACTUAL.addTo(jsonObject, kickingSwarmers);
+		IServerJsonOption.GAMEPLAY_SETTINGS_HOME.addTo(jsonObject, gameplaySettingsHome);
+		IServerJsonOption.GAMEPLAY_SETTINGS_AWAY.addTo(jsonObject, gameplaySettingsAway);
 		if (passState != null) {
 			IServerJsonOption.PASS_STATE.addTo(jsonObject, passState.toJsonValue());
 		}
@@ -439,6 +469,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 
 		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(source, jsonObject);
+
+		gameplaySettingsHome.clear();
+		gameplaySettingsHome.putAll(IServerJsonOption.GAMEPLAY_SETTINGS_HOME.getFrom(source, jsonObject));
+		gameplaySettingsAway.clear();
+		gameplaySettingsAway.putAll(IServerJsonOption.GAMEPLAY_SETTINGS_AWAY.getFrom(source, jsonObject));
 
 		JsonObject passStateObject = IServerJsonOption.PASS_STATE.getFrom(source, jsonObject);
 		if (passStateObject != null) {
