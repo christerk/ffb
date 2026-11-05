@@ -11,6 +11,8 @@ import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import javax.swing.*;
@@ -32,7 +34,8 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard, weatherMageButton, throwARockButton, regenerationButton, dwarfenWisdomButton;
+	private JButton fButtonWizard, weatherMageButton, throwARockButton, regenerationButton, dwarfenWisdomButton,
+		knockoutReserveButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -157,6 +160,28 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		}
 
+		inducementSet.stream().filter(type -> type.hasUsage(Usage.KNOCKOUT_RESERVE)).findFirst()
+			.ifPresent(type -> {
+
+				JPanel panel = new JPanel();
+				panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+				Player<?> player = pClient.getGame().getPlayerById(pDialogParameter.getPlayerId());
+				String buttonText = "<html>" +
+					"<b>" + type.getDescription() + "</b>" +
+					"<br>Move " + (player != null ? player.getName() : "Knocked Out player") + " to Reserves (" +
+					ReportBretonnianPastriesRoll.MINIMUM_ROLL + "+ on a D6)" +
+					"</html>";
+				knockoutReserveButton = new JButton(dimensionProvider(), buttonText);
+				knockoutReserveButton.setHorizontalAlignment(SwingConstants.LEFT);
+				knockoutReserveButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+				knockoutReserveButton.addActionListener(this);
+				panel.add(knockoutReserveButton);
+
+				panelMain.add(panel);
+				panelMain.add(Box.createVerticalStrut(5));
+
+			});
+
 		inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION))
 			.forEach(type -> {
 
@@ -213,6 +238,9 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		}
 		if (pActionEvent.getSource() == regenerationButton) {
 			fInducement = inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION)).findFirst().orElse(null);
+		}
+		if (pActionEvent.getSource() == knockoutReserveButton) {
+			fInducement = inducementSet.stream().filter(type -> type.hasUsage(Usage.KNOCKOUT_RESERVE)).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

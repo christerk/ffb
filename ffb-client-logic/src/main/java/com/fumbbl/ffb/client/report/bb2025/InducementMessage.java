@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -12,7 +12,6 @@ import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.INDUCEMENT)
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class InducementMessage extends ReportMessageBase<ReportInducement> {
 
@@ -43,6 +42,10 @@ public class InducementMessage extends ReportMessageBase<ReportInducement> {
 				print(getIndent(), " use ");
 				print(getIndent(), TextStyle.BOLD, inducementType.getDescription());
 				println(getIndent(), " to re-roll the failed Regeneration.");
+			} else if (inducementType.hasUsage(Usage.KNOCKOUT_RESERVE)) {
+				print(getIndent(), " use ");
+				print(getIndent(), TextStyle.BOLD, inducementType.getDescription());
+				println(getIndent(), " on a Knocked Out player.");
 			}
 		}
 	}
