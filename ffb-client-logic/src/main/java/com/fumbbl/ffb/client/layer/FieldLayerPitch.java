@@ -58,19 +58,6 @@ public class FieldLayerPitch extends FieldLayer {
 		}
 		g2d.scale(scale, scale);
 		g2d.drawImage(pImage, -1, -1, 782, 452, null);
-		// Temporary diagnostic: show the tile boundaries calculated by the viewport.
-		g2d.setTransform(new java.awt.geom.AffineTransform());
-		g2d.setColor(Color.MAGENTA);
-		int columns = uiDimensionProvider.isPitchPortrait() ? 15 : 26;
-		int rows = uiDimensionProvider.isPitchPortrait() ? 26 : 15;
-		for (int x = 0; x <= columns; x++) {
-			int boundary = origin + x * pitchViewport.squareSize();
-			g2d.drawLine(boundary, 0, boundary, size.height - 1);
-		}
-		for (int y = 0; y <= rows; y++) {
-			int boundary = origin + y * pitchViewport.squareSize();
-			g2d.drawLine(0, boundary, size.width - 1, boundary);
-		}
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);
