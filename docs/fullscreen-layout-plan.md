@@ -216,7 +216,7 @@ The earlier on/off resize policy has been removed. The reference layout uses the
 
 ## Phase 14: Equal-Sized Pitch Tiles
 
-Status: Future.
+Status: In progress; interaction and visual verification remain.
 
 The goal is for every pitch tile to have the same whole-pixel width and height. Fractional boundaries alone cannot guarantee equal rasterized tile sizes: adjacent tiles can differ by a pixel.
 
@@ -224,7 +224,7 @@ Plan this phase together with phase 15, but implement them separately. Investiga
 
 The pitch artwork, overlays, clearing and repaint regions, normal input, and setup drag hit testing must agree on the same grid in both orientations. Define edge and border behavior explicitly. Keep pitch fitting in the layout calculation and coordinate mapping in the viewport; avoid coupling the viewport to GUI placement.
 
-Verify integer and fractional window sizes, both orientations, tile boundaries and adjacent input pixels, setup dragging, redraws, and artwork alignment. Add a user-facing change list entry when fixing released behavior.
+Verify integer and fractional window sizes, both orientations, tile boundaries and adjacent input pixels, setup dragging, redraws, and artwork alignment. Do not add a change list entry for phase 14.
 
 ## Phase 15: Move GUI To Rule-Based Placement
 

@@ -106,7 +106,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 		reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
-		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
+		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport);
 		coordinateConverter = new CoordinateConverter(pitchViewport);
 		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider, pitchViewport);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);

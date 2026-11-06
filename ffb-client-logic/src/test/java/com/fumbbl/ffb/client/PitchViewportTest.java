@@ -60,32 +60,32 @@ class PitchViewportTest {
 	void landscapeCoordinateMapsToUpperLeftLocalSquare() {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 
-		assertEquals(new Dimension(0, 0), viewport.toLocal(new FieldCoordinate(0, 0)));
-		assertEquals(new Dimension(750, 420), viewport.toLocal(new FieldCoordinate(25, 14)));
+		assertEquals(new Dimension(1, 1), viewport.toLocal(new FieldCoordinate(0, 0)));
+		assertEquals(new Dimension(751, 421), viewport.toLocal(new FieldCoordinate(25, 14)));
 	}
 
 	@Test
 	void landscapeCoordinateMapsToLocalSquareCenter() {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 
-		assertEquals(new Dimension(15, 15), viewport.toLocal(new FieldCoordinate(0, 0), true));
-		assertEquals(new Dimension(765, 435), viewport.toLocal(new FieldCoordinate(25, 14), true));
+		assertEquals(new Dimension(16, 16), viewport.toLocal(new FieldCoordinate(0, 0), true));
+		assertEquals(new Dimension(766, 436), viewport.toLocal(new FieldCoordinate(25, 14), true));
 	}
 
 	@Test
 	void portraitCoordinateMapsToUpperLeftLocalSquare() {
 		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
 
-		assertEquals(new Dimension(0, 750), viewport.toLocal(new FieldCoordinate(0, 0)));
-		assertEquals(new Dimension(420, 0), viewport.toLocal(new FieldCoordinate(25, 14)));
+		assertEquals(new Dimension(1, 751), viewport.toLocal(new FieldCoordinate(0, 0)));
+		assertEquals(new Dimension(421, 1), viewport.toLocal(new FieldCoordinate(25, 14)));
 	}
 
 	@Test
 	void portraitCoordinateMapsToLocalSquareCenter() {
 		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
 
-		assertEquals(new Dimension(15, 765), viewport.toLocal(new FieldCoordinate(0, 0), true));
-		assertEquals(new Dimension(435, 15), viewport.toLocal(new FieldCoordinate(25, 14), true));
+		assertEquals(new Dimension(16, 766), viewport.toLocal(new FieldCoordinate(0, 0), true));
+		assertEquals(new Dimension(436, 16), viewport.toLocal(new FieldCoordinate(25, 14), true));
 	}
 
 	@Test
@@ -93,8 +93,8 @@ class PitchViewportTest {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 
 		assertEquals(new FieldCoordinate(0, 0), viewport.toFieldCoordinate(new Point(1, 1)));
-		assertEquals(new FieldCoordinate(1, 0), viewport.toFieldCoordinate(new Point(30, 1)));
-		assertEquals(new FieldCoordinate(25, 14), viewport.toFieldCoordinate(new Point(750, 420)));
+		assertEquals(new FieldCoordinate(1, 0), viewport.toFieldCoordinate(new Point(31, 1)));
+		assertEquals(new FieldCoordinate(25, 14), viewport.toFieldCoordinate(new Point(751, 421)));
 	}
 
 	@Test
@@ -102,8 +102,8 @@ class PitchViewportTest {
 		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
 
 		assertEquals(new FieldCoordinate(25, 0), viewport.toFieldCoordinate(new Point(1, 1)));
-		assertEquals(new FieldCoordinate(24, 0), viewport.toFieldCoordinate(new Point(1, 30)));
-		assertEquals(new FieldCoordinate(11, 14), viewport.toFieldCoordinate(new Point(420, 420)));
+		assertEquals(new FieldCoordinate(24, 0), viewport.toFieldCoordinate(new Point(1, 31)));
+		assertEquals(new FieldCoordinate(11, 14), viewport.toFieldCoordinate(new Point(421, 421)));
 	}
 
 	@Test
@@ -194,8 +194,8 @@ class PitchViewportTest {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
 
-		assertEquals(new Point(145, 0), viewport.worldToScreen(new FieldCoordinate(0, 0)));
-		assertEquals(new Point(895, 420), viewport.worldToScreen(new FieldCoordinate(25, 14)));
+		assertEquals(new Point(146, 1), viewport.worldToScreen(new FieldCoordinate(0, 0)));
+		assertEquals(new Point(896, 421), viewport.worldToScreen(new FieldCoordinate(25, 14)));
 	}
 
 	@Test
@@ -203,8 +203,8 @@ class PitchViewportTest {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
 
-		assertEquals(new Point(160, 15), viewport.worldToScreen(new FieldCoordinate(0, 0), true));
-		assertEquals(new Point(910, 435), viewport.worldToScreen(new FieldCoordinate(25, 14), true));
+		assertEquals(new Point(161, 16), viewport.worldToScreen(new FieldCoordinate(0, 0), true));
+		assertEquals(new Point(911, 436), viewport.worldToScreen(new FieldCoordinate(25, 14), true));
 	}
 
 	@Test
@@ -212,8 +212,8 @@ class PitchViewportTest {
 		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
 		viewport.setViewportBounds(new Rectangle(165, 0, 452, 782));
 
-		assertEquals(new Point(165, 750), viewport.worldToScreen(new FieldCoordinate(0, 0)));
-		assertEquals(new Point(585, 0), viewport.worldToScreen(new FieldCoordinate(25, 14)));
+		assertEquals(new Point(166, 751), viewport.worldToScreen(new FieldCoordinate(0, 0)));
+		assertEquals(new Point(586, 1), viewport.worldToScreen(new FieldCoordinate(25, 14)));
 	}
 
 	@Test
@@ -222,8 +222,8 @@ class PitchViewportTest {
 		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
 
 		assertEquals(new FieldCoordinate(0, 0), viewport.screenToWorld(new Point(146, 1)));
-		assertEquals(new FieldCoordinate(1, 0), viewport.screenToWorld(new Point(175, 1)));
-		assertEquals(new FieldCoordinate(25, 14), viewport.screenToWorld(new Point(895, 420)));
+		assertEquals(new FieldCoordinate(1, 0), viewport.screenToWorld(new Point(176, 1)));
+		assertEquals(new FieldCoordinate(25, 14), viewport.screenToWorld(new Point(896, 421)));
 	}
 
 	@Test
@@ -232,8 +232,8 @@ class PitchViewportTest {
 		viewport.setViewportBounds(new Rectangle(165, 0, 452, 782));
 
 		assertEquals(new FieldCoordinate(25, 0), viewport.screenToWorld(new Point(166, 1)));
-		assertEquals(new FieldCoordinate(24, 0), viewport.screenToWorld(new Point(166, 30)));
-		assertEquals(new FieldCoordinate(11, 14), viewport.screenToWorld(new Point(585, 420)));
+		assertEquals(new FieldCoordinate(24, 0), viewport.screenToWorld(new Point(166, 31)));
+		assertEquals(new FieldCoordinate(11, 14), viewport.screenToWorld(new Point(586, 421)));
 	}
 
 	@Test

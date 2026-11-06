@@ -80,13 +80,13 @@ class ClientLayoutCalculatorTest {
 		ClientLayoutResult result = layout(ClientLayout.WIDE);
 
 		assertEquals(new Rectangle(0, 0, 145, 1030), result.homeSidebarBounds());
-		assertEquals(new Rectangle(146, 0, 1484, 857), result.fieldBounds());
+		assertEquals(new Rectangle(158, 0, 1460, 844), result.fieldBounds());
 		assertEquals(new Rectangle(1631, 0, 145, 1030), result.awaySidebarBounds());
-		assertEquals(new Rectangle(145, 857, 1486, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(146, 890, 741, 139), result.logBounds());
-		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());
+		assertEquals(new Rectangle(145, 844, 1486, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(146, 877, 741, 139), result.logBounds());
+		assertEquals(new Rectangle(889, 877, 741, 139), result.chatBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
-		assertEquals(1.0, result.pitchScale(), 0.0001);
+		assertEquals(56.0 / 57.0, result.pitchScale(), 0.0001);
 		assertEquals(1.0, result.runtimeGuiScale(), 0.0001);
 		assertEquals(1.0, result.runtimeDugoutScale(), 0.0001);
 	}
@@ -139,8 +139,8 @@ class ClientLayoutCalculatorTest {
 				Rectangle pitch = result.fieldBounds();
 				Rectangle home = result.homeSidebarBounds();
 				Rectangle away = result.awaySidebarBounds();
-				assertTrue(pitch.x - (home.x + home.width) <= 2, layout + " GUI " + ratio);
-				assertTrue(away.x - (pitch.x + pitch.width) <= 2, layout + " GUI " + ratio);
+				assertTrue(pitch.x >= home.x + home.width, layout + " GUI " + ratio);
+				assertTrue(pitch.x + pitch.width <= away.x, layout + " GUI " + ratio);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ class ClientLayoutCalculatorTest {
 
 			assertEquals(base.runtimeGuiScale() * 2, enlarged.runtimeGuiScale(), 0.0001);
 			assertEquals(base.runtimeDugoutScale() * 2, enlarged.runtimeDugoutScale(), 0.0001);
-			assertEquals(base.pitchScale() * 2, enlarged.pitchScale(), 0.01);
+			assertEquals(base.pitchScale() * 2, enlarged.pitchScale(), 0.04);
 			assertEquals(enlarged.runtimeGuiScale(), wider.runtimeGuiScale(), 0.0001);
 			assertEquals(enlarged.pitchScale(), wider.pitchScale(), 0.0001);
 			assertTrue(wider.homeSidebarBounds().x > enlarged.homeSidebarBounds().x);
