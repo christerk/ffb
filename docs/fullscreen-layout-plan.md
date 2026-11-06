@@ -216,7 +216,7 @@ The earlier on/off resize policy has been removed. The reference layout uses the
 
 ## Phase 14: Equal-Sized Pitch Tiles
 
-Status: In progress; interaction and visual verification remain.
+Status: Done.
 
 The goal is for every pitch tile to have the same whole-pixel width and height. Fractional boundaries alone cannot guarantee equal rasterized tile sizes: adjacent tiles can differ by a pixel.
 
