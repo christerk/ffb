@@ -23,7 +23,7 @@ class SetupDragHitTesterTest {
 			hitTester.toFieldCoordinate(new Point(48, 0), 0));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2),
 			hitTester.toFieldCoordinate(new Point(96, 0), 0));
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3),
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2),
 			hitTester.toFieldCoordinate(new Point(144, 0), 0));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3),
 			hitTester.toFieldCoordinate(new Point(0, 48), 0));

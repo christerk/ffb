@@ -65,7 +65,7 @@ class UtilClientPlayerDragTest {
 
 	@Test
 	void fieldModeCrossesFromFieldToBoxForNegativeX() {
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, -1, 0, false));
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, -1, 0, false));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, -145, 0, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, -146, 0, false));
 	}
@@ -75,7 +75,7 @@ class UtilClientPlayerDragTest {
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 1), getFieldCoordinate(ClientLayout.LANDSCAPE, 48, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, 96, 0, true));
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, 144, 0, true));
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, 144, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 48, true));
 	}
 

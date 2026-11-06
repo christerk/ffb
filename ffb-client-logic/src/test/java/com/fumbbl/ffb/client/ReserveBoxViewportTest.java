@@ -36,6 +36,29 @@ class ReserveBoxViewportTest {
 	}
 
 	@Test
+	void rightEdgeStaysInLastColumnAcrossLayoutsAndGuiScales() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			for (double scale : new double[] {0.125, 0.5, 0.73, 1.0, 1.37, 2.0}) {
+				LayoutSettings settings = new LayoutSettings(layout, 1.0);
+				UiDimensionProvider dimensions = new UiDimensionProvider(settings);
+				dimensions.setRuntimeGuiScale(scale);
+				ReserveBoxViewport viewport = new ReserveBoxViewport(dimensions);
+				Dimension box = viewport.boxSize();
+				Dimension square = viewport.squareSize();
+				viewport.setViewportBounds(new Rectangle(10, 20, box.width, box.height));
+				int titleHeight = 2;
+				for (int row = 0; row < 3; row++) {
+					int y = 20 + titleHeight + row * square.height;
+					Point rightEdge = new Point(10 + box.width - 1, y);
+					assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, row * 3 + 2),
+						viewport.toReserveCoordinate(rightEdge, titleHeight), layout + " scale " + scale);
+					assertNull(viewport.toReserveCoordinate(new Point(10 + box.width, y), titleHeight));
+				}
+			}
+		}
+	}
+
+	@Test
 	void appliesViewportOffsetBeforeMapping() {
 		ReserveBoxViewport viewport = viewport(ClientLayout.LANDSCAPE);
 		viewport.setViewportBounds(new Rectangle(10, 20, 145, 430));
