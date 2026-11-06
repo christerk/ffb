@@ -23,8 +23,11 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
+
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -142,27 +145,15 @@ public class MarkerService {
 		});
 		pPopupMenu.setUndecorated(true);
 		pPopupMenu.pack();
-		Dimension offset = offset(ui, source, dimensionProvider);
-		int componentOffsetX = offset.width + ui.getX();
-		int componentOffsetY = offset.height + ui.getY();
+		Point popupLocation = new Point(pX, pY);
+		SwingUtilities.convertPointToScreen(popupLocation, source);
 
-		pPopupMenu.setLocation(pX + componentOffsetX, pY + componentOffsetY);
+		pPopupMenu.setLocation(popupLocation);
 		pPopupMenu.setVisible(true);
 		markerField.selectAll();
 		markerField.requestFocus();
 
 		return markerField;
-	}
-
-	private Dimension offset(UserInterface ui, Component source, DimensionProvider dimensionProvider) {
-		Dimension dimension = new Dimension(0, ui.getGameMenuBar().getHeight() + LayoutSettings.TITLE_BAR_HEIGHT);
-
-		if (source == ui.getFieldComponent()) {
-			dimension.width = (int) dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth();
-		} else if (source == ui.getSideBarAway()) {
-			dimension.width = (int) (dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth() + dimensionProvider.dimension(com.fumbbl.ffb.client.Component.FIELD).getWidth());
-		}
-		return dimension;
 	}
 
 	private static class MarkerCellRenderer extends JPanel implements ListCellRenderer<TransientPlayerMarker.Mode> {

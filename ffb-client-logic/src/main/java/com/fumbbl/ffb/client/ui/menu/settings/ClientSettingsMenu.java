@@ -146,7 +146,6 @@ public class ClientSettingsMenu extends FfbMenu {
 	@Override
 	public void dialogClosed(IDialog dialog) {
 		super.dialogClosed(dialog);
-		client.getUserInterface().dialogClosed(dialog);
 		switch (dialog.getId()) {
 			case SOUND_VOLUME:
 				DialogSoundVolume volumeDialog = (DialogSoundVolume) dialog;
@@ -156,7 +155,9 @@ public class ClientSettingsMenu extends FfbMenu {
 			case SCALING_FACTOR:
 				DialogScalingFactor scalingDialog = (DialogScalingFactor) dialog;
 				if (scalingDialog.getFactor() != null) {
-					updateScaleProperty(scalingDialog.getFactor());
+					client.setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
+					client.setProperty(CommonProperty.SETTING_GUI_SCALE_FACTOR, Double.toString(scalingDialog.getGuiRatio()));
+					client.saveUserSettings(true);
 				}
 				break;
 			default:
@@ -429,20 +430,21 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private boolean updateScaling() {
 		String factorValue = client.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
-		if (StringTool.isProvided(factorValue)) {
-			try {
-				double factor = Double.parseDouble(factorValue);
-				if (layoutSettings.getScale() != factor) {
-					layoutSettings.setScale(factor);
-					client.getUserInterface().getIconCache().clear();
-					FontCache fontCache = client.getUserInterface().getFontCache();
-					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
-					return true;
-				}
-			} catch (Exception ignored) {
-
+		try {
+			double factor = StringTool.isProvided(factorValue) ? Double.parseDouble(factorValue) : 1.0;
+			String guiValue = client.getProperty(CommonProperty.SETTING_GUI_SCALE_FACTOR);
+			double guiRatio = StringTool.isProvided(guiValue) ? Double.parseDouble(guiValue) : 1.0;
+			if (layoutSettings.getScale() != factor || layoutSettings.getGuiRatio() != guiRatio) {
+				client.getUserInterface().prepareScaleChange(factor / layoutSettings.getScale());
+				layoutSettings.setScale(factor);
+				layoutSettings.setGuiRatio(guiRatio);
+				client.getUserInterface().getIconCache().clear();
+				FontCache fontCache = client.getUserInterface().getFontCache();
+				fontCache.clear();
+				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+				return true;
 			}
+		} catch (NumberFormatException ignored) {
 		}
 		return false;
 	}
@@ -510,11 +512,6 @@ public class ClientSettingsMenu extends FfbMenu {
 		}
 
 		return false;
-	}
-
-	private void updateScaleProperty(double scalingFactor) {
-		client.setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingFactor));
-		client.saveUserSettings(true);
 	}
 
 	private void createLogMenu() {

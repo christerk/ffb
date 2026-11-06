@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.overlay.sketch;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.model.sketch.Sketch;
 
 import java.awt.Dimension;
@@ -24,16 +25,18 @@ public class ClientSketchManager {
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private List<Sketch> sketches;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	private final PitchViewport pitchViewport;
 	private final String coach;
 	private final Set<String> coachesPreventedFromSketching = new HashSet<>();
 	private final Set<String> hiddenCoaches = new HashSet<>();
 
 	private final Map<String, List<Sketch>> sketchesByCoach = new HashMap<>();
 
-	public ClientSketchManager(String coach, PitchDimensionProvider pitchDimensionProvider) {
+	public ClientSketchManager(String coach, PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport) {
 		this.coach = coach;
 		sketches = getSketches(coach);
 		this.pitchDimensionProvider = pitchDimensionProvider;
+		this.pitchViewport = pitchViewport;
 	}
 
 	private synchronized List<Sketch> getSketches(String coach) {
@@ -132,7 +135,7 @@ public class ClientSketchManager {
 		Iterator<FieldCoordinate> iterator = sketch.getPath().iterator();
 		FieldCoordinate currentNode = iterator.next();
 
-		if (inStartDecoration(pitchDimensionProvider.mapToLocal(currentNode, true), x, y)) {
+		if (inStartDecoration(pitchViewport.toLocal(currentNode, true), x, y)) {
 			return true;
 		}
 
@@ -140,8 +143,8 @@ public class ClientSketchManager {
 			FieldCoordinate previousNode = currentNode;
 			currentNode = iterator.next();
 			if (withinSpannedRectangle(
-				pitchDimensionProvider.mapToLocal(previousNode, true),
-				pitchDimensionProvider.mapToLocal(currentNode, true),
+				pitchViewport.toLocal(previousNode, true),
+				pitchViewport.toLocal(currentNode, true),
 				sketchWidth,
 				x, y
 			)) {
@@ -149,8 +152,8 @@ public class ClientSketchManager {
 			}
 		}
 
-		return inEndDecoration(pitchDimensionProvider.mapToLocal(currentNode, true),
-			pitchDimensionProvider.mapToLocal(sketch.getPath().getLast(), true), x, y);
+		return inEndDecoration(pitchViewport.toLocal(currentNode, true),
+			pitchViewport.toLocal(sketch.getPath().getLast(), true), x, y);
 	}
 
 	public synchronized void removeAll(String coach) {
