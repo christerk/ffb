@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.injury.modification.bb2025.ToxinConnoisseurModification;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.ToxinConnoisseurChainModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.mixed.special.ToxinConnoisseur;
 
@@ -12,5 +13,6 @@ public class ToxinConnoisseurBehaviour extends SkillBehaviour<ToxinConnoisseur> 
 		super();
 
 		registerModifier(new ToxinConnoisseurModification());
+		registerModifier(new ToxinConnoisseurChainModification());
 	}
 }

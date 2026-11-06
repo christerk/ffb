@@ -10,12 +10,15 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 
 import java.util.Arrays;
+import java.util.Set;
 
 public abstract class AbstractInjuryTypeBombWithModifier<T extends InjuryType> extends ModificationAwareInjuryTypeServer<T> {
 
@@ -56,8 +59,10 @@ public abstract class AbstractInjuryTypeBombWithModifier<T extends InjuryType> e
 
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-		factory.findInjuryModifiers(game, injuryContext, injuryType.isCausedByOpponent() ? pAttacker : null,
-			pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryContext::addInjuryModifier);
+		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext,
+			injuryType.isCausedByOpponent() ? pAttacker : null, pDefender, isStab(), isFoul(), isVomitLike());
+		new OptionalSkillModifierService().removeOptional(game, injuryModifiers);
+		injuryModifiers.forEach(injuryContext::addInjuryModifier);
 
 		if (Arrays.stream(injuryContext.getArmorModifiers())
 			.noneMatch(modifier -> modifier instanceof SpecialEffectArmourModifier)) {

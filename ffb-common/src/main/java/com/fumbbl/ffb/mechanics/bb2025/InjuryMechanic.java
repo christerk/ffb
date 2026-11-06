@@ -24,6 +24,11 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 	@Override
+	public boolean usesInjuryModificationChains() {
+		return true;
+	}
+
+	@Override
 	public SendToBoxReason raisedByNurgleReason() {
 		return SendToBoxReason.PLAGUE_RIDDEN;
 	}

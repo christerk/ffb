@@ -15,6 +15,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
@@ -35,6 +36,10 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 		super.setFailedArmourPlacesProne(false);
 	}
 
+	public boolean isUseInjuryModifiers() {
+		return useInjuryModifiers;
+	}
+
 	@Override
 	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext) {
@@ -44,6 +49,7 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomitLike());
+			new OptionalSkillModifierService().removeOptional(game, injuryModifiers);
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
@@ -57,6 +63,7 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 			Set<ArmorModifier> modifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+			new OptionalSkillModifierService().removeOptional(game, modifiers);
 
 			Optional<ArmorModifier> sneakyPair = modifiers.stream()
 				.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner))

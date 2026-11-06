@@ -21,6 +21,8 @@ import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.InjuryNode;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.InjuryTree;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCards;
@@ -38,6 +40,9 @@ public class InjuryResult implements IJsonSerializable {
 
 	private boolean alreadyReported;
 	private boolean preRegeneration = true;
+	private InjuryTree tree;
+	private boolean armourReported;
+	private boolean injuryReported;
 
 	private static final List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
 		add(PlayerState.PRONE);
@@ -61,6 +66,38 @@ public class InjuryResult implements IJsonSerializable {
 
 	public void setInjuryContext(InjuryContext context) {
 		injuryContext = context;
+	}
+
+	public InjuryTree getTree() {
+		return tree;
+	}
+
+	public void setTree(InjuryTree tree) {
+		this.tree = tree;
+	}
+
+	/**
+	 * BB2025 injury chains: continues the injury with the outcome of the given node.
+	 */
+	public void moveTo(int nodeId) {
+		tree.setCurrentId(nodeId);
+		injuryContext = tree.getCurrent().getContext();
+	}
+
+	public boolean isArmourReported() {
+		return armourReported;
+	}
+
+	public void setArmourReported(boolean armourReported) {
+		this.armourReported = armourReported;
+	}
+
+	public boolean isInjuryReported() {
+		return injuryReported;
+	}
+
+	public void setInjuryReported(boolean injuryReported) {
+		this.injuryReported = injuryReported;
 	}
 
 	public void setAlreadyReported(boolean alreadyReported) {
@@ -220,6 +257,11 @@ public class InjuryResult implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
 		IServerJsonOption.PRE_REGENERATION.addTo(jsonObject, preRegeneration);
+		IServerJsonOption.ARMOUR_REPORTED.addTo(jsonObject, armourReported);
+		IServerJsonOption.INJURY_REPORTED.addTo(jsonObject, injuryReported);
+		if (tree != null) {
+			IServerJsonOption.INJURY_TREE.addTo(jsonObject, tree.toJsonValue());
+		}
 		injuryContext.toJsonValue(jsonObject);
 
 		return jsonObject;
@@ -235,6 +277,17 @@ public class InjuryResult implements IJsonSerializable {
 
 		if (IServerJsonOption.PRE_REGENERATION.isDefinedIn(jsonObject)) {
 			preRegeneration = IServerJsonOption.PRE_REGENERATION.getFrom(source, jsonObject);
+		}
+
+		armourReported = Boolean.TRUE.equals(IServerJsonOption.ARMOUR_REPORTED.getFrom(source, jsonObject));
+		injuryReported = Boolean.TRUE.equals(IServerJsonOption.INJURY_REPORTED.getFrom(source, jsonObject));
+		JsonObject treeObject = IServerJsonOption.INJURY_TREE.getFrom(source, jsonObject);
+		if (treeObject != null) {
+			tree = new InjuryTree().initFrom(source, treeObject);
+			InjuryNode current = tree.getCurrent();
+			if (current != null && current.getContext() != null) {
+				current.setContext(injuryContext);
+			}
 		}
 
 		return this;

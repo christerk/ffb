@@ -51,6 +51,9 @@ public class DialogManager {
 					case SKILL_USE:
 						setDialogHandler(new DialogSkillUseHandler(getClient()));
 						break;
+					case INJURY_MODIFICATION_CHOICE:
+						setDialogHandler(new DialogInjuryModificationChoiceHandler(getClient()));
+						break;
 					case USE_APOTHECARY:
 						setDialogHandler(new DialogUseApothecaryHandler(getClient()));
 						break;

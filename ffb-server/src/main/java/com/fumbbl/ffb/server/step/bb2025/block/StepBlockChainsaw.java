@@ -28,6 +28,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsaw;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsawForSpp;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
+import com.fumbbl.ffb.server.model.InjuryTurnoverRule;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -189,6 +190,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 					new DropPlayerContext(injuryResultAttacker, causesTurnOver, true, fGotoLabelOnFailure,
 						actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, false, false, null, modifiedInjuryCausesTurnover,
 						GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption), null);
+				dropPlayerContext.setInjuryTurnoverRule(InjuryTurnoverRule.CHAINSAW_BLOCK);
 				publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}

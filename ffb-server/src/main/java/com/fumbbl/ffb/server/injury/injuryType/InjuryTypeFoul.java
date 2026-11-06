@@ -17,6 +17,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -39,6 +40,7 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 
 		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 			pDefender, isStab(), isFoul(), isVomitLike());
+		new OptionalSkillModifierService().removeOptional(game, injuryModifiers);
 		injuryContext.addInjuryModifiers(injuryModifiers);
 
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
@@ -78,7 +80,8 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 			if (!injuryContext.isArmorBroken()) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
-					
+				new OptionalSkillModifierService().removeOptional(game, armorModifiers);
+
 				Optional<ArmorModifier> sneakyPair = armorModifiers.stream()
 					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner))
 					.findFirst();

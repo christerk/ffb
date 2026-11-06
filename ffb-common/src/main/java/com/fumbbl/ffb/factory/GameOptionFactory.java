@@ -390,6 +390,24 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
 					.setMessageFalse("Tacklezone overlays are disabled.");
+			case MIGHTY_BLOW_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Mighty Blow is optional and chosen by the coach after the roll");
+			case CLAWS_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Claws is optional and chosen by the coach after the roll");
+			case DIRTY_PLAYER_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Dirty Player is optional and chosen by the coach after the roll");
+			case SNEAKY_PAIR_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("A Sneaky Pair is optional and chosen by the coach after the roll");
+			case LETHAL_FLIGHT_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Lethal Flight is optional and chosen by the coach after the roll");
+			case ARM_BAR_OPTIONAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Arm Bar is optional and chosen by the coach after the roll");
 			case MB_STACKS_AGAINST_CHAINSAW:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Mighty Blow can be used against Chainsaw players")
