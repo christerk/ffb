@@ -82,6 +82,8 @@ public enum GameOptionId implements INamedObject {
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),
 	ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN("allowSpecialBlocksWithBallAndChain"),
 	MB_STACKS_AGAINST_CHAINSAW("mbStacksAgainstChainsaw"),
+	MIGHTY_BLOW_OPTIONAL("mightyBlowOptional"), CLAWS_OPTIONAL("clawsOptional"), DIRTY_PLAYER_OPTIONAL("dirtyPlayerOptional"),
+	SNEAKY_PAIR_OPTIONAL("sneakyPairOptional"), LETHAL_FLIGHT_OPTIONAL("lethalFlightOptional"), ARM_BAR_OPTIONAL("armBarOptional"),
 	CHAINSAW_TURNOVER_ON_AV_BREAK("chainsawTurnoverOnAvBreak"), // legacy, keep around to make sure old replays or running games do not break after update
 	CHAINSAW_TURNOVER("chainsawTurnover"), BOMBER_PLACED_PRONE_IGNORES_TURNOVER("bomberPlacedProneIgnoresTurnover"),
 	BOMB_TEAM_MATE_KNOCK_DOWN_CAUSES_TURNOVER("bombTeamMateKnockDownCausesTurnover"),

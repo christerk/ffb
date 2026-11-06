@@ -22,6 +22,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK("clientUseProReRollForBlock"),
 	CLIENT_FOLLOWUP_CHOICE("clientFollowupChoice"), CLIENT_INTERCEPTOR_CHOICE("clientInterceptorChoice"),
 	CLIENT_USE_SKILL("clientUseSkill"), CLIENT_RE_ROLL_MODIFIER_CHOICE("clientReRollModifierChoice"),
+	CLIENT_INJURY_MODIFICATION_CHOICE("clientInjuryModificationChoice"),
 	SERVER_TEAM_SETUP_LIST("serverTeamSetupList"),
 	CLIENT_TEAM_SETUP_LOAD("clientTeamSetupLoad"), CLIENT_TEAM_SETUP_SAVE("clientTeamSetupSave"),
 	CLIENT_TEAM_SETUP_DELETE("clientTeamSetupDelete"), CLIENT_FOUL("clientFoul"),
@@ -148,6 +149,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseSkill();
 			case CLIENT_RE_ROLL_MODIFIER_CHOICE:
 				return new ClientCommandReRollModifierChoice();
+			case CLIENT_INJURY_MODIFICATION_CHOICE:
+				return new ClientCommandInjuryModificationChoice();
 			case SERVER_TEAM_SETUP_LIST:
 				return new ServerCommandTeamSetupList();
 			case CLIENT_TEAM_SETUP_LOAD:

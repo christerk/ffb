@@ -12,11 +12,13 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,7 +54,8 @@ public class InjuryTypeDropJump extends ModificationAwareInjuryTypeServer<DropJu
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 
-		Skill avOrInjModifierSkill = avOrInjModifierSkill(game, pDefender, vacatedFromCoordinate);
+		Skill avOrInjModifierSkill = new OptionalSkillModifierService()
+			.unlessOptional(game, avOrInjModifierSkill(game, pDefender, vacatedFromCoordinate)).orElse(null);
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {
 			avOrInjModifierSkill.getArmorModifiers().forEach(injuryContext::addArmorModifier);
@@ -65,7 +68,8 @@ public class InjuryTypeDropJump extends ModificationAwareInjuryTypeServer<DropJu
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate vacatedFromCoordinate,
 		InjuryContext injuryContext) {
 
-		Skill avOrInjModifierSkill = avOrInjModifierSkill(game, pDefender, vacatedFromCoordinate);
+		Skill avOrInjModifierSkill = new OptionalSkillModifierService()
+			.unlessOptional(game, avOrInjModifierSkill(game, pDefender, vacatedFromCoordinate)).orElse(null);
 
 		if (avOrInjModifierSkill != null
 			&& avOrInjModifierSkill.getArmorModifiers().stream().anyMatch(injuryContext::hasArmorModifier)) {
@@ -82,7 +86,28 @@ public class InjuryTypeDropJump extends ModificationAwareInjuryTypeServer<DropJu
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 
+	@Override
+	public List<Player<?>> optionalSkillAttackers(Game game, Player<?> defender, FieldCoordinate fromCoordinate) {
+		return armBarPlayer(game, defender, fromCoordinate)
+			.filter(player -> new OptionalSkillModifierService().isOptional(game, armBar(player)))
+			.map(player -> Collections.<Player<?>>singletonList(player))
+			.orElse(Collections.emptyList());
+	}
+
 	private Skill avOrInjModifierSkill(Game game, Player<?> pDefender, FieldCoordinate vacatedFromCoordinate) {
+		return armBarPlayer(game, pDefender, vacatedFromCoordinate).map(this::armBar).orElse(null);
+	}
+
+	private Skill armBar(Player<?> player) {
+		Skill armBar = player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump);
+		return armBar != null ? armBar : player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
+	}
+
+	private Optional<Player<?>> armBarPlayer(Game game, Player<?> pDefender, FieldCoordinate vacatedFromCoordinate) {
+		if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+			return Optional.empty();
+		}
+
 		FieldCoordinate fromCoordiante = vacatedFromCoordinate == null ? game.getFieldModel().getPlayerCoordinate(pDefender) : vacatedFromCoordinate;
 
 		Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordiante, false))
@@ -96,18 +121,17 @@ public class InjuryTypeDropJump extends ModificationAwareInjuryTypeServer<DropJu
 			}
 		}
 
-		if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
-			return players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
-				.filter(Objects::nonNull).findFirst().orElseGet(() -> {
-
-					if (divingTackler != null) {
-						return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
-					}
-
-					return null;
-				});
+		Optional<Player<?>> jumpArmBarPlayer = players.stream()
+			.filter(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump) != null)
+			.findFirst();
+		if (jumpArmBarPlayer.isPresent()) {
+			return jumpArmBarPlayer;
 		}
 
-		return null;
+		if (divingTackler != null && divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge) != null) {
+			return Optional.of(divingTackler);
+		}
+
+		return Optional.empty();
 	}
 }

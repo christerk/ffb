@@ -20,7 +20,8 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsaw;
-import com.fumbbl.ffb.server.model.DropPlayerContext;
+import com.fumbbl.ffb.server.model.DropPlayerContextBuilder;
+import com.fumbbl.ffb.server.model.InjuryTurnoverRule;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -138,17 +139,20 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 
 				boolean causesTurnOver = UtilPlayer.hasBall(game, actingPlayer.getPlayer());
+				boolean kickBack = GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption);
 				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
 					if (!GameOptionString.CHAINSAW_TURNOVER_NEVER.equalsIgnoreCase(chainsawOption)) {
 						causesTurnOver = true;
 					}
-				} else if (GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption)) {
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				} else if (kickBack) {
+					causesTurnOver = true;
 				}
 
 				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,
-					new DropPlayerContext(injuryResultAttacker, causesTurnOver, true, fGotoLabelOnFailure,
-						actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, false)));
+					DropPlayerContextBuilder.builder().injuryResult(injuryResultAttacker).endTurn(causesTurnOver)
+						.eligibleForSafePairOfHands(true).label(fGotoLabelOnFailure).playerId(actingPlayer.getPlayerId())
+						.apothecaryMode(ApothecaryMode.ATTACKER).endTurnWithoutKnockdown(kickBack)
+						.injuryTurnoverRule(InjuryTurnoverRule.CHAINSAW_FOUL).build()));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {

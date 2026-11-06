@@ -257,6 +257,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandReRollModifierChoice(playerId, skills, reRolledAction));
 	}
 
+	public void sendInjuryModificationChoice(List<Skill> skills) {
+		send(new ClientCommandInjuryModificationChoice(skills));
+	}
+
 	public void sendUseProReRollForBlock(int proIndex) {
 		send(new ClientCommandUseProReRollForBlock(proIndex));
 	}

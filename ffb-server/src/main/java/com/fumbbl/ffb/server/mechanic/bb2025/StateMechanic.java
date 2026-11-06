@@ -121,6 +121,11 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 
 	public void reportInjury(IStep step, InjuryResult injuryResult) {
 		InjuryContext injuryContext = injuryResult.injuryContext();
+		if (injuryResult.getTree() != null || (!(injuryContext instanceof ModifiedInjuryContext)
+			&& injuryContext.getModifiedInjuryContext() == null)) {
+			reportInjuryParts(step, injuryResult);
+			return;
+		}
 
 		SkipInjuryParts skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.CAS : SkipInjuryParts.EVERYTHING_BUT_CAS;
 		boolean playSound = true;
@@ -167,6 +172,35 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		step.getResult().addReport(reportInjury.init(injuryContext, skip));
 		if (playSound) {
 			step.getResult().setSound(injuryContext.getSound());
+		}
+		injuryResult.setAlreadyReported(true);
+	}
+
+	/**
+	 * Parts of the injury already shown while modifications were decided are not reported again.
+	 */
+	private void reportInjuryParts(IStep step, InjuryResult injuryResult) {
+		if (injuryResult.isAlreadyReported()) {
+			return;
+		}
+		InjuryContext injuryContext = injuryResult.injuryContext();
+		SkipInjuryParts skip = null;
+		if (!injuryResult.isPreRegeneration()) {
+			skip = SkipInjuryParts.EVERYTHING_BUT_CAS;
+		} else if (!injuryResult.isArmourReported()) {
+			skip = SkipInjuryParts.CAS;
+		} else if (!injuryResult.isInjuryReported()) {
+			skip = SkipInjuryParts.ARMOUR_AND_CAS;
+		}
+		if (skip != null) {
+			ReportFactory factory = step.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
+			ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
+			step.getResult().addReport(reportInjury.init(injuryContext, skip));
+		}
+		step.getResult().setSound(injuryContext.getSound());
+		if (injuryResult.isPreRegeneration()) {
+			injuryResult.setArmourReported(true);
+			injuryResult.setInjuryReported(true);
 		}
 		injuryResult.setAlreadyReported(true);
 	}

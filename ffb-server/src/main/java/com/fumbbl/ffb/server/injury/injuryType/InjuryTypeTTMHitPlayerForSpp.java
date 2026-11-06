@@ -12,6 +12,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifierContext;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
@@ -26,7 +27,8 @@ public class InjuryTypeTTMHitPlayerForSpp extends ModificationAwareInjuryTypeSer
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
-		Optional<Skill> lethalFlight = UtilCards.getSkillWithProperty(pAttacker, NamedProperties.affectsEitherArmourOrInjuryOnTtm);
+		Optional<Skill> lethalFlight = UtilCards.getSkillWithProperty(pAttacker, NamedProperties.affectsEitherArmourOrInjuryOnTtm)
+			.flatMap(skill -> new OptionalSkillModifierService().unlessOptional(game, skill));
 
 		if (!injuryContext.isArmorBroken()) {
 			if (roll) {
@@ -55,7 +57,8 @@ public class InjuryTypeTTMHitPlayerForSpp extends ModificationAwareInjuryTypeSer
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		InjuryContext injuryContext) {
 
-		Optional<Skill> lethalFlight = UtilCards.getSkillWithProperty(pAttacker, NamedProperties.affectsEitherArmourOrInjuryOnTtm);
+		Optional<Skill> lethalFlight = UtilCards.getSkillWithProperty(pAttacker, NamedProperties.affectsEitherArmourOrInjuryOnTtm)
+			.flatMap(skill -> new OptionalSkillModifierService().unlessOptional(game, skill));
 
 		if (lethalFlight.isPresent()
 			&& lethalFlight.get().getArmorModifiers().stream().anyMatch(injuryContext::hasArmorModifier)) {

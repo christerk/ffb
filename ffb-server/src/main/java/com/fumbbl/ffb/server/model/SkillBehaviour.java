@@ -9,12 +9,14 @@ import com.fumbbl.ffb.model.PlayerModifier;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.ChainableInjuryModification;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepId;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +37,16 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	private final List<PlayerModifier> playerModifiers;
 	private final List<StepModifier<? extends IStep, ?>> stepModifiers;
 	private final Map<StepId, Class<? extends IStep>> steps;
-	private InjuryContextModification<? extends ModificationParams> injuryContextModification;
+	private final List<InjuryContextModification<? extends ModificationParams>> injuryContextModifications;
+	private final List<ChainableInjuryModification> chainableInjuryModifications;
 
 
 	public SkillBehaviour() {
 		playerModifiers = new ArrayList<>();
 		stepModifiers = new ArrayList<>();
 		steps = new HashMap<>();
+		injuryContextModifications = new ArrayList<>();
+		chainableInjuryModifications = new ArrayList<>();
 
 		List<RulesCollection.Rules> skillRules = getRules(skillClass);
 		List<RulesCollection.Rules> behaviourRules = getRules(getClass());
@@ -66,9 +71,8 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	public void setSkill(T skill) {
 		this.skill = skill;
 		this.skill.setBehaviour(this);
-		if (injuryContextModification != null) {
-			injuryContextModification.setSkill(skill);
-		}
+		injuryContextModifications.forEach(modification -> modification.setSkill(skill));
+		chainableInjuryModifications.forEach(modification -> modification.setSkill(skill));
 	}
 
 	protected void registerModifier(StepModifier<?, ?> stepModifier) {
@@ -80,7 +84,17 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	}
 
 	protected void registerModifier(InjuryContextModification<?> injuryContextModification) {
-		this.injuryContextModification = injuryContextModification;
+		injuryContextModifications.add(injuryContextModification);
+		if (skill != null) {
+			injuryContextModification.setSkill(skill);
+		}
+	}
+
+	protected void registerModifier(ChainableInjuryModification chainableInjuryModification) {
+		chainableInjuryModifications.add(chainableInjuryModification);
+		if (skill != null) {
+			chainableInjuryModification.setSkill(skill);
+		}
 	}
 
 	protected void registerStep(StepId stepId, Class<? extends IStep> step) {
@@ -97,7 +111,16 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 
 	@Override
 	public InjuryContextModification<?> getInjuryContextModification() {
-		return injuryContextModification;
+		return injuryContextModifications.isEmpty() ? null : injuryContextModifications.get(0);
+	}
+
+	@Override
+	public List<InjuryContextModification<?>> getInjuryContextModifications() {
+		return Collections.unmodifiableList(injuryContextModifications);
+	}
+
+	public List<ChainableInjuryModification> getChainableInjuryModifications() {
+		return Collections.unmodifiableList(chainableInjuryModifications);
 	}
 
 	@Override
@@ -107,6 +130,6 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 
 	@Override
 	public boolean hasInjuryModifier(InjuryType injuryType) {
-		return injuryContextModification != null && injuryContextModification.isValidType(injuryType);
+		return injuryContextModifications.stream().anyMatch(modification -> modification.isValidType(injuryType));
 	}
 }

@@ -11,12 +11,12 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.mixed.ReportBiasedRef;
 import com.fumbbl.ffb.report.mixed.ReportReferee;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.SpottedFoulService;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -89,17 +89,8 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 																					 StepReferee.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean refereeSpotsFoul = false;
-				if (!game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) && (!UtilCards.hasSkill(actingPlayer, skill)
-					|| state.injuryResultDefender.injuryContext().isArmorBroken()
-					|| ((UtilCards.hasSkill(actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
-					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
-					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
-				}
-				if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
-					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
-					refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
-				}
+				boolean refereeSpotsFoul = new SpottedFoulService().spottedByDice(game,
+					state.injuryResultDefender.injuryContext(), UtilCards.hasSkill(actingPlayer, skill));
 				boolean underScrutiny = step.getGameState().getPrayerState().isUnderScrutiny(actingPlayer.getPlayer().getTeam());
 				refereeSpotsFoul |= (underScrutiny && state.injuryResultDefender.injuryContext().isArmorBroken());
 				step.getResult().addReport(new ReportReferee(refereeSpotsFoul, underScrutiny));

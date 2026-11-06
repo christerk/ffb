@@ -10,6 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addImprovement("Injury: Skills modifying armour or injury rolls (e.g. Crushing Blow, Dwarfen Grit, Savage Mauling) are now offered one after another as long as they can change the result, with a selection dialog when several can be combined")
+			.addFeature("Game options to make Mighty Blow, Claws, Dirty Player, A Sneaky Pair, Lethal Flight and Arm Bar optional, offering them only when they change the result")
 			.addBugfix("Pass Block: Team re-rolls could not be used for rolls of the active team during a pass block, e.g. Shadowing a pass blocker")
 			.addBugfix("Pass Block: The move squares of the last pass blocker were still shown after the pass block ended")
 			.addImprovement("Team Setup: Saving a setup under the name of an existing one now asks for confirmation before overwriting it")
