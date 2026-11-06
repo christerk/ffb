@@ -13,7 +13,7 @@ The requested direction is:
 
 ## Current Status
 
-Phases 1-12 are implemented or partially implemented. The current branch completed the runtime layout data-flow cleanup and prepares the codebase for configurable resize behavior.
+Phases 1-13 are implemented or partially implemented. Phase 13 is complete. Phases 14 and 15 should be planned together and implemented separately: equal-sized pitch tiles affect the space available to surrounding components.
 
 Phase 12 completed in this branch:
 
@@ -208,29 +208,23 @@ Remaining note: score/log/chat placement still contains local rectangle arithmet
 
 ## Phase 13: Add Configurable Resize Scaling Policy
 
-Status: In progress: two scale controls implemented; visual verification remains.
+Status: Done.
 
 The client offers an overall scale and a GUI scale control. Changing overall scale resizes the current window proportionally; changing GUI scale resizes the composed layout around the current pitch scale. The GUI slider ranges from 25% to 100%; larger interface elements require a larger overall scale or future layout changes. Manual window resizing scales the complete layout while preserving its proportions. If the window has a different aspect ratio, the layout is centered in the available space.
 
 The earlier on/off resize policy has been removed. The reference layout uses the selected GUI scale so it does not reserve space for larger interface components.
 
-## Phase 14: Fix Fractional Pitch Grid Mapping
+## Phase 14: Equal-Sized Pitch Tiles
 
-Status: Future.
+Status: In progress; interaction and visual verification remain.
 
-Fix the long-standing issue where fractional scaling can produce visibly inconsistent tile sizes because square size is rounded too early.
+The goal is for every pitch tile to have the same whole-pixel width and height. Fractional boundaries alone cannot guarantee equal rasterized tile sizes: adjacent tiles can differ by a pixel.
 
-The target model is that pitch square boundaries come from the exact pitch transform:
+Plan this phase together with phase 15, but implement them separately. Investigate fitting the largest integer tile size into the available pitch area, then derive pitch bounds and effective scale from that size. Resizing would make the pitch grow in tile-size steps and can leave unused space until phase 15 handles placement. Confirm the approach against the existing two-pixel field allowance, pitch artwork, wide layout scale, and minimum window sizes before implementation.
 
-```text
-left = round(x * exactSquareSize)
-right = round((x + 1) * exactSquareSize)
-width = right - left
-```
+The pitch artwork, overlays, clearing and repaint regions, normal input, and setup drag hit testing must agree on the same grid in both orientations. Define edge and border behavior explicitly. Keep pitch fitting in the layout calculation and coordinate mapping in the viewport; avoid coupling the viewport to GUI placement.
 
-Rendering and input should agree on these boundaries. The fix should avoid assuming every square can use one rounded integer `squareSize()` when the pitch scale is fractional.
-
-This should apply at all scale settings and window sizes.
+Verify integer and fractional window sizes, both orientations, tile boundaries and adjacent input pixels, setup dragging, redraws, and artwork alignment. Do not add a change list entry for phase 14.
 
 ## Phase 15: Move GUI To Rule-Based Placement
 
@@ -242,6 +236,8 @@ Move non-pitch GUI components toward rule-based placement:
 - log/chat placed bottom or side depending on available shape
 - score/status/timer components pinned to top or bottom
 - pitch takes the remaining available area
+
+Phase 14's integer tile fit may leave space around the pitch. Plan how to use that space per layout without assuming every component can stretch. The current landscape and wide layouts place information below the central pitch area; portrait places it below the game area; square places it to the right. Consider both axes for each topology, including moving rails and expanding log/chat containers without scaling their contents. Decide which gaps are acceptable and account for different window aspect ratios, minimum sizes, and existing component constraints. Do not promise a gap-free result until these rules are validated.
 
 This is where the client can start moving away from fixed `ClientLayout` variants.
 

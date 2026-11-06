@@ -4,6 +4,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
@@ -17,6 +18,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -34,7 +36,7 @@ public class FieldLayerPitch extends FieldLayer {
 	public void drawWeather(Weather pWeather) {
 		if (pWeather != null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather, pitchDimensionProvider);
+			BufferedImage fieldImage = iconCache.getUnscaledPitch(getClient().getGame(), pWeather);
 			if (fieldImage != null) {
 				drawPitch(fieldImage);
 			}
@@ -45,13 +47,17 @@ public class FieldLayerPitch extends FieldLayer {
 	protected void drawPitch(BufferedImage pImage) {
 		Graphics2D g2d = fImage.createGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		int origin = pitchViewport.gridOffset();
+		double scale = (double) pitchViewport.squareSize() / LayoutSettings.BASE_SQUARE_SIZE;
 		if (uiDimensionProvider.isPitchPortrait()) {
-			g2d.translate(0, size.height);
+			g2d.translate(origin, origin + 26 * pitchViewport.squareSize());
 			g2d.rotate(-Math.PI / 2);
-			g2d.drawImage(pImage, 0, 0, fImage.getHeight(), fImage.getWidth(),null);
 		} else {
-			g2d.drawImage(pImage, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
+			g2d.translate(origin, origin);
 		}
+		g2d.scale(scale, scale);
+		g2d.drawImage(pImage, -1, -1, 782, 452, null);
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);

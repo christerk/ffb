@@ -23,7 +23,7 @@ class SetupDragHitTesterTest {
 			hitTester.toFieldCoordinate(new Point(48, 0), 0));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2),
 			hitTester.toFieldCoordinate(new Point(96, 0), 0));
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3),
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2),
 			hitTester.toFieldCoordinate(new Point(144, 0), 0));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3),
 			hitTester.toFieldCoordinate(new Point(0, 48), 0));
@@ -33,22 +33,20 @@ class SetupDragHitTesterTest {
 	void mapsLandscapePitchHitsFromContentCoordinates() {
 		SetupDragHitTester hitTester = hitTester(ClientLayout.LANDSCAPE);
 
-		assertEquals(new FieldCoordinate(0, 0),
-			hitTester.toFieldCoordinate(new Point(145, 0), 0));
+		assertNull(hitTester.toFieldCoordinate(new Point(145, 0), 0));
 		assertEquals(new FieldCoordinate(0, 0),
 			hitTester.toFieldCoordinate(new Point(146, 1), 0));
 		assertEquals(new FieldCoordinate(1, 0),
-			hitTester.toFieldCoordinate(new Point(175, 1), 0));
+			hitTester.toFieldCoordinate(new Point(176, 1), 0));
 		assertEquals(new FieldCoordinate(25, 14),
-			hitTester.toFieldCoordinate(new Point(895, 420), 0));
+			hitTester.toFieldCoordinate(new Point(896, 421), 0));
 	}
 
 	@Test
-	void preservesLandscapeSetupEdgeQuirks() {
+	void rejectsLandscapeBorderAndOutsidePoints() {
 		SetupDragHitTester hitTester = hitTester(ClientLayout.LANDSCAPE);
 
-		assertEquals(new FieldCoordinate(26, 15),
-			hitTester.toFieldCoordinate(new Point(926, 451), 0));
+		assertNull(hitTester.toFieldCoordinate(new Point(926, 451), 0));
 		assertNull(hitTester.toFieldCoordinate(new Point(927, 1), 0));
 		assertNull(hitTester.toFieldCoordinate(new Point(146, 452), 0));
 	}
@@ -68,17 +66,16 @@ class SetupDragHitTesterTest {
 	}
 
 	@Test
-	void mapsPortraitPitchHitsFromContentCoordinatesUsingSetupDragMath() {
+	void mapsPortraitPitchHitsFromContentCoordinates() {
 		SetupDragHitTester hitTester = hitTester(ClientLayout.PORTRAIT);
 
-		assertNull(hitTester.toFieldCoordinate(new Point(166, 1), 0));
-		assertNull(hitTester.toFieldCoordinate(new Point(166, 330), 0));
-		assertEquals(new FieldCoordinate(15, 0),
+		assertEquals(new FieldCoordinate(25, 0), hitTester.toFieldCoordinate(new Point(166, 1), 0));
+		assertEquals(new FieldCoordinate(15, 0), hitTester.toFieldCoordinate(new Point(166, 330), 0));
+		assertEquals(new FieldCoordinate(14, 0),
 			hitTester.toFieldCoordinate(new Point(166, 331), 0));
-		assertEquals(new FieldCoordinate(12, 14),
-			hitTester.toFieldCoordinate(new Point(585, 420), 0));
-		assertEquals(new FieldCoordinate(0, 0),
-			hitTester.toFieldCoordinate(new Point(165, 782), 0));
+		assertEquals(new FieldCoordinate(11, 14),
+			hitTester.toFieldCoordinate(new Point(586, 421), 0));
+		assertNull(hitTester.toFieldCoordinate(new Point(165, 782), 0));
 	}
 
 	@Test
@@ -102,7 +99,6 @@ class SetupDragHitTesterTest {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
-		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
 		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
 
@@ -112,7 +108,7 @@ class SetupDragHitTesterTest {
 		ReserveBoxViewport reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 
-		return new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
+		return new SetupDragHitTester(pitchViewport, reserveBoxViewport);
 	}
 
 	private Dimension defaultLayoutSize(ClientLayout layout) {

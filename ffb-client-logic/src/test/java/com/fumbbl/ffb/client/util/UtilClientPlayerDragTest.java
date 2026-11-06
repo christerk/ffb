@@ -5,7 +5,6 @@ import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.ReserveBoxViewport;
 import com.fumbbl.ffb.client.SetupDragHitTester;
@@ -35,38 +34,38 @@ class UtilClientPlayerDragTest {
 
 	@Test
 	void landscapeFieldModeMapsFieldPixelsToCurrentCoordinates() {
-		assertEquals(new FieldCoordinate(0, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 0, false));
+		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 0, false));
 		assertEquals(new FieldCoordinate(0, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 1, 1, false));
-		assertEquals(new FieldCoordinate(1, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 30, 1, false));
-		assertEquals(new FieldCoordinate(25, 14), getFieldCoordinate(ClientLayout.LANDSCAPE, 750, 420, false));
+		assertEquals(new FieldCoordinate(1, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 31, 1, false));
+		assertEquals(new FieldCoordinate(25, 14), getFieldCoordinate(ClientLayout.LANDSCAPE, 751, 421, false));
 	}
 
 	@Test
-	void landscapeFieldModePreservesCurrentEdgeAndPaddingBehavior() {
-		assertEquals(new FieldCoordinate(26, 15), getFieldCoordinate(ClientLayout.LANDSCAPE, 781, 451, false));
+	void landscapeFieldModeRejectsBorderAndOutsidePoints() {
+		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 781, 451, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 782, 1, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 1, 452, false));
 	}
 
 	@Test
-	void portraitFieldModePreservesCurrentDragMapping() {
-		assertNull(getFieldCoordinate(ClientLayout.PORTRAIT, 1, 1, false));
-		assertNull(getFieldCoordinate(ClientLayout.PORTRAIT, 1, 330, false));
-		assertEquals(new FieldCoordinate(15, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 331, false));
-		assertEquals(new FieldCoordinate(12, 14), getFieldCoordinate(ClientLayout.PORTRAIT, 420, 420, false));
-		assertEquals(new FieldCoordinate(0, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 0, 782, false));
+	void portraitFieldModeMapsPitchCoordinates() {
+		assertEquals(new FieldCoordinate(25, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 1, false));
+		assertEquals(new FieldCoordinate(15, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 330, false));
+		assertEquals(new FieldCoordinate(14, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 331, false));
+		assertEquals(new FieldCoordinate(11, 14), getFieldCoordinate(ClientLayout.PORTRAIT, 421, 421, false));
+		assertNull(getFieldCoordinate(ClientLayout.PORTRAIT, 0, 782, false));
 	}
 
 	@Test
 	void boxModeCrossesFromBoxToFieldAfterBoxWidth() {
-		assertEquals(new FieldCoordinate(0, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 145, 0, true));
-		assertEquals(new FieldCoordinate(1, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 175, 1, true));
-		assertEquals(new FieldCoordinate(25, 14), getFieldCoordinate(ClientLayout.LANDSCAPE, 895, 420, true));
+		assertEquals(new FieldCoordinate(0, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 146, 1, true));
+		assertEquals(new FieldCoordinate(1, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 176, 1, true));
+		assertEquals(new FieldCoordinate(25, 14), getFieldCoordinate(ClientLayout.LANDSCAPE, 896, 421, true));
 	}
 
 	@Test
 	void fieldModeCrossesFromFieldToBoxForNegativeX() {
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, -1, 0, false));
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, -1, 0, false));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, -145, 0, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, -146, 0, false));
 	}
@@ -76,7 +75,7 @@ class UtilClientPlayerDragTest {
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 0), getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 1), getFieldCoordinate(ClientLayout.LANDSCAPE, 48, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, 96, 0, true));
-		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, 144, 0, true));
+		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 2), getFieldCoordinate(ClientLayout.LANDSCAPE, 144, 0, true));
 		assertEquals(new FieldCoordinate(FieldCoordinate.RSV_HOME_X, 3), getFieldCoordinate(ClientLayout.LANDSCAPE, 0, 48, true));
 	}
 
@@ -88,7 +87,6 @@ class UtilClientPlayerDragTest {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
-		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
 		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
 
@@ -99,7 +97,7 @@ class UtilClientPlayerDragTest {
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 
 		SetupDragHitTester setupDragHitTester = new SetupDragHitTester(
-			pitchViewport, reserveBoxViewport, pitchDimensionProvider
+			pitchViewport, reserveBoxViewport
 		);
 
 		FantasyFootballClient client = mock(FantasyFootballClient.class);
