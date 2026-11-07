@@ -19,6 +19,11 @@ import java.awt.Component;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.JDesktopPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,6 +60,40 @@ class DialogSkillSettingsTest {
 		assertTrue(saveButton.isEnabled());
 		assertFalse(reRollLabel.isOpaque());
 		assertFalse(dodgeLabel.isOpaque());
+	}
+
+	@Test
+	void requiredDialogBlocksAndRestoresBackgroundInteraction() throws Exception {
+		FantasyFootballClient client = client();
+		UserInterface userInterface = client.getUserInterface();
+		JDesktopPane desktop = new JDesktopPane();
+		JPanel background = new JPanel();
+		JButton backgroundButton = new JButton(new PitchDimensionProvider(
+			new LayoutSettings(ClientLayout.LANDSCAPE, 1.0)), "Background");
+		background.add(backgroundButton);
+		desktop.add(background);
+		JMenuBar menuBar = new JMenuBar();
+		JMenuItem menuItem = new JMenuItem("Menu");
+		menuBar.add(menuItem);
+		JRootPane rootPane = new JRootPane();
+		rootPane.setJMenuBar(menuBar);
+		rootPane.setContentPane(desktop);
+		when(userInterface.getDesktop()).thenReturn(desktop);
+		when(userInterface.getRootPane()).thenReturn(rootPane);
+
+		DialogSkillSettings dialog = new DialogSkillSettings(client, entries(
+			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS), entries(
+			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
+		JComboBox<String> dialogBox = field(dialog, "dodgeBlockBox");
+
+		dialog.showDialog(null);
+		assertFalse(backgroundButton.isEnabled());
+		assertFalse(menuItem.isEnabled());
+		assertTrue(dialogBox.isEnabled());
+
+		dialog.hideDialog();
+		assertTrue(backgroundButton.isEnabled());
+		assertTrue(menuItem.isEnabled());
 	}
 
 	private FantasyFootballClient client() {

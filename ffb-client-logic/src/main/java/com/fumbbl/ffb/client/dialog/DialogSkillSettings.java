@@ -41,6 +41,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	public DialogSkillSettings(FantasyFootballClient client, Map<String, String> reRollBallAndChainEntries,
 	                           Map<String, String> dodgeBlockEntries, boolean required) {
 		super(client, "Skill settings", false);
+		setBlockBackgroundInteraction(required);
 		this.reRollBallAndChainEntries = reRollBallAndChainEntries;
 		this.dodgeBlockEntries = dodgeBlockEntries;
 
