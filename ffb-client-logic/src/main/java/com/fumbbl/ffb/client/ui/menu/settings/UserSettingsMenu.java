@@ -99,4 +99,8 @@ public class UserSettingsMenu extends FfbMenu {
 	public Map<String, String> menuEntries(CommonProperty menuProperty) {
 		return gamePlayMenu.menuEntries(menuProperty);
 	}
+
+	public void showSkillSettingsDialog(boolean required) {
+		gamePlayMenu.showSkillSettingsDialog(required);
+	}
 }

@@ -28,6 +28,12 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
 		ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
 		UserInterface userInterface = getClient().getUserInterface();
 
+		String coach = getClient().getParameters().getCoach();
+		if (joinCommand.getClientMode() == ClientMode.PLAYER && coach != null
+			&& coach.equalsIgnoreCase(joinCommand.getCoach())) {
+			getClient().getClientData().setUserSettingsLoaded(true);
+		}
+
 		if (ClientMode.PLAYER == joinCommand.getClientMode()) {
 			getClient().getClientData().setTurnTimerStopped(false);
 		}

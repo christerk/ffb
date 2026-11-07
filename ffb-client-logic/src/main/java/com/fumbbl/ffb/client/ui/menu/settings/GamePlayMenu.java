@@ -191,8 +191,7 @@ public class GamePlayMenu extends FfbMenu {
 		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
 
 		if (source == skillSettingsMenuItem) {
-			showDialog(new DialogSkillSettings(client, menuEntries(SETTING_RE_ROLL_BALL_AND_CHAIN),
-				menuEntries(SETTING_DODGE_BLOCK)));
+			showSkillSettingsDialog(false);
 		}
 
 		if (source == fAutomoveOffMenuItem) {
@@ -472,6 +471,11 @@ public class GamePlayMenu extends FfbMenu {
 		skillSettingsMenuItem = new JMenuItem(dimensionProvider, "Skill settings");
 		skillSettingsMenuItem.addActionListener(this);
 		add(skillSettingsMenuItem);
+	}
+
+	public void showSkillSettingsDialog(boolean required) {
+		showDialog(new DialogSkillSettings(client, menuEntries(SETTING_RE_ROLL_BALL_AND_CHAIN),
+			menuEntries(SETTING_DODGE_BLOCK), required));
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
@@ -13,6 +12,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,21 +26,27 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	private final JComboBox<String> dodgeBlockBox;
 	private final JButton saveButton;
 	private final JButton cancelButton;
+	private final JLabel reRollBallAndChainLabel;
+	private final JLabel dodgeBlockLabel;
+	private final Color defaultLabelBackground;
 	private String reRollBallAndChainSetting;
 	private String dodgeBlockSetting;
 	private boolean saved;
 
 	public DialogSkillSettings(FantasyFootballClient client, Map<String, String> reRollBallAndChainEntries,
 	                           Map<String, String> dodgeBlockEntries) {
+		this(client, reRollBallAndChainEntries, dodgeBlockEntries, false);
+	}
+
+	public DialogSkillSettings(FantasyFootballClient client, Map<String, String> reRollBallAndChainEntries,
+	                           Map<String, String> dodgeBlockEntries, boolean required) {
 		super(client, "Skill settings", false);
 		this.reRollBallAndChainEntries = reRollBallAndChainEntries;
 		this.dodgeBlockEntries = dodgeBlockEntries;
 
 		reRollBallAndChainBox = createComboBox(reRollBallAndChainEntries,
-			client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN),
-			IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
-		dodgeBlockBox = createComboBox(dodgeBlockEntries, client.getProperty(CommonProperty.SETTING_DODGE_BLOCK),
-			IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
+			client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
+		dodgeBlockBox = createComboBox(dodgeBlockEntries, client.getProperty(CommonProperty.SETTING_DODGE_BLOCK));
 
 		saveButton = new JButton(dimensionProvider(), "Save");
 		saveButton.addActionListener(this);
@@ -49,23 +55,29 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		cancelButton.addActionListener(this);
 		cancelButton.setMnemonic((int) 'C');
 
+		reRollBallAndChainLabel = new JLabel(dimensionProvider(),
+			client.getUserInterface().getGameMenuBar().menuName(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
+		dodgeBlockLabel = new JLabel(dimensionProvider(),
+			client.getUserInterface().getGameMenuBar().menuName(CommonProperty.SETTING_DODGE_BLOCK));
+		defaultLabelBackground = reRollBallAndChainLabel.getBackground();
+
 		JLabel sectionLabel = new JLabel(dimensionProvider(), "Re-Roll settings");
 		sectionLabel.setFont(new Font(sectionLabel.getFont().getName(), Font.BOLD, sectionLabel.getFont().getSize()));
 
 		JPanel settingsPanel = new JPanel();
 		settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
 		settingsPanel.add(sectionLabel);
-		settingsPanel.add(createSettingRow(client.getUserInterface().getGameMenuBar()
-			.menuName(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN), reRollBallAndChainBox));
-		settingsPanel.add(createSettingRow(client.getUserInterface().getGameMenuBar()
-			.menuName(CommonProperty.SETTING_DODGE_BLOCK), dodgeBlockBox));
+		settingsPanel.add(createSettingRow(reRollBallAndChainLabel, reRollBallAndChainBox));
+		settingsPanel.add(createSettingRow(dodgeBlockLabel, dodgeBlockBox));
 		settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(saveButton);
-		buttonPanel.add(Box.createHorizontalStrut(5));
-		buttonPanel.add(cancelButton);
+		if (!required) {
+			buttonPanel.add(Box.createHorizontalStrut(5));
+			buttonPanel.add(cancelButton);
+		}
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		JPanel contentPanel = new JPanel();
@@ -74,28 +86,42 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		contentPanel.add(buttonPanel);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
+		reRollBallAndChainBox.addActionListener(event -> updateSaveState());
+		dodgeBlockBox.addActionListener(event -> updateSaveState());
+		updateSaveState();
+
 		pack();
 		setLocationToCenter();
 		addMouseListener(this);
 	}
 
-	private JComboBox<String> createComboBox(Map<String, String> entries, String selectedValue, String defaultValue) {
+	private JComboBox<String> createComboBox(Map<String, String> entries, String selectedValue) {
 		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
-		String selectedLabel = entries.get(selectedValue);
-		if (selectedLabel == null) {
-			selectedLabel = entries.get(defaultValue);
-		}
-		box.setSelectedItem(selectedLabel);
+		box.setSelectedItem(entries.get(selectedValue));
 		return box;
 	}
 
-	private JPanel createSettingRow(String label, JComboBox<String> comboBox) {
+	private JPanel createSettingRow(JLabel label, JComboBox<String> comboBox) {
 		JPanel row = new JPanel();
 		row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-		row.add(new JLabel(dimensionProvider(), label));
+		row.add(label);
 		row.add(Box.createHorizontalStrut(5));
 		row.add(comboBox);
 		return row;
+	}
+
+	private void updateSaveState() {
+		boolean reRollSet = reRollBallAndChainBox.getSelectedIndex() >= 0;
+		boolean dodgeSet = dodgeBlockBox.getSelectedIndex() >= 0;
+		highlight(reRollBallAndChainLabel, !reRollSet);
+		highlight(dodgeBlockLabel, !dodgeSet);
+		saveButton.setEnabled(reRollSet && dodgeSet);
+	}
+
+	private void highlight(JLabel label, boolean unset) {
+		label.setOpaque(unset);
+		label.setBackground(unset ? new Color(255, 235, 150) : defaultLabelBackground);
+		label.setFont(label.getFont().deriveFont(unset ? Font.BOLD : Font.PLAIN));
 	}
 
 	private void closeDialog() {
@@ -121,7 +147,9 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			reRollBallAndChainSetting = selectedValue(reRollBallAndChainEntries, reRollBallAndChainBox);
 			dodgeBlockSetting = selectedValue(dodgeBlockEntries, dodgeBlockBox);
 			saved = reRollBallAndChainSetting != null && dodgeBlockSetting != null;
-			closeDialog();
+			if (saved) {
+				closeDialog();
+			}
 		} else if (event.getSource() == cancelButton) {
 			closeDialog();
 		}
