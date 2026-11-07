@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.handler;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IIconProperty;
@@ -149,6 +148,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 					userInterface.getDialogManager().updateDialog();
 					userInterface.getGameMenuBar().updateMissingPlayers();
 					userInterface.getGameMenuBar().updateInducements();
+					getClient().getClientData().setUserSettingsLoaded(true);
 					maybeShowSkillSettingsDialog(userInterface);
 					userInterface.getChat().requestChatInputFocus();
 				});
@@ -162,7 +162,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		return true;
 	}
 
-	private void maybeShowSkillSettingsDialog(UserInterface userInterface) {
+	void maybeShowSkillSettingsDialog(UserInterface userInterface) {
 		Game game = getClient().getGame();
 		if (getClient().getMode() != ClientMode.PLAYER
 			|| !getClient().getClientData().isUserSettingsLoaded()
@@ -171,9 +171,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			|| game.getHalf() != 1
 			|| game.getTurnMode() != TurnMode.SETUP
 			|| game.getTurnDataHome().getTurnNr() != 0
-			|| game.getTurnDataAway().getTurnNr() != 0
-			|| getClient().getClientState() == null
-			|| getClient().getClientState().getId() != ClientStateId.SETUP) {
+			|| game.getTurnDataAway().getTurnNr() != 0) {
 			return;
 		}
 
