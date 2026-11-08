@@ -96,6 +96,20 @@ class DialogSkillSettingsTest {
 		assertTrue(menuItem.isEnabled());
 	}
 
+	@Test
+	void requiredDialogClosesImmediatelyWhenAllSettingsAreConfigured() {
+		FantasyFootballClient client = client();
+		String reRollSetting = CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS;
+		String dodgeSetting = CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS;
+		when(client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(reRollSetting);
+		when(client.getProperty(CommonProperty.SETTING_DODGE_BLOCK)).thenReturn(dodgeSetting);
+		DialogSkillSettings dialog = new DialogSkillSettings(client, entries(reRollSetting), entries(dodgeSetting), true);
+
+		dialog.showDialog(closedDialog -> closedDialog.hideDialog());
+
+		assertFalse(dialog.isVisible());
+	}
+
 	private FantasyFootballClient client() {
 		FantasyFootballClient client = mock(FantasyFootballClient.class, RETURNS_DEEP_STUBS);
 		UserInterface userInterface = mock(UserInterface.class, RETURNS_DEEP_STUBS);

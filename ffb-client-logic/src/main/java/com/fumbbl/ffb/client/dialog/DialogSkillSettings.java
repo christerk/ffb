@@ -29,6 +29,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	private final JLabel reRollBallAndChainLabel;
 	private final JLabel dodgeBlockLabel;
 	private final Color defaultLabelBackground;
+	private final boolean closeIfConfigured;
 	private String reRollBallAndChainSetting;
 	private String dodgeBlockSetting;
 	private boolean saved;
@@ -44,6 +45,9 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		setBlockBackgroundInteraction(required);
 		this.reRollBallAndChainEntries = reRollBallAndChainEntries;
 		this.dodgeBlockEntries = dodgeBlockEntries;
+		closeIfConfigured = required
+			&& isConfigured(reRollBallAndChainEntries, client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN))
+			&& isConfigured(dodgeBlockEntries, client.getProperty(CommonProperty.SETTING_DODGE_BLOCK));
 
 		reRollBallAndChainBox = createComboBox(reRollBallAndChainEntries,
 			client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
@@ -100,6 +104,18 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(entries.get(selectedValue));
 		return box;
+	}
+
+	private boolean isConfigured(Map<String, String> entries, String value) {
+		return value != null && entries.containsKey(value);
+	}
+
+	@Override
+	public void showDialog(IDialogCloseListener closeListener) {
+		super.showDialog(closeListener);
+		if (closeIfConfigured) {
+			closeDialog();
+		}
 	}
 
 	private JPanel createSettingRow(JLabel label, JComboBox<String> comboBox) {

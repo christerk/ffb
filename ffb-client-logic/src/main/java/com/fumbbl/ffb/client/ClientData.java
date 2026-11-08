@@ -25,7 +25,6 @@ public class ClientData {
 	private boolean fTurnTimerStopped;
 	private boolean fEndTurnButtonHidden;
 	private boolean userSettingsLoaded;
-	private boolean skillSettingsPromptShown;
 
 	private int spectatorCount;
 	private SpecialEffect fWizardSpell;
@@ -137,14 +136,6 @@ public class ClientData {
 
 	public void setUserSettingsLoaded(boolean userSettingsLoaded) {
 		this.userSettingsLoaded = userSettingsLoaded;
-	}
-
-	public boolean isSkillSettingsPromptShown() {
-		return skillSettingsPromptShown;
-	}
-
-	public void setSkillSettingsPromptShown(boolean skillSettingsPromptShown) {
-		this.skillSettingsPromptShown = skillSettingsPromptShown;
 	}
 
 	public void setSpectators(List<String> spectators) {

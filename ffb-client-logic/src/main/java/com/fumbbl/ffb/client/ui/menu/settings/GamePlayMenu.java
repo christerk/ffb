@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
@@ -64,6 +65,10 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem markActingPlayerActionOffMenuItem;
 
 	private JMenu reRollBallAndChainPanelMenu;
+	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
 	private JMenuItem skillSettingsMenuItem;
 
 	// Player Mode
@@ -105,9 +110,12 @@ public class GamePlayMenu extends FfbMenu {
 		createBlitzPanelMenu();
 		createGazePanelMenu();
 		createRightClickMenu();
-		createBallAndChainMenu();
-		createDodgeBlockMenu();
-		createSkillSettingsMenu();
+		boolean bb2025 = client.getGame().getOptions().getRulesVersion() == RulesCollection.Rules.BB2025;
+		createBallAndChainMenu(!bb2025);
+		if (bb2025) {
+			createDodgeBlockMenu();
+			createSkillSettingsMenu();
+		}
 		createRangegridMenu();
 		createMarkUsedPlayerMenu();
 		createMarkBlitzingPlayerMenu();
@@ -153,6 +161,12 @@ public class GamePlayMenu extends FfbMenu {
 
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
+		String reRollSetting = client.getProperty(SETTING_RE_ROLL_BALL_AND_CHAIN);
+		reRollBallAndChainAlwaysMenuItem.setSelected(reRollSetting == null
+			|| IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS.equals(reRollSetting));
+		reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollSetting));
+		reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollSetting));
+		reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollSetting));
 
 
 		// Tacklezone player mode
@@ -192,6 +206,11 @@ public class GamePlayMenu extends FfbMenu {
 
 		if (source == skillSettingsMenuItem) {
 			showSkillSettingsDialog(false);
+		}
+		if (source == reRollBallAndChainAlwaysMenuItem || source == reRollBallAndChainNoOpponentMenuItem
+			|| source == reRollBallAndChainTeamMateMenuItem || source == reRollBallAndChainNeverMenuItem) {
+			client.setProperty(SETTING_RE_ROLL_BALL_AND_CHAIN, source.getName());
+			client.saveUserSettings(false);
 		}
 
 		if (source == fAutomoveOffMenuItem) {
@@ -419,30 +438,37 @@ public class GamePlayMenu extends FfbMenu {
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
 	}
 
-	private void createBallAndChainMenu() {
+	private void createBallAndChainMenu(boolean visible) {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN);
 		exposedMenus.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
 
-		JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always");
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always");
 		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
+		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
-		JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent");
+		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent");
 		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
+		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
-		JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate");
 		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
+		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
 
-		JRadioButtonMenuItem reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never");
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never");
 		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
+		reRollBallAndChainNeverMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
+		if (visible) {
+			add(reRollBallAndChainPanelMenu);
+		}
 	}
 
 	private void createDodgeBlockMenu() {

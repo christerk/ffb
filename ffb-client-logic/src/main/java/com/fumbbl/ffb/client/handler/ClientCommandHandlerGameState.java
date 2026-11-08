@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.client.handler;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
@@ -29,7 +25,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
@@ -148,8 +143,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 					userInterface.getDialogManager().updateDialog();
 					userInterface.getGameMenuBar().updateMissingPlayers();
 					userInterface.getGameMenuBar().updateInducements();
-					getClient().getClientData().setUserSettingsLoaded(true);
-					maybeShowSkillSettingsDialog(userInterface);
 					userInterface.getChat().requestChatInputFocus();
 				});
 			} catch (FantasyFootballException e) {
@@ -160,35 +153,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		getClient().initRulesDependentMembers();
 
 		return true;
-	}
-
-	void maybeShowSkillSettingsDialog(UserInterface userInterface) {
-		Game game = getClient().getGame();
-		if (getClient().getMode() != ClientMode.PLAYER
-			|| !getClient().getClientData().isUserSettingsLoaded()
-			|| getClient().getClientData().isSkillSettingsPromptShown()
-			|| game.getOptions().getRulesVersion() != RulesCollection.Rules.BB2025
-			|| game.getHalf() != 1
-			|| game.getTurnMode() != TurnMode.SETUP
-			|| game.getTurnDataHome().getTurnNr() != 0
-			|| game.getTurnDataAway().getTurnNr() != 0) {
-			return;
-		}
-
-		if (isConfigured(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN,
-			userInterface.getGameMenuBar().menuEntries(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN))
-			&& isConfigured(CommonProperty.SETTING_DODGE_BLOCK,
-			userInterface.getGameMenuBar().menuEntries(CommonProperty.SETTING_DODGE_BLOCK))) {
-			return;
-		}
-
-		getClient().getClientData().setSkillSettingsPromptShown(true);
-		userInterface.getGameMenuBar().showSkillSettingsDialog(true);
-	}
-
-	private boolean isConfigured(CommonProperty property, Map<String, String> entries) {
-		String value = getClient().getProperty(property);
-		return value != null && entries.containsKey(value);
 	}
 
 	public void dialogClosed(IDialog pDialog) {

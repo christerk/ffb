@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -254,6 +255,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setGameplaySetting(boolean home, CommonProperty setting, String value) {
 		Map<String, String> settings = home ? gameplaySettingsHome : gameplaySettingsAway;
+		if (setting == CommonProperty.SETTING_DODGE_BLOCK
+			&& getGame().getOptions().getRulesVersion() != RulesCollection.Rules.BB2025) {
+			settings.remove(setting.getKey());
+			return;
+		}
 		if (value != null) {
 			settings.put(setting.getKey(), value);
 		} else {
@@ -274,6 +280,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	 * @return the value the coach of the given side sent for the setting, or null if none was received
 	 */
 	public String getGameplaySetting(boolean home, CommonProperty setting) {
+		if (setting == CommonProperty.SETTING_DODGE_BLOCK
+			&& getGame().getOptions().getRulesVersion() != RulesCollection.Rules.BB2025) {
+			return null;
+		}
 		return (home ? gameplaySettingsHome : gameplaySettingsAway).get(setting.getKey());
 	}
 
@@ -474,6 +484,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		gameplaySettingsHome.putAll(IServerJsonOption.GAMEPLAY_SETTINGS_HOME.getFrom(source, jsonObject));
 		gameplaySettingsAway.clear();
 		gameplaySettingsAway.putAll(IServerJsonOption.GAMEPLAY_SETTINGS_AWAY.getFrom(source, jsonObject));
+		if (getGame().getOptions().getRulesVersion() != RulesCollection.Rules.BB2025) {
+			gameplaySettingsHome.remove(CommonProperty.SETTING_DODGE_BLOCK.getKey());
+			gameplaySettingsAway.remove(CommonProperty.SETTING_DODGE_BLOCK.getKey());
+		}
 
 		JsonObject passStateObject = IServerJsonOption.PASS_STATE.getFrom(source, jsonObject);
 		if (passStateObject != null) {

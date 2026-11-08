@@ -213,6 +213,7 @@ public class DodgeBlockSettingTest {
 		GameState state = buildState("BB2020", OPEN_FIELD_Y, false, true);
 		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 
+		assertNull(state.getGameplaySetting(false, CommonProperty.SETTING_DODGE_BLOCK));
 		assertNoDialogAndDodgeUsed(state, stumble(state, "home1", "away1"));
 	}
 
