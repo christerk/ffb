@@ -99,6 +99,12 @@ class DialogSkillSettingsTest {
 	@Test
 	void requiredDialogClosesImmediatelyWhenAllSettingsAreConfigured() {
 		FantasyFootballClient client = client();
+		UserInterface userInterface = client.getUserInterface();
+		JDesktopPane desktop = new JDesktopPane();
+		JRootPane rootPane = new JRootPane();
+		rootPane.setContentPane(desktop);
+		when(userInterface.getDesktop()).thenReturn(desktop);
+		when(userInterface.getRootPane()).thenReturn(rootPane);
 		String reRollSetting = CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS;
 		String dodgeSetting = CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS;
 		when(client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(reRollSetting);
