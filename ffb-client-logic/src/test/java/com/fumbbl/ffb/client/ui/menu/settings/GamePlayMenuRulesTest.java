@@ -17,6 +17,7 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -33,10 +34,16 @@ class GamePlayMenuRulesTest {
 
 		assertTrue(hasItem(menu, "Skill settings"));
 		assertFalse(hasItem(menu, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN.getValue()));
+		assertEquals(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN.getValue(),
+			menu.menuName(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
+		assertEquals(CommonProperty.SETTING_DODGE_BLOCK.getValue(), menu.menuName(CommonProperty.SETTING_DODGE_BLOCK));
 		assertTrue(menu.menuEntries(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)
 			.containsKey(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS));
 		assertTrue(menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK)
 			.containsKey(IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS));
+		assertEquals("Situational (whole wide zone)",
+			menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK)
+				.get(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE));
 	}
 
 	@Test
@@ -48,6 +55,7 @@ class GamePlayMenuRulesTest {
 		assertTrue(hasItem(menu, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN.getValue()));
 		assertFalse(hasItem(menu, "Skill settings"));
 		assertTrue(menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK).isEmpty());
+		assertEquals(CommonProperty.SETTING_DODGE_BLOCK.getValue(), menu.menuName(CommonProperty.SETTING_DODGE_BLOCK));
 
 		JMenu ballAndChainMenu = findMenu(menu, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN.getValue());
 		javax.swing.JMenuItem neverItem = ballAndChainMenu.getItem(3);
