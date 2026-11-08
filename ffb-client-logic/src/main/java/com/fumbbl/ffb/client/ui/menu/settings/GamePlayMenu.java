@@ -112,9 +112,10 @@ public class GamePlayMenu extends FfbMenu {
 		createGazePanelMenu();
 		createRightClickMenu();
 		boolean bb2025 = client.getGame().getOptions().getRulesVersion() == RulesCollection.Rules.BB2025;
-		createBallAndChainMenu(!bb2025);
+		if (!bb2025) {
+			createBallAndChainMenu();
+		}
 		if (bb2025) {
-			createDodgeBlockMenu();
 			createSkillSettingsMenu();
 		}
 		createRangegridMenu();
@@ -461,7 +462,7 @@ public class GamePlayMenu extends FfbMenu {
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
 	}
 
-	private void createBallAndChainMenu(boolean visible) {
+	private void createBallAndChainMenu() {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, menuTitles.get(SETTING_RE_ROLL_BALL_AND_CHAIN));
 		for (Map.Entry<String, String> entry : menuEntries.get(SETTING_RE_ROLL_BALL_AND_CHAIN).entrySet()) {
@@ -480,24 +481,7 @@ public class GamePlayMenu extends FfbMenu {
 				reRollBallAndChainNeverMenuItem = item;
 			}
 		}
-		if (visible) {
-			add(reRollBallAndChainPanelMenu);
-		}
-	}
-
-	private void createDodgeBlockMenu() {
-		ButtonGroup dodgeBlockGroup = new ButtonGroup();
-		JMenu dodgeBlockMenu = new JMenu(dimensionProvider, menuTitles.get(SETTING_DODGE_BLOCK));
-		for (Map.Entry<String, String> entry : menuEntries.get(SETTING_DODGE_BLOCK).entrySet()) {
-			createDodgeBlockMenuItem(dodgeBlockMenu, dodgeBlockGroup, entry.getValue(), entry.getKey());
-		}
-	}
-
-	private void createDodgeBlockMenuItem(JMenu menu, ButtonGroup group, String text, String value) {
-		JRadioButtonMenuItem item = new JRadioButtonMenuItem(dimensionProvider, text);
-		item.setName(value);
-		group.add(item);
-		menu.add(item);
+		add(reRollBallAndChainPanelMenu);
 	}
 
 	private void createSkillSettingsMenu() {
@@ -747,6 +731,10 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	private Map<String, String> getMenuEntries(CommonProperty menuProperty) {
+		if (SETTING_DODGE_BLOCK.equals(menuProperty)
+			&& client.getGame().getOptions().getRulesVersion() != RulesCollection.Rules.BB2025) {
+			return new LinkedHashMap<>();
+		}
 		Map<String, String> entries = menuEntries.get(menuProperty);
 		return entries != null ? new LinkedHashMap<>(entries) : new LinkedHashMap<>();
 	}
