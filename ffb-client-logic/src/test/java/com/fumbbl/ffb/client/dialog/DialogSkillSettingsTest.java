@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -36,16 +37,18 @@ class DialogSkillSettingsTest {
 	@Test
 	void requiredDialogHighlightsUnsetSettingsAndEnablesSaveOnlyWhenComplete() throws Exception {
 		FantasyFootballClient client = client();
-		DialogSkillSettings dialog = new DialogSkillSettings(client, entries(
-			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS), entries(
+		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntries(
+			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS,
 			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
 
-		JComboBox<String> reRollBox = field(dialog, "reRollBallAndChainBox");
-		JComboBox<String> dodgeBox = field(dialog, "dodgeBlockBox");
+		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
+		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");
+		JComboBox<String> reRollBox = settingBoxes.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		JComboBox<String> dodgeBox = settingBoxes.get(CommonProperty.SETTING_DODGE_BLOCK);
 		JButton saveButton = field(dialog, "saveButton");
 		JButton cancelButton = field(dialog, "cancelButton");
-		JLabel reRollLabel = field(dialog, "reRollBallAndChainLabel");
-		JLabel dodgeLabel = field(dialog, "dodgeBlockLabel");
+		JLabel reRollLabel = settingLabels.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		JLabel dodgeLabel = settingLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
 
 		assertFalse(saveButton.isEnabled());
 		assertTrue(reRollBox.getSelectedIndex() < 0);
@@ -60,6 +63,13 @@ class DialogSkillSettingsTest {
 		assertTrue(saveButton.isEnabled());
 		assertFalse(reRollLabel.isOpaque());
 		assertFalse(dodgeLabel.isOpaque());
+
+		saveButton.doClick();
+		assertTrue(dialog.isSaved());
+		assertEquals(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS,
+			dialog.getSetting(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
+		assertEquals(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS,
+			dialog.getSetting(CommonProperty.SETTING_DODGE_BLOCK));
 	}
 
 	@Test
@@ -81,10 +91,11 @@ class DialogSkillSettingsTest {
 		when(userInterface.getDesktop()).thenReturn(desktop);
 		when(userInterface.getRootPane()).thenReturn(rootPane);
 
-		DialogSkillSettings dialog = new DialogSkillSettings(client, entries(
-			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS), entries(
+		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntries(
+			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS,
 			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
-		JComboBox<String> dialogBox = field(dialog, "dodgeBlockBox");
+		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
+		JComboBox<String> dialogBox = settingBoxes.get(CommonProperty.SETTING_DODGE_BLOCK);
 
 		dialog.showDialog(null);
 		assertFalse(backgroundButton.isEnabled());
@@ -109,7 +120,7 @@ class DialogSkillSettingsTest {
 		String dodgeSetting = CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS;
 		when(client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(reRollSetting);
 		when(client.getProperty(CommonProperty.SETTING_DODGE_BLOCK)).thenReturn(dodgeSetting);
-		DialogSkillSettings dialog = new DialogSkillSettings(client, entries(reRollSetting), entries(dodgeSetting), true);
+		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntries(reRollSetting, dodgeSetting), true);
 
 		dialog.showDialog(closedDialog -> closedDialog.hideDialog());
 
@@ -134,6 +145,13 @@ class DialogSkillSettingsTest {
 	private Map<String, String> entries(String value) {
 		Map<String, String> entries = new LinkedHashMap<>();
 		entries.put(value, "Always");
+		return entries;
+	}
+
+	private Map<CommonProperty, Map<String, String>> settingsEntries(String reRollSetting, String dodgeSetting) {
+		Map<CommonProperty, Map<String, String>> entries = new LinkedHashMap<>();
+		entries.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, entries(reRollSetting));
+		entries.put(CommonProperty.SETTING_DODGE_BLOCK, entries(dodgeSetting));
 		return entries;
 	}
 

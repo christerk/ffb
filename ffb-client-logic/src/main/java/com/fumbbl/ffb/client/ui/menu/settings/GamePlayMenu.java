@@ -491,8 +491,11 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	public void showSkillSettingsDialog(boolean required) {
-		showDialog(new DialogSkillSettings(client, getMenuEntries(SETTING_RE_ROLL_BALL_AND_CHAIN),
-			getMenuEntries(SETTING_DODGE_BLOCK), required));
+		Map<CommonProperty, Map<String, String>> settingEntries = new LinkedHashMap<>();
+		for (CommonProperty property : DialogSkillSettings.SETTING_PROPERTIES) {
+			settingEntries.put(property, getMenuEntries(property));
+		}
+		showDialog(new DialogSkillSettings(client, settingEntries, required));
 	}
 
 	@Override
@@ -501,8 +504,9 @@ public class GamePlayMenu extends FfbMenu {
 		if (dialog instanceof DialogSkillSettings) {
 			DialogSkillSettings skillSettings = (DialogSkillSettings) dialog;
 			if (skillSettings.isSaved()) {
-				client.setProperty(SETTING_RE_ROLL_BALL_AND_CHAIN, skillSettings.getReRollBallAndChainSetting());
-				client.setProperty(SETTING_DODGE_BLOCK, skillSettings.getDodgeBlockSetting());
+				for (CommonProperty property : DialogSkillSettings.SETTING_PROPERTIES) {
+					client.setProperty(property, skillSettings.getSetting(property));
+				}
 				client.saveUserSettings(false);
 			}
 		}

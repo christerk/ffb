@@ -16,42 +16,43 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DialogSkillSettings extends Dialog implements ActionListener {
 
-	private final Map<String, String> reRollBallAndChainEntries;
-	private final Map<String, String> dodgeBlockEntries;
-	private final JComboBox<String> reRollBallAndChainBox;
-	private final JComboBox<String> dodgeBlockBox;
+	public static final List<CommonProperty> SETTING_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
+		CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN,
+		CommonProperty.SETTING_DODGE_BLOCK));
+
+	private final Map<CommonProperty, Map<String, String>> settingEntries;
+	private final Map<CommonProperty, JComboBox<String>> settingBoxes = new LinkedHashMap<>();
+	private final Map<CommonProperty, JLabel> settingLabels = new LinkedHashMap<>();
+	private final Map<CommonProperty, Color> defaultLabelBackgrounds = new LinkedHashMap<>();
 	private final JButton saveButton;
 	private final JButton cancelButton;
-	private final JLabel reRollBallAndChainLabel;
-	private final JLabel dodgeBlockLabel;
-	private final Color defaultLabelBackground;
 	private final boolean closeIfConfigured;
-	private String reRollBallAndChainSetting;
-	private String dodgeBlockSetting;
+	private final Map<CommonProperty, String> selectedSettings = new LinkedHashMap<>();
 	private boolean saved;
 
-	public DialogSkillSettings(FantasyFootballClient client, Map<String, String> reRollBallAndChainEntries,
-	                           Map<String, String> dodgeBlockEntries) {
-		this(client, reRollBallAndChainEntries, dodgeBlockEntries, false);
+	public DialogSkillSettings(FantasyFootballClient client, Map<CommonProperty, Map<String, String>> settingEntries) {
+		this(client, settingEntries, false);
 	}
 
-	public DialogSkillSettings(FantasyFootballClient client, Map<String, String> reRollBallAndChainEntries,
-	                           Map<String, String> dodgeBlockEntries, boolean required) {
+	public DialogSkillSettings(FantasyFootballClient client,
+	                           Map<CommonProperty, Map<String, String>> settingEntries, boolean required) {
 		super(client, "Skill settings", false);
 		setBlockBackgroundInteraction(required);
-		this.reRollBallAndChainEntries = reRollBallAndChainEntries;
-		this.dodgeBlockEntries = dodgeBlockEntries;
-		closeIfConfigured = required
-			&& isConfigured(reRollBallAndChainEntries, client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN))
-			&& isConfigured(dodgeBlockEntries, client.getProperty(CommonProperty.SETTING_DODGE_BLOCK));
-
-		reRollBallAndChainBox = createComboBox(reRollBallAndChainEntries,
-			client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
-		dodgeBlockBox = createComboBox(dodgeBlockEntries, client.getProperty(CommonProperty.SETTING_DODGE_BLOCK));
+		this.settingEntries = new LinkedHashMap<>();
+		for (CommonProperty property : SETTING_PROPERTIES) {
+			Map<String, String> entries = settingEntries.get(property);
+			this.settingEntries.put(property, entries == null ? Collections.emptyMap() : new LinkedHashMap<>(entries));
+		}
+		closeIfConfigured = required && this.settingEntries.entrySet().stream().allMatch(entry ->
+			isConfigured(entry.getValue(), client.getProperty(entry.getKey())));
 
 		saveButton = new JButton(dimensionProvider(), "Save");
 		saveButton.addActionListener(this);
@@ -60,20 +61,23 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		cancelButton.addActionListener(this);
 		cancelButton.setMnemonic((int) 'C');
 
-		reRollBallAndChainLabel = new JLabel(dimensionProvider(),
-			client.getUserInterface().getGameMenuBar().menuName(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
-		dodgeBlockLabel = new JLabel(dimensionProvider(),
-			client.getUserInterface().getGameMenuBar().menuName(CommonProperty.SETTING_DODGE_BLOCK));
-		defaultLabelBackground = reRollBallAndChainLabel.getBackground();
-
 		JLabel sectionLabel = new JLabel(dimensionProvider(), "Re-Roll settings");
 		sectionLabel.setFont(new Font(sectionLabel.getFont().getName(), Font.BOLD, sectionLabel.getFont().getSize()));
 
 		JPanel settingsPanel = new JPanel();
 		settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
 		settingsPanel.add(sectionLabel);
-		settingsPanel.add(createSettingRow(reRollBallAndChainLabel, reRollBallAndChainBox));
-		settingsPanel.add(createSettingRow(dodgeBlockLabel, dodgeBlockBox));
+		for (Map.Entry<CommonProperty, Map<String, String>> entry : this.settingEntries.entrySet()) {
+			CommonProperty property = entry.getKey();
+			JComboBox<String> settingBox = createComboBox(entry.getValue(), client.getProperty(property));
+			JLabel settingLabel = new JLabel(dimensionProvider(),
+				client.getUserInterface().getGameMenuBar().menuName(property));
+			settingBoxes.put(property, settingBox);
+			settingLabels.put(property, settingLabel);
+			defaultLabelBackgrounds.put(property, settingLabel.getBackground());
+			settingsPanel.add(createSettingRow(settingLabel, settingBox));
+			settingBox.addActionListener(event -> updateSaveState());
+		}
 		settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JPanel buttonPanel = new JPanel();
@@ -91,8 +95,6 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		contentPanel.add(buttonPanel);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
-		reRollBallAndChainBox.addActionListener(event -> updateSaveState());
-		dodgeBlockBox.addActionListener(event -> updateSaveState());
 		updateSaveState();
 
 		pack();
@@ -128,16 +130,19 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	}
 
 	private void updateSaveState() {
-		boolean reRollSet = reRollBallAndChainBox.getSelectedIndex() >= 0;
-		boolean dodgeSet = dodgeBlockBox.getSelectedIndex() >= 0;
-		highlight(reRollBallAndChainLabel, !reRollSet);
-		highlight(dodgeBlockLabel, !dodgeSet);
-		saveButton.setEnabled(reRollSet && dodgeSet);
+		boolean allSettingsSet = !settingBoxes.isEmpty();
+		for (Map.Entry<CommonProperty, JComboBox<String>> entry : settingBoxes.entrySet()) {
+			boolean settingSet = entry.getValue().getSelectedIndex() >= 0;
+			allSettingsSet &= settingSet;
+			highlight(entry.getKey(), !settingSet);
+		}
+		saveButton.setEnabled(allSettingsSet);
 	}
 
-	private void highlight(JLabel label, boolean unset) {
+	private void highlight(CommonProperty property, boolean unset) {
+		JLabel label = settingLabels.get(property);
 		label.setOpaque(unset);
-		label.setBackground(unset ? new Color(255, 235, 150) : defaultLabelBackground);
+		label.setBackground(unset ? new Color(255, 235, 150) : defaultLabelBackgrounds.get(property));
 		label.setFont(label.getFont().deriveFont(unset ? Font.BOLD : Font.PLAIN));
 	}
 
@@ -161,9 +166,11 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == saveButton) {
-			reRollBallAndChainSetting = selectedValue(reRollBallAndChainEntries, reRollBallAndChainBox);
-			dodgeBlockSetting = selectedValue(dodgeBlockEntries, dodgeBlockBox);
-			saved = reRollBallAndChainSetting != null && dodgeBlockSetting != null;
+			for (Map.Entry<CommonProperty, JComboBox<String>> entry : settingBoxes.entrySet()) {
+				selectedSettings.put(entry.getKey(), selectedValue(settingEntries.get(entry.getKey()), entry.getValue()));
+			}
+			saved = selectedSettings.size() == settingEntries.size()
+				&& selectedSettings.values().stream().allMatch(value -> value != null);
 			if (saved) {
 				closeDialog();
 			}
@@ -172,12 +179,8 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		}
 	}
 
-	public String getReRollBallAndChainSetting() {
-		return reRollBallAndChainSetting;
-	}
-
-	public String getDodgeBlockSetting() {
-		return dodgeBlockSetting;
+	public String getSetting(CommonProperty property) {
+		return selectedSettings.get(property);
 	}
 
 	public boolean isSaved() {
