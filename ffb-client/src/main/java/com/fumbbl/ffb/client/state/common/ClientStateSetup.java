@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.common;
 
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
@@ -19,18 +18,6 @@ public class ClientStateSetup extends AbstractClientStateSetup<SetupLogicModule>
 
 	public ClientStateSetup(FantasyFootballClientAwt pClient) {
 		super(pClient, new SetupLogicModule(pClient));
-	}
-
-	@Override
-	public void setUp() {
-		super.setUp();
-		if (getClient().getMode() == ClientMode.PLAYER
-			&& getClient().getClientData().isUserSettingsLoaded()
-			&& getClient().getGame().getOptions().getRulesVersion() == RulesCollection.Rules.BB2025
-			&& getClient().getGame().getHalf() == 1
-			&& getClient().getGame().firstTurnOfHalf()) {
-			getClient().getUserInterface().getGameMenuBar().showSkillSettingsDialog(true);
-		}
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
