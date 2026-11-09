@@ -56,6 +56,7 @@ import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
@@ -934,9 +935,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 		// after a reload; the indexes are determined first as they may add to the serialized main list
 		List<InjuryResult> serializedResults = new ArrayList<>(injuryResults);
 		int[] regenerationFailedIndexes = regenerationFailedResults != null
-			? injuryIndexes(regenerationFailedResults, serializedResults) : null;
-		int[] deadIndexes = injuryIndexes(deadResults, serializedResults);
-		int[] gettingEvenIndexes = injuryIndexes(gettingEvenResults, serializedResults);
+			? injuryIndexes(regenerationFailedResults, "regenerationFailedResults", serializedResults) : null;
+		int[] deadIndexes = injuryIndexes(deadResults, "deadResults", serializedResults);
+		int[] gettingEvenIndexes = injuryIndexes(gettingEvenResults, "gettingEvenResults", serializedResults);
 		addInjuriesToJson(serializedResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
 		if (regenerationFailedIndexes != null) {
 			IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED.addTo(jsonObject, regenerationFailedIndexes);
@@ -967,8 +968,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 	 * A result that is not one of the serialized main list's objects is appended to that list, the same way a legacy
 	 * copy without a counterpart is added to the main list on load, so the indexes and the previous format keep the
 	 * same entries. The step's own main list is left as it is, saving does not change how the step goes on.
+	 * Such a result means the step's lists disagree, which no code path is expected to cause, so it is logged as a
+	 * warning; saving still completes, since a failed save would cost the running game more than the extra entry.
 	 */
-	private int[] injuryIndexes(List<InjuryResult> results, List<InjuryResult> serializedResults) {
+	private int[] injuryIndexes(List<InjuryResult> results, String listName, List<InjuryResult> serializedResults) {
 		int[] indexes = new int[results.size()];
 		for (int i = 0; i < results.size(); i++) {
 			InjuryResult result = results.get(i);
@@ -976,10 +979,23 @@ public class StepApothecaryMultiple extends AbstractStep {
 			if (index < 0) {
 				serializedResults.add(result);
 				index = serializedResults.size() - 1;
+				warnUnindexedResult(result, listName, index);
 			}
 			indexes[i] = index;
 		}
 		return indexes;
+	}
+
+	private void warnUnindexedResult(InjuryResult result, String listName, int index) {
+		GameState gameState = getGameState();
+		if (gameState == null || gameState.getServer() == null || gameState.getServer().getDebugLog() == null
+			|| gameState.getGame() == null) {
+			return;
+		}
+		String defenderId = result != null && result.injuryContext() != null ? result.injuryContext().getDefenderId() : null;
+		gameState.getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getGame().getId(),
+			"StepApothecaryMultiple: " + listName + " holds an injury result for defender " + defenderId
+				+ " that is not in injuryResults; appended to the serialized injuryResults at index " + index);
 	}
 
 	private int injuryIndex(InjuryResult result, List<InjuryResult> serializedResults) {
