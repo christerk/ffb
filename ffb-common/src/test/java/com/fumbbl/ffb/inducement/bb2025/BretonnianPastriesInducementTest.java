@@ -31,7 +31,13 @@ class BretonnianPastriesInducementTest {
 	}
 
 	@Test
-	void pastriesAreAvailableToAnyTeamOncePerGameByDefault() {
+	void pastriesAreUnavailableByDefault() {
+		assertEquals(0, pastries.availability(team, options));
+	}
+
+	@Test
+	void pastriesAreAvailableToAnyTeamOncePerGameWhenEnabled() {
+		options.addOption(new GameOptionInt(GameOptionId.INDUCEMENT_BRETONNIAN_PASTRIES_MAX).setValue(1));
 		assertEquals(1, pastries.availability(team, options));
 	}
 

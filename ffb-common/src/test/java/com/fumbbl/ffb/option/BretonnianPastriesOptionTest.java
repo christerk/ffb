@@ -19,10 +19,10 @@ class BretonnianPastriesOptionTest {
 	}
 
 	@Test
-	void maxDefaultsToOne() {
+	void maxDefaultsToZero() {
 		GameOptionInt option = (GameOptionInt) factory.createGameOption(GameOptionId.INDUCEMENT_BRETONNIAN_PASTRIES_MAX);
 
-		assertEquals(1, option.getValue());
+		assertEquals(0, option.getValue());
 		assertEquals("inducementBretonnianPastriesMax", option.getId().getName());
 	}
 
