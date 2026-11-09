@@ -148,9 +148,15 @@ public class StepApothecaryMultiple extends AbstractStep {
 					ClientCommandUseInducement clientCommandUseInducement =
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
 					Optional<InjuryResult> knockoutReserveResult = injuryWaitingForKnockoutReserve();
+					InducementType usedInducement = clientCommandUseInducement.getInducementType();
+					boolean regenerationAnswer = (usedInducement == null) || usedInducement.hasUsage(Usage.REGENERATION);
 					if (knockoutReserveResult.isPresent()) {
-						handleKnockoutReserve(knockoutReserveResult.get(), clientCommandUseInducement.getInducementType());
-					} else if (ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
+						InjuryResult result = knockoutReserveResult.get();
+						if (new KnockoutReserveService().isAnswer(getGameState(), pReceivedCommand, injuredPlayer(result, game))) {
+							handleKnockoutReserve(result, usedInducement);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
+					} else if (regenerationAnswer && ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
 						regenerationFailedResults.stream().filter(
 								result -> result.injuryContext().getDefenderId().equals(clientCommandUseInducement.getPlayerIds()[0]))
 							.findFirst().ifPresent(result -> {
@@ -181,11 +187,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 								}
 								result.passedRegeneration();
 							});
-
-					} else {
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else if (regenerationAnswer) {
 						regenerationFailedResults.forEach(InjuryResult::passedRegeneration);
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();

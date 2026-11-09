@@ -200,9 +200,12 @@ public class StepApothecary extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					} else if ((fInjuryResult != null)
 						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)) {
-						new KnockoutReserveService().use(this, fInjuryResult, injuredPlayer(),
-							clientCommandUseInducement.getInducementType(), getTurnData().getInducementSet());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
+						KnockoutReserveService knockoutReserveService = new KnockoutReserveService();
+						if (knockoutReserveService.isAnswer(getGameState(), pReceivedCommand, injuredPlayer())) {
+							knockoutReserveService.use(this, fInjuryResult, injuredPlayer(),
+								clientCommandUseInducement.getInducementType(), getTurnData().getInducementSet());
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
 					}
 					break;
 				case CLIENT_USE_RE_ROLL:

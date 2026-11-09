@@ -8,13 +8,18 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
+import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
+import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.Optional;
 
@@ -52,6 +57,21 @@ public class KnockoutReserveService {
 			new InducementType[]{inducementType}, injuredPlayer.getId()), true);
 		injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_PASTRIES_USE);
 		step.getResult().setNextAction(StepAction.CONTINUE);
+	}
+
+	/**
+	 * @param receivedCommand a CLIENT_USE_INDUCEMENT command
+	 * @return true if the command answers the offer made for the injured player: it comes from the coach of the
+	 * player's team and either declines or uses a knockout reserve inducement for that player
+	 */
+	public boolean isAnswer(GameState gameState, ReceivedCommand receivedCommand, Player<?> injuredPlayer) {
+		ClientCommandUseInducement command = (ClientCommandUseInducement) receivedCommand.getCommand();
+		InducementType inducementType = command.getInducementType();
+		String[] playerIds = command.getPlayerIds();
+		boolean forInjuredPlayer = ArrayTool.isProvided(playerIds) ? injuredPlayer.getId().equals(playerIds[0])
+			: inducementType == null;
+		return forInjuredPlayer && ((inducementType == null) || inducementType.hasUsage(Usage.KNOCKOUT_RESERVE))
+			&& UtilServerSteps.checkCommandIsFromPlayerTeam(gameState, receivedCommand, injuredPlayer);
 	}
 
 	/**
