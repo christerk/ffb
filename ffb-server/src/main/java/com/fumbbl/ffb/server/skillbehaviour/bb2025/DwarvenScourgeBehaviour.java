@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.injury.modification.AvOrInjModification;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.AvOrInjChainModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.bb2025.special.DwarvenScourge;
 
@@ -12,5 +13,6 @@ public class DwarvenScourgeBehaviour extends SkillBehaviour<DwarvenScourge> {
 		super();
 
 		registerModifier(new AvOrInjModification());
+		registerModifier(new AvOrInjChainModification());
 	}
 }

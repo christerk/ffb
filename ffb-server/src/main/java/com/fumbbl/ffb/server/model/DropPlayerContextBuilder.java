@@ -22,6 +22,7 @@ public class DropPlayerContextBuilder {
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
 	private StepParameterKey[] additionalVictimStateKeys;
+	private InjuryTurnoverRule injuryTurnoverRule = InjuryTurnoverRule.FIXED;
 
 	private DropPlayerContextBuilder() {
 	}
@@ -44,6 +45,7 @@ public class DropPlayerContextBuilder {
 		builder.apothecaryMode = original.getApothecaryMode();
 		builder.victimStateKey = original.getVictimStateKey();
 		builder.additionalVictimStateKeys = original.getAdditionalVictimStateKeys();
+		builder.injuryTurnoverRule = original.getInjuryTurnoverRule();
 
 		return builder;
 	}
@@ -108,9 +110,16 @@ public class DropPlayerContextBuilder {
 		return this;
 	}
 
+	public DropPlayerContextBuilder injuryTurnoverRule(InjuryTurnoverRule rule) {
+		this.injuryTurnoverRule = rule;
+		return this;
+	}
+
 	public DropPlayerContext build() {
-		return new DropPlayerContext(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode,
-			requiresArmourBreak, alreadyDropped, victimStateKey, modifiedInjuryEndsTurn, endTurnWithoutKnockdown,
-			additionalVictimStateKeys);
+		DropPlayerContext context = new DropPlayerContext(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId,
+			apothecaryMode, requiresArmourBreak, alreadyDropped, victimStateKey, modifiedInjuryEndsTurn,
+			endTurnWithoutKnockdown, additionalVictimStateKeys);
+		context.setInjuryTurnoverRule(injuryTurnoverRule);
+		return context;
 	}
 }

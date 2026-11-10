@@ -18,6 +18,13 @@ public abstract class InjuryMechanic implements Mechanic {
 		return Type.INJURY;
 	}
 
+	/**
+	 * @return true if armour and injury modifications are offered as chains of coach decisions
+	 */
+	public boolean usesInjuryModificationChains() {
+		return false;
+	}
+
 	public abstract SendToBoxReason raisedByNurgleReason();
 
 	public abstract String raisedByNurgleMessage();

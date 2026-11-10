@@ -1,10 +1,17 @@
 # BB2025: Chained Armour and Injury Modifications
 
-Status: **in progress**, steps 1, 2 and 4 implemented in #351 (not used by the game flow yet). Added to the plan
-afterwards: combinations of modifier skills (rule 6, 3.5), the tree of evaluated injury contexts replacing the
-decision loop on a single state (3.1, 3.7, 3.10) and the build / offer eligibility modes (rule 7, 3.1.3). #351
-has to be adapted: the per skill result check of the `MODIFIER` chain modifications moves to the combination
-service, `isApplicable` gets the eligibility mode, `InjuryResolutionState` becomes the node (see steps 3 and 4).
+Status: **implemented** (steps 1–9; #351 was closed unmerged, the implementation was redone from scratch).
+Deviations from the plan:
+* Iron Hard Skin only blocks chain modifications with the `MODIFIER` effect, re-rolls are still offered.
+* Arm Bar keeps the up front `ARM_BAR` player choice in `StepMoveDodge`; with `ARM_BAR_OPTIONAL` the chosen
+  player is offered the skill in the tree and becomes the attacker when it is accepted (no `ArmBarPlayerService`,
+  no deferred choice). A failed jump offers only the first eligible Arm Bar player.
+* The non chain path of the BB2025 injury handling (defender ignoring the first armour break) does not offer
+  optional skills, they are not applied there.
+* With `CLAW_DOES_NOT_STACK` and Claws applied by the base evaluation, the other base armour modifiers are
+  dropped from the context before later chain modifiers are added.
+* Not covered by state tests yet: stale tree scenarios, hidden dice, turnover per node, the saved game format
+  and the Dirty Player / A Sneaky Pair / Lethal Flight / Arm Bar options.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep the current "one precomputed alternative" behaviour untouched.
 
 ---

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.injury.modification.bb2025.SlayerModification;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.SlayerChainModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.mixed.special.Slayer;
 
@@ -13,5 +14,6 @@ public class SlayerBehaviour extends SkillBehaviour<Slayer> {
 		super();
 
 		registerModifier(new SlayerModification());
+		registerModifier(new SlayerChainModification());
 	}
 }

@@ -23,6 +23,7 @@ public class DropPlayerContext implements IJsonSerializable {
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
 	private StepParameterKey[] additionalVictimStateKeys;
+	private InjuryTurnoverRule injuryTurnoverRule = InjuryTurnoverRule.FIXED;
 
 	public DropPlayerContext() {
 	}
@@ -141,6 +142,14 @@ public class DropPlayerContext implements IJsonSerializable {
 		this.endTurn = endTurn;
 	}
 
+	public InjuryTurnoverRule getInjuryTurnoverRule() {
+		return injuryTurnoverRule;
+	}
+
+	public void setInjuryTurnoverRule(InjuryTurnoverRule injuryTurnoverRule) {
+		this.injuryTurnoverRule = injuryTurnoverRule != null ? injuryTurnoverRule : InjuryTurnoverRule.FIXED;
+	}
+
 	public StepParameterKey[] getAdditionalVictimStateKeys() {
 		return additionalVictimStateKeys;
 	}
@@ -167,6 +176,11 @@ public class DropPlayerContext implements IJsonSerializable {
 			endTurnWithoutKnockdown = IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.getFrom(source, jsonObject);
 		}
 
+		if (IServerJsonOption.INJURY_TURNOVER_RULE.isDefinedIn(jsonObject)) {
+			injuryTurnoverRule =
+				InjuryTurnoverRule.valueOf(IServerJsonOption.INJURY_TURNOVER_RULE.getFrom(source, jsonObject));
+		}
+
 		if (IJsonOption.STEP_PARAMETER_KEYS.isDefinedIn(jsonObject)) {
 			additionalVictimStateKeys =
 				Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
@@ -191,6 +205,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		}
 		IServerJsonOption.MODIFIED_INJURY_ENDS_TURN.addTo(jsonObject, modifiedInjuryEndsTurn);
 		IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.addTo(jsonObject, endTurnWithoutKnockdown);
+		IServerJsonOption.INJURY_TURNOVER_RULE.addTo(jsonObject, injuryTurnoverRule.name());
 		if (ArrayTool.isProvided(additionalVictimStateKeys)) {
 			String[] keys = Arrays.stream(additionalVictimStateKeys).map(StepParameterKey::name).collect(Collectors.toList())
 				.toArray(new String[]{});

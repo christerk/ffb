@@ -16,6 +16,8 @@ import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.server.step.IStep;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -95,6 +97,61 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		} else {
 			savedByArmour(currentInjuryContext);
 		}
+	}
+
+	/**
+	 * BB2025 injury chains: base armour evaluation of the given context, the dice are taken from the given roller.
+	 */
+	public void evaluateArmour(Game game, GameState gameState, DiceRoller diceRoller, Player<?> attacker,
+		Player<?> defender, FieldCoordinate defenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext context) {
+		InjuryContext original = injuryContext;
+		injuryContext = context;
+		try {
+			armourRoll(game, gameState, diceRoller, attacker, defender, defenderCoordinate, fromCoordinate,
+				DiceInterpreter.getInstance(), context, true);
+		} finally {
+			injuryContext = original;
+		}
+	}
+
+	/**
+	 * BB2025 injury chains: base injury evaluation of the given context with broken armour.
+	 */
+	public void evaluateInjury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> attacker,
+		Player<?> defender, FieldCoordinate defenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext context) {
+		InjuryContext original = injuryContext;
+		injuryContext = context;
+		try {
+			injuryRoll(game, gameState, diceRoller, attacker, defender, defenderCoordinate, fromCoordinate, context);
+		} finally {
+			injuryContext = original;
+		}
+	}
+
+	/**
+	 * BB2025 injury chains: interprets the injury roll of the context again, e.g. after skill modifiers were added.
+	 */
+	public void reinterpretInjury(Player<?> defender, GameState gameState, DiceRoller diceRoller, InjuryContext context) {
+		setInjury(defender, gameState, diceRoller, context);
+	}
+
+	/**
+	 * BB2025 injury chains: players without attacker role that may modify the injury with an optional skill and
+	 * become the attacker by doing so, e.g. Arm Bar.
+	 */
+	public List<Player<?>> optionalSkillAttackers(Game game, Player<?> defender, FieldCoordinate fromCoordinate) {
+		return Collections.emptyList();
+	}
+
+	/**
+	 * BB2025 injury chains: whether the owner of an applied optional skill becomes the attacker of the injury.
+	 */
+	public boolean optionalSkillOwnerBecomesAttacker() {
+		return false;
+	}
+
+	public void applySavedByArmour(InjuryContext context) {
+		savedByArmour(context);
 	}
 
 	protected void savedByArmour(InjuryContext injuryContext) {

@@ -11,6 +11,8 @@ public interface ISkillBehaviour<T extends Skill> extends IKeyedItem {
 
 	IInjuryContextModification getInjuryContextModification();
 
+	List<? extends IInjuryContextModification> getInjuryContextModifications();
+
 	List<PlayerModifier> getPlayerModifiers();
 
 	boolean hasInjuryModifier(InjuryType injuryType);

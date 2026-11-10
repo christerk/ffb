@@ -10,6 +10,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -31,6 +32,9 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBallAndChain;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.ModificationAwareInjuryTypeServer;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.InjuryTree;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.InjuryTreeBuilder;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.step.IStep;
@@ -41,6 +45,9 @@ import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kalimar
@@ -84,6 +91,13 @@ public class UtilServerInjury {
 			oldInjuryContext = new InjuryContext();
 		}
 
+		InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
+		if (injuryMechanic.usesInjuryModificationChains() && pInjuryType instanceof ModificationAwareInjuryTypeServer
+			&& !pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak)) {
+			return handleInjuryWithChains(gameState, (ModificationAwareInjuryTypeServer<?>) pInjuryType, pAttacker,
+				pDefender, pDefenderCoordinate, fromCoordinate);
+		}
+
 		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate,
 			fromCoordinate, oldInjuryContext, pApothecaryMode);
 
@@ -102,8 +116,40 @@ public class UtilServerInjury {
 
 	}
 
+	/**
+	 * BB2025: all outcomes reachable by modifying skills are precomputed, the injury starts at the unmodified root.
+	 */
+	private static InjuryResult handleInjuryWithChains(GameState gameState, ModificationAwareInjuryTypeServer<?> injuryType,
+		Player<?> attacker, Player<?> defender, FieldCoordinate defenderCoordinate, FieldCoordinate fromCoordinate) {
+		List<String> attackerRoleIds = new ArrayList<>();
+		if (attacker != null) {
+			attackerRoleIds.add(attacker.getId());
+		} else if (injuryType.injuryType().isChainsaw() || injuryType.injuryType().isVomitLike()) {
+			attackerRoleIds.add(defender.getId());
+		} else {
+			injuryType.optionalSkillAttackers(gameState.getGame(), defender, fromCoordinate)
+				.forEach(player -> attackerRoleIds.add(player.getId()));
+		}
+		InjuryTree tree = new InjuryTreeBuilder().build(gameState, injuryType, injuryType.injuryContext(),
+			defenderCoordinate, fromCoordinate, attackerRoleIds, injuryType.stunIsTreatedAsKo());
+		InjuryResult injuryResult = new InjuryResult();
+		injuryResult.setTree(tree);
+		injuryResult.setInjuryContext(tree.getRoot().getContext());
+		return injuryResult;
+	}
+
 	private static void evaluateInjuryContext(InjuryTypeServer<?> pInjuryType, Player<?> pDefender,
 	                                          InjuryContext injuryContext, GameState gameState) {
+		evaluateInjuryContext(pInjuryType.injuryType(), pInjuryType.stunIsTreatedAsKo(), pDefender, injuryContext,
+			gameState);
+	}
+
+	/**
+	 * Evaluates serious injuries, stun to KO, apothecary status, send to box data and sound of the context. Rolls no
+	 * dice, so it can be repeated on an already evaluated context.
+	 */
+	public static void evaluateInjuryContext(InjuryType injuryType, boolean stunIsTreatedAsKo, Player<?> pDefender,
+	                                         InjuryContext injuryContext, GameState gameState) {
 
 		Game game = gameState.getGame();
 
@@ -116,7 +162,7 @@ public class UtilServerInjury {
 			}
 		}
 
-		if ((pDefender.hasSkillProperty(NamedProperties.convertStunToKO) || pInjuryType.stunIsTreatedAsKo()) &&
+		if ((pDefender.hasSkillProperty(NamedProperties.convertStunToKO) || stunIsTreatedAsKo) &&
 			(injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
@@ -126,7 +172,7 @@ public class UtilServerInjury {
 				InjuryMechanic mechanic =
 					(InjuryMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
-				if (!pInjuryType.canUseApo() ||
+				if (!injuryType.canUseApo() ||
 					(injuryContext.isKnockedOut() && pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 				} else if (mechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
@@ -155,7 +201,7 @@ public class UtilServerInjury {
 			injuryContext.setSendToBoxTurn(turnData.getTurnNr());
 			injuryContext.setSendToBoxHalf(game.getHalf());
 
-			injuryContext.setSendToBoxReason(pInjuryType.sendToBoxReason());
+			injuryContext.setSendToBoxReason(injuryType.sendToBoxReason());
 		}
 
 		if (injuryContext.getPlayerState() != null) {

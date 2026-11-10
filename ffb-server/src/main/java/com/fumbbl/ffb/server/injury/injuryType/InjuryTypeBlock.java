@@ -17,6 +17,7 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.OptionalSkillModifierService;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
@@ -57,6 +58,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 			(mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomitLike(), isChainsaw());
+			new OptionalSkillModifierService().removeOptional(game, injuryModifiers);
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 
@@ -94,6 +96,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 				Set<ArmorModifier> armorModifiers =
 					armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 						isFoul());
+				new OptionalSkillModifierService().removeOptional(game, armorModifiers);
 				if (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES) {
 					// BB2025: Only apply Claws and Mighty Blow from attacker
 					armorModifiers = armorModifiers.stream()
@@ -160,6 +163,10 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.addArmorModifier(mb);
 		}
+	}
+
+	public Mode getMode() {
+		return mode;
 	}
 
 	public enum Mode {
