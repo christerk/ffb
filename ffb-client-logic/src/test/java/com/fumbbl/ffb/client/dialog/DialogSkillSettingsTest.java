@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JMenuBar;
@@ -162,10 +163,20 @@ class DialogSkillSettingsTest {
 		when(client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(reRollSetting);
 		when(client.getProperty(CommonProperty.SETTING_DODGE_BLOCK)).thenReturn(dodgeSetting);
 		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntries(reRollSetting, dodgeSetting), true);
+		AtomicInteger shownEvents = new AtomicInteger();
+		dialog.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
+			public void componentShown(java.awt.event.ComponentEvent event) {
+				shownEvents.incrementAndGet();
+			}
+		});
 
 		dialog.showDialog(closedDialog -> closedDialog.hideDialog());
 
 		assertFalse(dialog.isVisible());
+		assertEquals(0, shownEvents.get());
+		assertEquals(0, desktop.getComponentCount());
+		org.mockito.Mockito.verify(userInterface, never()).beginBackgroundInteractionBlock();
 	}
 
 	private FantasyFootballClient client() {

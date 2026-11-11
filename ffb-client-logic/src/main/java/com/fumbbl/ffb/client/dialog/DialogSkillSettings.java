@@ -144,10 +144,13 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 
 	@Override
 	public void showDialog(IDialogCloseListener closeListener) {
-		super.showDialog(closeListener);
 		if (closeIfConfigured) {
-			closeDialog();
+			if (closeListener != null) {
+				closeListener.dialogClosed(this);
+			}
+			return;
 		}
+		super.showDialog(closeListener);
 	}
 
 	private void updateSaveState() {
