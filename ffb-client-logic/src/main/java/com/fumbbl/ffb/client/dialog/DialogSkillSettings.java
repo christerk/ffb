@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
@@ -26,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.UIManager;
+
 public class DialogSkillSettings extends Dialog implements ActionListener {
 
 	public static final List<CommonProperty> SETTING_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
@@ -35,6 +38,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	private final Map<CommonProperty, Map<String, String>> settingEntries;
 	private final Map<CommonProperty, JComboBox<String>> settingBoxes = new LinkedHashMap<>();
 	private final Map<CommonProperty, JLabel> settingLabels = new LinkedHashMap<>();
+	private final Map<CommonProperty, JLabel> settingHelpLabels = new LinkedHashMap<>();
 	private final Map<CommonProperty, Border> defaultBoxBorders = new LinkedHashMap<>();
 	private final JButton saveButton;
 	private final JButton cancelButton;
@@ -74,8 +78,11 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			JComboBox<String> settingBox = createComboBox(entry.getValue(), client.getProperty(property));
 			JLabel settingLabel = new JLabel(dimensionProvider(),
 				client.getUserInterface().getGameMenuBar().menuName(property));
+			JLabel helpLabel = new JLabel(dimensionProvider(), UIManager.getIcon("OptionPane.questionIcon"));
+			helpLabel.setToolTipText(createTooltip(property, entry.getValue()));
 			settingBoxes.put(property, settingBox);
 			settingLabels.put(property, settingLabel);
+			settingHelpLabels.put(property, helpLabel);
 			defaultBoxBorders.put(property, settingBox.getBorder());
 			settingBox.addActionListener(event -> updateSaveState());
 		}
@@ -85,7 +92,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		GridBagConstraints sectionConstraints = new GridBagConstraints();
 		sectionConstraints.gridx = 0;
 		sectionConstraints.gridy = 0;
-		sectionConstraints.gridwidth = 2;
+		sectionConstraints.gridwidth = 3;
 		sectionConstraints.fill = GridBagConstraints.HORIZONTAL;
 		sectionConstraints.weightx = 1;
 		settingsPanel.add(sectionLabel, sectionConstraints);
@@ -106,6 +113,13 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			boxConstraints.weightx = 1;
 			boxConstraints.insets = new Insets(5, 0, 5, 0);
 			settingsPanel.add(settingBoxes.get(property), boxConstraints);
+
+			GridBagConstraints helpConstraints = new GridBagConstraints();
+			helpConstraints.gridx = 2;
+			helpConstraints.gridy = row;
+			helpConstraints.anchor = GridBagConstraints.CENTER;
+			helpConstraints.insets = new Insets(5, 5, 5, 0);
+			settingsPanel.add(settingHelpLabels.get(property), helpConstraints);
 			row++;
 		}
 		settingsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -136,6 +150,43 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(entries.get(selectedValue));
 		return box;
+	}
+
+	private String createTooltip(CommonProperty property, Map<String, String> entries) {
+		Map<String, String> descriptions = descriptions(property);
+		StringBuilder tooltip = new StringBuilder("<html>");
+		for (Map.Entry<String, String> entry : entries.entrySet()) {
+			if (tooltip.length() > "<html>".length()) {
+				tooltip.append("<br>");
+			}
+			tooltip.append("<b>").append(entry.getValue()).append("</b>: ")
+				.append(descriptions.getOrDefault(entry.getKey(), ""));
+		}
+		return tooltip.append("</html>").toString();
+	}
+
+	private Map<String, String> descriptions(CommonProperty property) {
+		Map<String, String> descriptions = new LinkedHashMap<>();
+		if (CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN.equals(property)) {
+			descriptions.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS,
+				"Ask before using an available re-roll on any scatter.");
+			descriptions.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT,
+				"Ask if the scatter does not hit an opponent.");
+			descriptions.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE,
+				"Ask only if the scatter hits a team-mate.");
+			descriptions.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER,
+				"Do not ask or use an available re-roll.");
+		} else if (CommonProperty.SETTING_DODGE_BLOCK.equals(property)) {
+			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS,
+				"Ask whenever Dodge or Watch Out! can be used against a Stumble.");
+			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE,
+				"Ask for a forced chain push, a first-turn push into the attacker’s half, or a push into a wide-zone row or end zone.");
+			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL,
+				"Ask for a forced chain push, a first-turn push into the attacker’s half, or a push into a sideline row or end zone.");
+			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER,
+				"Use Dodge or Watch Out! automatically without asking.");
+		}
+		return descriptions;
 	}
 
 	private boolean isConfigured(Map<String, String> entries, String value) {

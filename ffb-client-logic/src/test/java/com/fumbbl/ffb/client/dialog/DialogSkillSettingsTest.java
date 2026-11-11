@@ -47,16 +47,17 @@ class DialogSkillSettingsTest {
 	@Test
 	void requiredDialogHighlightsUnsetSettingsAndEnablesSaveOnlyWhenComplete() throws Exception {
 		FantasyFootballClient client = client();
-		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntries(
-			CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS,
-			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
+		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntriesWithAllOptions(), true);
 
 		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
 		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");
+		Map<CommonProperty, JLabel> settingHelpLabels = field(dialog, "settingHelpLabels");
 		JComboBox<String> reRollBox = settingBoxes.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 		JComboBox<String> dodgeBox = settingBoxes.get(CommonProperty.SETTING_DODGE_BLOCK);
 		JLabel reRollLabel = settingLabels.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 		JLabel dodgeLabel = settingLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
+		JLabel reRollHelp = settingHelpLabels.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		JLabel dodgeHelp = settingHelpLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
 		JButton saveButton = field(dialog, "saveButton");
 		JButton cancelButton = field(dialog, "cancelButton");
 
@@ -77,6 +78,20 @@ class DialogSkillSettingsTest {
 		assertEquals(0, tableLayout.getConstraints(reRollLabel).gridx);
 		assertEquals(1, tableLayout.getConstraints(reRollBox).gridx);
 		assertEquals(1, tableLayout.getConstraints(dodgeBox).gridx);
+		assertEquals(2, tableLayout.getConstraints(reRollHelp).gridx);
+		assertEquals(2, tableLayout.getConstraints(dodgeHelp).gridx);
+		assertTrue(reRollHelp.getIcon() != null);
+		assertTrue(dodgeHelp.getIcon() != null);
+		assertTrue(reRollHelp.getToolTipText().contains("Always"));
+		assertTrue(reRollHelp.getToolTipText().contains("When not hitting an opponent"));
+		assertTrue(reRollHelp.getToolTipText().contains("When hitting Team-mate"));
+		assertTrue(reRollHelp.getToolTipText().contains("Never"));
+		assertTrue(dodgeHelp.getToolTipText().contains("Always"));
+		assertTrue(dodgeHelp.getToolTipText().contains("Situational (whole wide zone)"));
+		assertTrue(dodgeHelp.getToolTipText().contains("<b>Situational</b>"));
+		assertTrue(dodgeHelp.getToolTipText().contains("Never"));
+		assertTrue(dodgeHelp.getToolTipText().contains("forced chain push"));
+		assertTrue(dodgeHelp.getToolTipText().contains("wide-zone row or end zone"));
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
@@ -204,6 +219,24 @@ class DialogSkillSettingsTest {
 		Map<CommonProperty, Map<String, String>> entries = new LinkedHashMap<>();
 		entries.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, entries(reRollSetting));
 		entries.put(CommonProperty.SETTING_DODGE_BLOCK, entries(dodgeSetting));
+		return entries;
+	}
+
+	private Map<CommonProperty, Map<String, String>> settingsEntriesWithAllOptions() {
+		Map<CommonProperty, Map<String, String>> entries = new LinkedHashMap<>();
+		Map<String, String> reRollEntries = new LinkedHashMap<>();
+		reRollEntries.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, "Always");
+		reRollEntries.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT, "When not hitting an opponent");
+		reRollEntries.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE, "When hitting Team-mate");
+		reRollEntries.put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER, "Never");
+		entries.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollEntries);
+
+		Map<String, String> dodgeEntries = new LinkedHashMap<>();
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS, "Always");
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Situational (whole wide zone)");
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Situational");
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER, "Never");
+		entries.put(CommonProperty.SETTING_DODGE_BLOCK, dodgeEntries);
 		return entries;
 	}
 
