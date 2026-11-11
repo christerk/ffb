@@ -35,7 +35,8 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	private final Map<CommonProperty, Map<String, String>> settingEntries;
 	private final Map<CommonProperty, JComboBox<String>> settingBoxes = new LinkedHashMap<>();
 	private final Map<CommonProperty, JLabel> settingLabels = new LinkedHashMap<>();
-	private final Map<CommonProperty, Border> defaultLabelBorders = new LinkedHashMap<>();
+	private final Map<CommonProperty, JPanel> settingRows = new LinkedHashMap<>();
+	private final Map<CommonProperty, Border> defaultRowBorders = new LinkedHashMap<>();
 	private final JButton saveButton;
 	private final JButton cancelButton;
 	private final boolean closeIfConfigured;
@@ -69,15 +70,6 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		sectionLabel.setFont(new Font(sectionLabel.getFont().getName(), Font.BOLD, sectionLabel.getFont().getSize()));
 		sectionLabel.setHorizontalAlignment(JLabel.CENTER);
 
-		JPanel settingsPanel = new JPanel();
-		settingsPanel.setLayout(new GridBagLayout());
-		GridBagConstraints sectionConstraints = new GridBagConstraints();
-		sectionConstraints.gridx = 0;
-		sectionConstraints.gridy = 0;
-		sectionConstraints.gridwidth = 2;
-		sectionConstraints.fill = GridBagConstraints.HORIZONTAL;
-		settingsPanel.add(sectionLabel, sectionConstraints);
-		int row = 1;
 		for (Map.Entry<CommonProperty, Map<String, String>> entry : this.settingEntries.entrySet()) {
 			CommonProperty property = entry.getKey();
 			JComboBox<String> settingBox = createComboBox(entry.getValue(), client.getProperty(property));
@@ -85,24 +77,37 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 				client.getUserInterface().getGameMenuBar().menuName(property));
 			settingBoxes.put(property, settingBox);
 			settingLabels.put(property, settingLabel);
-			defaultLabelBorders.put(property, settingLabel.getBorder());
-			GridBagConstraints labelConstraints = new GridBagConstraints();
-			labelConstraints.gridx = 0;
-			labelConstraints.gridy = row;
-			labelConstraints.anchor = GridBagConstraints.LINE_START;
-			labelConstraints.insets = new Insets(2, 0, 2, 2);
-			settingsPanel.add(settingLabel, labelConstraints);
-
-			GridBagConstraints boxConstraints = new GridBagConstraints();
-			boxConstraints.gridx = 1;
-			boxConstraints.gridy = row;
-			boxConstraints.anchor = GridBagConstraints.LINE_START;
-			boxConstraints.insets = new Insets(2, 0, 2, 0);
-			settingsPanel.add(settingBox, boxConstraints);
 			settingBox.addActionListener(event -> updateSaveState());
+		}
+
+		int labelColumnWidth = settingLabels.values().stream()
+			.mapToInt(label -> label.getPreferredSize().width).max().orElse(0);
+		JPanel settingsPanel = new JPanel();
+		settingsPanel.setLayout(new GridBagLayout());
+		GridBagConstraints sectionConstraints = new GridBagConstraints();
+		sectionConstraints.gridx = 0;
+		sectionConstraints.gridy = 0;
+		sectionConstraints.gridwidth = 2;
+		sectionConstraints.fill = GridBagConstraints.HORIZONTAL;
+		sectionConstraints.weightx = 1;
+		settingsPanel.add(sectionLabel, sectionConstraints);
+		int row = 1;
+		for (CommonProperty property : settingLabels.keySet()) {
+			JPanel settingRow = createSettingRow(settingLabels.get(property), settingBoxes.get(property), labelColumnWidth);
+			settingRows.put(property, settingRow);
+			defaultRowBorders.put(property, settingRow.getBorder());
+
+			GridBagConstraints rowConstraints = new GridBagConstraints();
+			rowConstraints.gridx = 0;
+			rowConstraints.gridy = row;
+			rowConstraints.gridwidth = 2;
+			rowConstraints.fill = GridBagConstraints.HORIZONTAL;
+			rowConstraints.weightx = 1;
+			rowConstraints.insets = new Insets(2, 0, 2, 0);
+			settingsPanel.add(settingRow, rowConstraints);
 			row++;
 		}
-		settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		settingsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -154,9 +159,34 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		saveButton.setEnabled(allSettingsSet);
 	}
 
+	private JPanel createSettingRow(JLabel label, JComboBox<String> comboBox, int labelColumnWidth) {
+		JPanel row = new JPanel(new GridBagLayout());
+		GridBagLayout layout = (GridBagLayout) row.getLayout();
+		layout.columnWidths = new int[]{labelColumnWidth, 5, 0};
+		layout.columnWeights = new double[]{0, 0, 1};
+
+		GridBagConstraints labelConstraints = new GridBagConstraints();
+		labelConstraints.gridx = 0;
+		labelConstraints.gridy = 0;
+		labelConstraints.anchor = GridBagConstraints.LINE_START;
+		labelConstraints.insets = new Insets(3, 5, 3, 0);
+		row.add(label, labelConstraints);
+
+		GridBagConstraints boxConstraints = new GridBagConstraints();
+		boxConstraints.gridx = 2;
+		boxConstraints.gridy = 0;
+		boxConstraints.anchor = GridBagConstraints.LINE_START;
+		boxConstraints.fill = GridBagConstraints.HORIZONTAL;
+		boxConstraints.weightx = 1;
+		boxConstraints.insets = new Insets(3, 0, 3, 5);
+		row.add(comboBox, boxConstraints);
+		return row;
+	}
+
 	private void highlight(CommonProperty property, boolean unset) {
 		JLabel label = settingLabels.get(property);
-		label.setBorder(unset ? BorderFactory.createLineBorder(Color.RED) : defaultLabelBorders.get(property));
+		settingRows.get(property).setBorder(unset
+			? BorderFactory.createLineBorder(Color.RED) : defaultRowBorders.get(property));
 		label.setFont(label.getFont().deriveFont(unset ? Font.BOLD : Font.PLAIN));
 	}
 

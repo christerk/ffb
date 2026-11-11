@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.border.LineBorder;
+import java.awt.GridBagLayout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -43,29 +44,34 @@ class DialogSkillSettingsTest {
 			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
 
 		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
-		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");
+		Map<CommonProperty, JPanel> settingRows = field(dialog, "settingRows");
 		JComboBox<String> reRollBox = settingBoxes.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 		JComboBox<String> dodgeBox = settingBoxes.get(CommonProperty.SETTING_DODGE_BLOCK);
+		JPanel reRollRow = settingRows.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		JPanel dodgeRow = settingRows.get(CommonProperty.SETTING_DODGE_BLOCK);
 		JButton saveButton = field(dialog, "saveButton");
 		JButton cancelButton = field(dialog, "cancelButton");
-		JLabel reRollLabel = settingLabels.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
-		JLabel dodgeLabel = settingLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
 
 		assertFalse(saveButton.isEnabled());
 		assertTrue(reRollBox.getSelectedIndex() < 0);
 		assertTrue(dodgeBox.getSelectedIndex() < 0);
-		assertTrue(reRollLabel.getBorder() instanceof LineBorder);
-		assertEquals(java.awt.Color.RED, ((LineBorder) reRollLabel.getBorder()).getLineColor());
-		assertTrue(dodgeLabel.getBorder() instanceof LineBorder);
-		assertEquals(java.awt.Color.RED, ((LineBorder) dodgeLabel.getBorder()).getLineColor());
+		assertTrue(reRollRow.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) reRollRow.getBorder()).getLineColor());
+		assertTrue(dodgeRow.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) dodgeRow.getBorder()).getLineColor());
+		assertEquals(5, ((GridBagLayout) reRollRow.getLayout()).columnWidths[1]);
+		JPanel contentPanel = (JPanel) dialog.getContentPane().getComponent(0);
+		JPanel settingsPanel = (JPanel) contentPanel.getComponent(0);
+		assertEquals(10, settingsPanel.getBorder().getBorderInsets(settingsPanel).left);
+		assertEquals(10, settingsPanel.getBorder().getBorderInsets(settingsPanel).top);
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
 		assertFalse(saveButton.isEnabled());
 		dodgeBox.setSelectedIndex(0);
 		assertTrue(saveButton.isEnabled());
-		assertFalse(reRollLabel.getBorder() instanceof LineBorder);
-		assertFalse(dodgeLabel.getBorder() instanceof LineBorder);
+		assertFalse(reRollRow.getBorder() instanceof LineBorder);
+		assertFalse(dodgeRow.getBorder() instanceof LineBorder);
 
 		saveButton.doClick();
 		assertTrue(dialog.isSaved());
