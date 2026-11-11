@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,6 +56,8 @@ class DialogSkillSettingsTest {
 		assertTrue(dodgeBox.getSelectedIndex() < 0);
 		assertTrue(reRollLabel.isOpaque());
 		assertTrue(dodgeLabel.isOpaque());
+		assertEquals(new Color(255, 150, 150), reRollLabel.getBackground());
+		assertEquals(new Color(255, 150, 150), dodgeLabel.getBackground());
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
