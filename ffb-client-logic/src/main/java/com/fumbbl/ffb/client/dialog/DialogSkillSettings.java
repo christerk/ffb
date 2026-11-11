@@ -11,12 +11,13 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	private final Map<CommonProperty, Map<String, String>> settingEntries;
 	private final Map<CommonProperty, JComboBox<String>> settingBoxes = new LinkedHashMap<>();
 	private final Map<CommonProperty, JLabel> settingLabels = new LinkedHashMap<>();
-	private final Map<CommonProperty, Color> defaultLabelBackgrounds = new LinkedHashMap<>();
+	private final Map<CommonProperty, Border> defaultLabelBorders = new LinkedHashMap<>();
 	private final JButton saveButton;
 	private final JButton cancelButton;
 	private final boolean closeIfConfigured;
@@ -84,7 +85,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 				client.getUserInterface().getGameMenuBar().menuName(property));
 			settingBoxes.put(property, settingBox);
 			settingLabels.put(property, settingLabel);
-			defaultLabelBackgrounds.put(property, settingLabel.getBackground());
+			defaultLabelBorders.put(property, settingLabel.getBorder());
 			GridBagConstraints labelConstraints = new GridBagConstraints();
 			labelConstraints.gridx = 0;
 			labelConstraints.gridy = row;
@@ -155,8 +156,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 
 	private void highlight(CommonProperty property, boolean unset) {
 		JLabel label = settingLabels.get(property);
-		label.setOpaque(unset);
-		label.setBackground(unset ? new Color(255, 150, 150) : defaultLabelBackgrounds.get(property));
+		label.setBorder(unset ? BorderFactory.createLineBorder(Color.RED) : defaultLabelBorders.get(property));
 		label.setFont(label.getFont().deriveFont(unset ? Font.BOLD : Font.PLAIN));
 	}
 

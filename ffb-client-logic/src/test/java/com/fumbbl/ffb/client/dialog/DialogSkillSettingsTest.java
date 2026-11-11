@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.border.LineBorder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -54,18 +54,18 @@ class DialogSkillSettingsTest {
 		assertFalse(saveButton.isEnabled());
 		assertTrue(reRollBox.getSelectedIndex() < 0);
 		assertTrue(dodgeBox.getSelectedIndex() < 0);
-		assertTrue(reRollLabel.isOpaque());
-		assertTrue(dodgeLabel.isOpaque());
-		assertEquals(new Color(255, 150, 150), reRollLabel.getBackground());
-		assertEquals(new Color(255, 150, 150), dodgeLabel.getBackground());
+		assertTrue(reRollLabel.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) reRollLabel.getBorder()).getLineColor());
+		assertTrue(dodgeLabel.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) dodgeLabel.getBorder()).getLineColor());
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
 		assertFalse(saveButton.isEnabled());
 		dodgeBox.setSelectedIndex(0);
 		assertTrue(saveButton.isEnabled());
-		assertFalse(reRollLabel.isOpaque());
-		assertFalse(dodgeLabel.isOpaque());
+		assertFalse(reRollLabel.getBorder() instanceof LineBorder);
+		assertFalse(dodgeLabel.getBorder() instanceof LineBorder);
 
 		saveButton.doClick();
 		assertTrue(dialog.isSaved());
