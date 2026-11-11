@@ -53,6 +53,12 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 	public static final FieldCoordinateBounds ENDZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(25, 0),
 			new FieldCoordinate(25, 14));
 
+	public static final FieldCoordinateBounds ENDZONE_HOME_WIDE_ZONE = new FieldCoordinateBounds(
+			new FieldCoordinate(0, 0), new FieldCoordinate(3, 14));
+
+	public static final FieldCoordinateBounds ENDZONE_AWAY_WIDE_ZONE = new FieldCoordinateBounds(
+			new FieldCoordinate(22, 0), new FieldCoordinate(25, 14));
+
 	public static final FieldCoordinateBounds SIDELINE_UPPER = new FieldCoordinateBounds(new FieldCoordinate(1, 0),
 			new FieldCoordinate(24, 0));
 

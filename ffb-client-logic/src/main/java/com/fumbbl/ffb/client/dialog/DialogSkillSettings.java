@@ -180,7 +180,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS,
 				"Ask whenever Dodge or Watch Out! can be used against a Stumble.");
 			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE,
-				"Ask for a forced chain push, a first-turn push into the attacker’s half, or a push into a wide-zone row or end zone.");
+				"Ask for a forced chain push, a first-turn push into the attacker’s half, or a push into a wide-zone row or a four-square-deep endzone area.");
 			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL,
 				"Ask for a forced chain push, a first-turn push into the attacker’s half, or a push into a sideline row or end zone.");
 			descriptions.put(CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER,

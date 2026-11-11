@@ -154,6 +154,25 @@ public class DodgeBlockSettingTest {
 	}
 
 	@Test
+	public void wideZoneAsksInExtendedEndzoneAreas() {
+		GameState awayEndzoneState = buildStateAtX("BB2025", 20, 21, OPEN_FIELD_Y, false, true);
+		setting(awayEndzoneState, CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE);
+		assertDialogShown(awayEndzoneState, stumble(awayEndzoneState, "home1", "away1"));
+
+		GameState homeEndzoneState = buildStateAtX("BB2025", 5, 4, OPEN_FIELD_Y, false, true);
+		setting(homeEndzoneState, CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE);
+		assertDialogShown(homeEndzoneState, stumble(homeEndzoneState, "home1", "away1"));
+	}
+
+	@Test
+	public void situationalDoesNotAskOutsideEndzoneLines() {
+		GameState awayEndzoneState = buildStateAtX("BB2025", 20, 21, OPEN_FIELD_Y, false, true);
+		setting(awayEndzoneState, CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL);
+
+		assertNoDialogAndDodgeUsed(awayEndzoneState, stumble(awayEndzoneState, "home1", "away1"));
+	}
+
+	@Test
 	public void settingOfAttackingCoachIsIgnored() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
 		state.setGameplaySetting(true, CommonProperty.SETTING_DODGE_BLOCK, CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER);
@@ -253,22 +272,27 @@ public class DodgeBlockSettingTest {
 	}
 
 	private GameState buildState(String rules, int y, boolean chainPush, boolean defenderHasTackleZones) {
+		return buildStateAtX(rules, 15, 16, y, chainPush, defenderHasTackleZones);
+	}
+
+	private GameState buildStateAtX(String rules, int attackerX, int defenderX, int y, boolean chainPush,
+	                                boolean defenderHasTackleZones) {
 		GameState state = new GameStateBuilder(testServer.getGameState())
 			.withRule(rules)
 			.withTeam(true, t -> t
-				.player("home1", p -> p.at(15, y).stats(6, 3, 3, 5, 8)))
+				.player("home1", p -> p.at(attackerX, y).stats(6, 3, 3, 5, 8)))
 			.withTeam(false, t -> {
 				t.player("away1", p -> {
-					p.at(16, y).stats(6, 3, 3, 5, 8).skill("Dodge");
+					p.at(defenderX, y).stats(6, 3, 3, 5, 8).skill("Dodge");
 					if (!defenderHasTackleZones) {
 						p.state(new PlayerState(PlayerState.STANDING).changeConfused(true));
 					}
 				});
 				if (chainPush) {
 					// a chain push is only forced when every pushback square is occupied
-					t.player("away2", p -> p.at(17, y - 1).stats(6, 3, 3, 5, 8))
-						.player("away3", p -> p.at(17, y).stats(6, 3, 3, 5, 8))
-						.player("away4", p -> p.at(17, y + 1).stats(6, 3, 3, 5, 8));
+					t.player("away2", p -> p.at(defenderX + 1, y - 1).stats(6, 3, 3, 5, 8))
+						.player("away3", p -> p.at(defenderX + 1, y).stats(6, 3, 3, 5, 8))
+						.player("away4", p -> p.at(defenderX + 1, y + 1).stats(6, 3, 3, 5, 8));
 				}
 			})
 			.build();

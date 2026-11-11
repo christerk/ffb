@@ -37,9 +37,11 @@ public class DodgeBlockChoiceService {
 			case CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER:
 				return false;
 			case CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL:
-				return isCriticalPush(game, SIDELINE_ROWS);
+				return isCriticalPush(game, SIDELINE_ROWS,
+					FieldCoordinateBounds.ENDZONE_HOME, FieldCoordinateBounds.ENDZONE_AWAY);
 			case CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE:
-				return isCriticalPush(game, WIDE_ZONE_ROWS);
+				return isCriticalPush(game, WIDE_ZONE_ROWS,
+					FieldCoordinateBounds.ENDZONE_HOME_WIDE_ZONE, FieldCoordinateBounds.ENDZONE_AWAY_WIDE_ZONE);
 			default:
 				return true;
 		}
@@ -52,7 +54,8 @@ public class DodgeBlockChoiceService {
 	 * attackers half.
 	 * 3: the defender could be pushed into one of the given sideline rows or into an end zone.
 	 */
-	private boolean isCriticalPush(Game game, FieldCoordinateBounds[] sidelineRows) {
+	private boolean isCriticalPush(Game game, FieldCoordinateBounds[] sidelineRows,
+	                               FieldCoordinateBounds... endzoneBounds) {
 
 		boolean chainPush = false;
 		boolean sidelinePush = false;
@@ -86,9 +89,7 @@ public class DodgeBlockChoiceService {
 			if (ArrayTool.isProvided(regularPushbackSquares)) {
 				for (PushbackSquare pushbackSquare : grabPushbackSquares) {
 					FieldCoordinate coordinate = pushbackSquare.getCoordinate();
-					if (isInAny(coordinate, sidelineRows)
-						|| FieldCoordinateBounds.ENDZONE_HOME.isInBounds(coordinate)
-						|| FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(coordinate)) {
+					if (isInAny(coordinate, sidelineRows) || isInAny(coordinate, endzoneBounds)) {
 						sidelinePush = true;
 					}
 					if ((game.getTeamHome().hasPlayer(attacker) && FieldCoordinateBounds.HALF_HOME.isInBounds(coordinate)
