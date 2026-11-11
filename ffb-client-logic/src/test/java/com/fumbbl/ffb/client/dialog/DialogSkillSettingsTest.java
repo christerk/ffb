@@ -6,32 +6,39 @@ import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.ui.SideBarComponent;
+import com.fumbbl.ffb.client.ui.TurnDiceStatusComponent;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.swing.JDesktopPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.border.LineBorder;
-import java.awt.GridBagLayout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class DialogSkillSettingsTest {
@@ -44,34 +51,39 @@ class DialogSkillSettingsTest {
 			CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS), true);
 
 		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
-		Map<CommonProperty, JPanel> settingRows = field(dialog, "settingRows");
+		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");
 		JComboBox<String> reRollBox = settingBoxes.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 		JComboBox<String> dodgeBox = settingBoxes.get(CommonProperty.SETTING_DODGE_BLOCK);
-		JPanel reRollRow = settingRows.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
-		JPanel dodgeRow = settingRows.get(CommonProperty.SETTING_DODGE_BLOCK);
+		JLabel reRollLabel = settingLabels.get(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		JLabel dodgeLabel = settingLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
 		JButton saveButton = field(dialog, "saveButton");
 		JButton cancelButton = field(dialog, "cancelButton");
 
 		assertFalse(saveButton.isEnabled());
 		assertTrue(reRollBox.getSelectedIndex() < 0);
 		assertTrue(dodgeBox.getSelectedIndex() < 0);
-		assertTrue(reRollRow.getBorder() instanceof LineBorder);
-		assertEquals(java.awt.Color.RED, ((LineBorder) reRollRow.getBorder()).getLineColor());
-		assertTrue(dodgeRow.getBorder() instanceof LineBorder);
-		assertEquals(java.awt.Color.RED, ((LineBorder) dodgeRow.getBorder()).getLineColor());
-		assertEquals(5, ((GridBagLayout) reRollRow.getLayout()).columnWidths[1]);
+		assertTrue(reRollBox.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) reRollBox.getBorder()).getLineColor());
+		assertTrue(dodgeBox.getBorder() instanceof LineBorder);
+		assertEquals(java.awt.Color.RED, ((LineBorder) dodgeBox.getBorder()).getLineColor());
+		assertFalse(reRollLabel.getBorder() instanceof LineBorder);
 		JPanel contentPanel = (JPanel) dialog.getContentPane().getComponent(0);
 		JPanel settingsPanel = (JPanel) contentPanel.getComponent(0);
 		assertEquals(10, settingsPanel.getBorder().getBorderInsets(settingsPanel).left);
 		assertEquals(10, settingsPanel.getBorder().getBorderInsets(settingsPanel).top);
+		GridBagLayout tableLayout = (GridBagLayout) settingsPanel.getLayout();
+		assertEquals(5, tableLayout.getConstraints(reRollLabel).insets.right);
+		assertEquals(0, tableLayout.getConstraints(reRollLabel).gridx);
+		assertEquals(1, tableLayout.getConstraints(reRollBox).gridx);
+		assertEquals(1, tableLayout.getConstraints(dodgeBox).gridx);
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
 		assertFalse(saveButton.isEnabled());
 		dodgeBox.setSelectedIndex(0);
 		assertTrue(saveButton.isEnabled());
-		assertFalse(reRollRow.getBorder() instanceof LineBorder);
-		assertFalse(dodgeRow.getBorder() instanceof LineBorder);
+		assertFalse(reRollBox.getBorder() instanceof LineBorder);
+		assertFalse(dodgeBox.getBorder() instanceof LineBorder);
 
 		saveButton.doClick();
 		assertTrue(dialog.isSaved());
@@ -114,6 +126,26 @@ class DialogSkillSettingsTest {
 		dialog.hideDialog();
 		assertTrue(backgroundButton.isEnabled());
 		assertTrue(menuItem.isEnabled());
+		org.mockito.Mockito.verify(userInterface).beginBackgroundInteractionBlock();
+		org.mockito.Mockito.verify(userInterface).endBackgroundInteractionBlock();
+	}
+
+	@Test
+	void endTurnControlIgnoresClicksWhileRequiredDialogIsOpen() {
+		FantasyFootballClient client = mock(FantasyFootballClient.class);
+		UserInterface userInterface = mock(UserInterface.class);
+		SideBarComponent sideBar = mock(SideBarComponent.class);
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		when(client.getUserInterface()).thenReturn(userInterface);
+		when(sideBar.getClient()).thenReturn(client);
+		when(userInterface.isBackgroundInteractionBlocked()).thenReturn(true);
+		TurnDiceStatusComponent component = new TurnDiceStatusComponent(sideBar,
+			new UiDimensionProvider(settings), new StyleProvider());
+
+		component.mouseReleased(new MouseEvent(new JPanel(), MouseEvent.MOUSE_RELEASED,
+			System.currentTimeMillis(), 0, 0, 0, 1, false));
+
+		verify(client, never()).getGame();
 	}
 
 	@Test

@@ -39,6 +39,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private final FantasyFootballClient fClient;
 	private IDialog currentDialog;
+	private int backgroundInteractionBlockCount;
 	private final FieldComponent fFieldComponent;
 	private final StatusReport fStatusReport;
 	private final SideBarComponent fSideBarHome;
@@ -293,6 +294,20 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public DialogManager getDialogManager() {
 		return fDialogManager;
+	}
+
+	public synchronized void beginBackgroundInteractionBlock() {
+		backgroundInteractionBlockCount++;
+	}
+
+	public synchronized void endBackgroundInteractionBlock() {
+		if (backgroundInteractionBlockCount > 0) {
+			backgroundInteractionBlockCount--;
+		}
+	}
+
+	public synchronized boolean isBackgroundInteractionBlocked() {
+		return backgroundInteractionBlockCount > 0;
 	}
 
 	public MarkerService getMarkerService() {

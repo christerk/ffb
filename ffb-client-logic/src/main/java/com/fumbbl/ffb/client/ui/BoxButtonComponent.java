@@ -208,6 +208,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (getSideBar().getClient().getUserInterface().isBackgroundInteractionBlocked()) {
+			return;
+		}
 		BoxType newBox = findBoxTypeForLocation(pMouseEvent.getPoint());
 		if (newBox != null) {
 			if (newBox != fOpenBox) {

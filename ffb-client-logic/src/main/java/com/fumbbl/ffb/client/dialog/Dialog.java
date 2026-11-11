@@ -41,6 +41,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private boolean fChatInputFocus;
 	private DialogKeyGuard keyGuard;
 	private boolean blockBackgroundInteraction;
+	private boolean backgroundInteractionBlockRegistered;
 	private final Map<java.awt.Component, Boolean> backgroundEnabledStates = new IdentityHashMap<>();
 
 	private final JPanel contentPanel;
@@ -74,6 +75,10 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			fChatInputFocus = userInterface.getChat().hasChatInputFocus();
 			userInterface.getDesktop().add(Dialog.this);
 			if (blockBackgroundInteraction) {
+				if (!backgroundInteractionBlockRegistered) {
+					userInterface.beginBackgroundInteractionBlock();
+					backgroundInteractionBlockRegistered = true;
+				}
 				restoreBackgroundInteraction();
 				disableBackgroundInteraction(userInterface.getRootPane(), Dialog.this);
 			}
@@ -98,6 +103,10 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 				}
 			}
 			restoreBackgroundInteraction();
+			if (backgroundInteractionBlockRegistered) {
+				getClient().getUserInterface().endBackgroundInteractionBlock();
+				backgroundInteractionBlockRegistered = false;
+			}
 		});
 	}
 
