@@ -49,7 +49,7 @@ class DialogSkillSettingsTest {
 	void requiredDialogHighlightsUnsetSettingsAndEnablesSaveOnlyWhenComplete() throws Exception {
 		FantasyFootballClient client = client();
 		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntriesWithAllOptions(), true);
-		assertFalse(ToolTipManager.sharedInstance().isLightWeightPopupEnabled());
+		assertTrue(ToolTipManager.sharedInstance().isLightWeightPopupEnabled());
 
 		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
 		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");
