@@ -31,6 +31,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.ToolTipManager;
 import javax.swing.border.LineBorder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,6 +49,7 @@ class DialogSkillSettingsTest {
 	void requiredDialogHighlightsUnsetSettingsAndEnablesSaveOnlyWhenComplete() throws Exception {
 		FantasyFootballClient client = client();
 		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntriesWithAllOptions(), true);
+		assertFalse(ToolTipManager.sharedInstance().isLightWeightPopupEnabled());
 
 		Map<CommonProperty, JComboBox<String>> settingBoxes = field(dialog, "settingBoxes");
 		Map<CommonProperty, JLabel> settingLabels = field(dialog, "settingLabels");

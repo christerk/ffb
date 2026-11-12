@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -54,6 +55,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 	                           Map<CommonProperty, Map<String, String>> settingEntries, boolean required) {
 		super(client, "Skill settings", false);
 		setBlockBackgroundInteraction(required);
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		this.settingEntries = new LinkedHashMap<>();
 		for (CommonProperty property : SETTING_PROPERTIES) {
 			Map<String, String> entries = settingEntries.get(property);
@@ -201,6 +203,8 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			}
 			return;
 		}
+		pack();
+		setLocationToCenter();
 		super.showDialog(closeListener);
 	}
 
