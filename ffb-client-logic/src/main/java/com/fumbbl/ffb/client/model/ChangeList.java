@@ -86,6 +86,7 @@ public class ChangeList {
 		);
 
 		versions.add(new VersionChangeList("3.3.0")
+			.addImprovement("Reworked the game client layout so pitch, team rails, and information panels resize as one composition")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")
 			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")

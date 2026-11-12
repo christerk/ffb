@@ -38,8 +38,9 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private FieldCoordinate fMarkerCoordinate;
 
-	public FieldLayerOverPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerOverPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+															 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void removeThrownPlayer() {
@@ -70,7 +71,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if (pPushbackSquare != null) {
 			clear(pPushbackSquare.getCoordinate(), true);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			Direction localDirection = pitchDimensionProvider.mapToLocal(pPushbackSquare.getDirection());
+			Direction localDirection = pitchViewport.toLocal(pPushbackSquare.getDirection());
 			BufferedImage pushbackIcon = iconCache.getPushbackIcon(localDirection, pPushbackSquare.isSelected(), pitchDimensionProvider);
 			draw(pushbackIcon, pPushbackSquare.getCoordinate(), 1.0f);
 		}
@@ -125,15 +126,15 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				clear(pMoveSquare.getCoordinate(), true);
 			}
 
-			Dimension dimensionWithOffset = pitchDimensionProvider.mapToLocal(pMoveSquare.getCoordinate(), true);
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pMoveSquare.getCoordinate());
+			Dimension dimensionWithOffset = pitchViewport.toLocal(pMoveSquare.getCoordinate(), true);
+			Dimension dimension = pitchViewport.toLocal(pMoveSquare.getCoordinate());
 			int x = dimension.width + 2;
 			int y = dimension.height + 2;
 			Graphics2D g2d = getImage().createGraphics();
 			GraphicsEnhancer.applyAAHints(g2d);
 
 			g2d.setPaint(COLOR_MOVE_SQUARE);
-			Rectangle bounds = new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 4, pitchDimensionProvider.fieldSquareSize() - 4);
+			Rectangle bounds = new Rectangle(x, y, pitchViewport.squareSize() - 4, pitchViewport.squareSize() - 4);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
 			g2d.setColor(COLOR_TARGET_NUMBER);
@@ -209,7 +210,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			Dimension dimension = pitchDimensionProvider.mapToLocal(fMarkerCoordinate);
+			Dimension dimension = pitchViewport.toLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty, pitchDimensionProvider);
@@ -232,7 +233,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			Dimension dimension = pitchDimensionProvider.mapToLocal(fMarkerCoordinate);
+			Dimension dimension = pitchViewport.toLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL, pitchDimensionProvider);
@@ -269,8 +270,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, pitchViewport.squareSize() - 2, pitchViewport.squareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

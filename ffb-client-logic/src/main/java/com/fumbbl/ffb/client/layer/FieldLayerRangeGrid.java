@@ -20,8 +20,9 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private FieldCoordinate fCenterCoordinate;
 
-	public FieldLayerRangeGrid(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerRangeGrid(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+														 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {
@@ -58,10 +59,10 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate);
 			int x = dimension.width;
 			int y = dimension.height;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(x + 1, y + 1, pitchViewport.squareSize() - 2, pitchViewport.squareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

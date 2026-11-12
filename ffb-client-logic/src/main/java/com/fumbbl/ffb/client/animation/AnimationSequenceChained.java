@@ -23,12 +23,13 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 
 	public static AnimationSequenceChained createAnimationSequenceTrickster(FantasyFootballClient client, Animation animation) {
 		PitchDimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
+		PitchViewport pitchViewport = client.getUserInterface().getPitchViewport();
 		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
 		Player<?> player = client.getGame().getPlayerById(animation.getThrownPlayerId());
 		BufferedImage icon = playerIconFactory.getIcon(client, player, dimensionProvider);
 
 		return new AnimationSequenceChained(
-			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),
+			new AnimationData(pitchViewport.toLocal(animation.getStartCoordinate(), true),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 1.0d, icon, 1.0f, 1.0d,120, SoundId.HYPNO),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_2, 0.6f, 1.0d, icon, 0.9f, 0.95d,120),
@@ -39,7 +40,7 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, icon, 0.2f, 0.2d,120),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, icon, 0.0f, 0.05d,120),
 				}),
-			new AnimationData(dimensionProvider.mapToLocal(animation.getEndCoordinate(), true),
+			new AnimationData(pitchViewport.toLocal(animation.getEndCoordinate(), true),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_1, 0.8f, 0.6d, 120, SoundId.BLUNDER),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_2, 0.6f, 0.6d, icon, 0.2f, 0.2d,120),
@@ -64,16 +65,16 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 
 
 	public static AnimationSequenceChained createAnimationSequenceBlastin(FantasyFootballClient client, Animation animation) {
-		PitchDimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
+		PitchViewport pitchViewport = client.getUserInterface().getPitchViewport();
 
 		return new AnimationSequenceChained(
-			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),
+			new AnimationData(pitchViewport.toLocal(animation.getStartCoordinate(), true),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_1, 0.8f, 0.5d, 60, SoundId.BLUNDER),
 					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_1, 1.0f, 0.35d, 60),
 					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_2, 1.0f, 0.15d,60),
 				}),
-			new AnimationData(dimensionProvider.mapToLocal(animation.getEndCoordinate(), true),
+			new AnimationData(pitchViewport.toLocal(animation.getEndCoordinate(), true),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_1, 0.8f, 0.6d,  120, SoundId.EXPLODE),
 					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_2, 0.6f, 0.6d, 120),
