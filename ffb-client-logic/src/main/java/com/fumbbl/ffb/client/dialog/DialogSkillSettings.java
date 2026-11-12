@@ -11,16 +11,22 @@ import com.fumbbl.ffb.dialog.DialogId;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDesktopPane;
+import javax.swing.JToolTip;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -78,7 +84,7 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 			JComboBox<String> settingBox = createComboBox(entry.getValue(), client.getProperty(property));
 			JLabel settingLabel = new JLabel(dimensionProvider(),
 				client.getUserInterface().getGameMenuBar().menuName(property));
-			JLabel helpLabel = new JLabel(dimensionProvider(), UIManager.getIcon("OptionPane.questionIcon"));
+			JLabel helpLabel = new BoundedTooltipLabel(UIManager.getIcon("OptionPane.questionIcon"));
 			helpLabel.setToolTipText(createTooltip(property, entry.getValue()));
 			settingBoxes.put(property, settingBox);
 			settingLabels.put(property, settingLabel);
@@ -150,6 +156,73 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(entries.get(selectedValue));
 		return box;
+	}
+
+	private class BoundedTooltipLabel extends JLabel {
+
+		private BoundedTooltipLabel(javax.swing.Icon icon) {
+			super(dimensionProvider(), icon);
+		}
+
+		@Override
+		public JToolTip createToolTip() {
+			JToolTip tooltip = new JToolTip() {
+				@Override
+				public void setTipText(String tipText) {
+					super.setTipText(wrapTooltip(tipText));
+				}
+			};
+			tooltip.setComponent(this);
+			return tooltip;
+		}
+
+		@Override
+		public Point getToolTipLocation(MouseEvent event) {
+			JDesktopPane desktop = getClient().getUserInterface().getDesktop();
+			if (event == null || !desktop.isShowing() || !isShowing()) {
+				return null;
+			}
+			try {
+				Point desktopLocation = desktop.getLocationOnScreen();
+				Point labelLocation = getLocationOnScreen();
+				Rectangle bounds = new Rectangle(desktopLocation, desktop.getSize());
+				JToolTip tooltip = createToolTip();
+				tooltip.setComponent(this);
+				tooltip.setTipText(getToolTipText());
+				Dimension tooltipSize = tooltip.getPreferredSize();
+
+				int x = labelLocation.x + event.getX() + 12;
+				int y = labelLocation.y + event.getY() + 20;
+				if (x + tooltipSize.width > bounds.x + bounds.width) {
+					x = bounds.x + bounds.width - tooltipSize.width - 5;
+				}
+				if (x < bounds.x + 5) {
+					x = bounds.x + 5;
+				}
+				if (y + tooltipSize.height > bounds.y + bounds.height) {
+					y = labelLocation.y + event.getY() - tooltipSize.height - 5;
+				}
+				if (y < bounds.y + 5) {
+					y = bounds.y + 5;
+				}
+				return new Point(x - labelLocation.x, y - labelLocation.y);
+			} catch (java.awt.IllegalComponentStateException exception) {
+				return null;
+			}
+		}
+
+		private String wrapTooltip(String tipText) {
+			if (tipText == null) {
+				return null;
+			}
+			JDesktopPane desktop = getClient().getUserInterface().getDesktop();
+			int width = Math.max(1, desktop.getWidth() - 20);
+			String content = tipText.startsWith("<html>") ? tipText.substring(6) : tipText;
+			if (content.endsWith("</html>")) {
+				content = content.substring(0, content.length() - 7);
+			}
+			return "<html><body width='" + width + "'>" + content + "</body></html>";
+		}
 	}
 
 	private String createTooltip(CommonProperty property, Map<String, String> entries) {
