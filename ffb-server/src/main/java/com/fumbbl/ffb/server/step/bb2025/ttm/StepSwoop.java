@@ -82,9 +82,11 @@ public class StepSwoop extends AbstractStep {
 				executeSwoop();
 			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL) {
 				ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
-				state.reRollSource = clientCommandUseReRoll.getReRollSource();
-				state.reRolledAction = clientCommandUseReRoll.getReRolledAction();
-				executeSwoop();
+				if (isReRollSourceOffered(clientCommandUseReRoll.getReRolledAction(), clientCommandUseReRoll.getReRollSource(), null)) {
+					state.reRollSource = clientCommandUseReRoll.getReRollSource();
+					state.reRolledAction = clientCommandUseReRoll.getReRolledAction();
+					executeSwoop();
+				}
 			}
 		}
 

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.overlay.Overlay;
 import com.fumbbl.ffb.client.overlay.PathSketchOverlay;
+import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -17,7 +18,6 @@ import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Insets;
 import java.io.IOException;
@@ -38,13 +38,13 @@ import java.util.stream.Collectors;
  * @author Kalimar
  */
 public class FantasyFootballClientAwt extends FantasyFootballClient {
-	private final UserInterface fUserInterface;
+	private UserInterface fUserInterface;
 	private Properties fProperties;
-	private final ActionKeyBindings fActionKeyBindings;
-	private final ClientReplayer fReplayer;
+	private ActionKeyBindings fActionKeyBindings;
+	private ClientReplayer fReplayer;
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
-	private final PathSketchOverlay pathSketchOverlay;
+	private PathSketchOverlay pathSketchOverlay;
 
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
@@ -56,6 +56,17 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		super(pParameters);
 		logger = new ClientLogger(getLogFolder(), logEnabled(), gameId());
 
+		// loading the icon definitions and initializing sound do not touch Swing components, doing them on the calling
+		// thread keeps the event dispatch thread responsive during startup
+		IconCache iconCache = new IconCache(this);
+		iconCache.init();
+		SoundEngine soundEngine = new SoundEngine(this);
+		soundEngine.init();
+
+		uiDispatcher.runOnUiThreadAndWait(() -> createUserInterface(iconCache, soundEngine));
+	}
+
+	private void createUserInterface(IconCache iconCache, SoundEngine soundEngine) {
 		fActionKeyBindings = new ActionKeyBindings(this);
 
 		try {
@@ -68,7 +79,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		fReplayer = new ClientReplayer(this);
 
-		fUserInterface = new UserInterface(this);
+		fUserInterface = new UserInterface(this, iconCache, soundEngine);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 		fUserInterface.getGameMenuBar().refresh();
@@ -169,15 +180,11 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 				System.out.println(ClientParameters.USAGE);
 				return;
 			}
-			// the whole user interface has to be created on the event dispatch thread
-			SwingUtilities.invokeAndWait(() -> {
-				try {
-					FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
-					client.showUserInterface();
-				} catch (Exception all) {
-					all.printStackTrace(System.err);
-				}
-			});
+			// only the user interface is created on the event dispatch thread, everything else is set up on this thread.
+			// Blocking the event dispatch thread for seconds during startup can hang the client under OpenWebStart, when
+			// focus events of its own windows (e.g. the Java console) pile up behind the blocked event dispatch thread
+			FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
+			client.showUserInterface();
 		} catch (Exception all) {
 			all.printStackTrace(System.err);
 		}

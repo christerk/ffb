@@ -70,7 +70,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 
-	public UserInterface(FantasyFootballClient pClient) {
+	/**
+	 * @param iconCache   an already initialized icon cache
+	 * @param soundEngine an already initialized sound engine
+	 */
+	public UserInterface(FantasyFootballClient pClient, IconCache iconCache, SoundEngine soundEngine) {
 
 		markerService = new MarkerService();
 
@@ -90,12 +94,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
 		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
-		fIconCache = new IconCache(getClient());
-		fIconCache.init();
+		fIconCache = iconCache;
 		fontCache = new FontCache();
-		fSoundEngine = new SoundEngine(getClient());
+		fSoundEngine = soundEngine;
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
-		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
 		clickStrategyRegistry = new ClickStrategyRegistry();

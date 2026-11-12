@@ -77,7 +77,8 @@ public class StepFoulAppearanceMultiple extends AbstractStepMultiple {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL_FOR_TARGET) {
 				ClientCommandUseReRollForTarget command = (ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
-				if (command.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE) {
+				if (command.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE
+					&& isReRollSourceOffered(ReRolledActions.FOUL_APPEARANCE, command.getReRollSource(), command.getTargetId())) {
 					if (reRollSourceSuccessfully(command.getReRollSource())) {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

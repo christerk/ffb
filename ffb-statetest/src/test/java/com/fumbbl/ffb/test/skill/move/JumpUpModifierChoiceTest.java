@@ -697,7 +697,8 @@ class JumpUpModifierChoiceTest {
 		step.start();
 		assertEquals(2, dialog(state).getRoll());
 		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
-		assertEquals(StepCommandStatus.EXECUTE_STEP, step.handleCommand(new ReceivedCommand(
+		// the spent team re-roll is no longer offered, so sending it again is ignored
+		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
 			new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL), null)));
 		chooseModifier(state);
 		assertEquals(PlayerState.MOVING, playerState(state).getBase());

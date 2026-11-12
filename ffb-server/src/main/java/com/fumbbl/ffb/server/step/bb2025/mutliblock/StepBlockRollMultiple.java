@@ -8,6 +8,8 @@ import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSourceComposer;
+import com.fumbbl.ffb.ReRollSourceComposition;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -18,7 +20,6 @@ import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -27,7 +28,6 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -157,6 +157,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				case CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET:
 					ClientCommandBlockOrReRollChoiceForTarget command =
 						(ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
+					// without a re-roll source the command is a block die choice, which can also come from the defender's dialog
+					if (command.getReRollSource() != null
+						&& !isReRollSourceOffered(ReRolledActions.BLOCK, command.getReRollSource(), command.getTargetId())) {
+						break;
+					}
 					if (reRollSourceSuccessfully(command.getReRollSource())) {
 						stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -173,12 +178,18 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 				case CLIENT_USE_BRAWLER:
 					ClientCommandUseBrawler brawlerCommand = (ClientCommandUseBrawler) pReceivedCommand.getCommand();
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.BRAWLER, brawlerCommand.getTargetId())) {
+						break;
+					}
 					state.reRollSource = ReRollSources.BRAWLER;
 					state.selectedTarget = brawlerCommand.getTargetId();
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_HATRED:
 					ClientCommandUseHatred hatredCommand = (ClientCommandUseHatred) pReceivedCommand.getCommand();
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.HATRED, hatredCommand.getTargetId())) {
+						break;
+					}
 					state.reRollSource = ReRollSources.HATRED;
 					state.selectedTarget = hatredCommand.getTargetId();
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -213,12 +224,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			state.firstRun = false;
 			game.getFieldModel().clearDiceDecorations();
 
-			final boolean teamReRollAvailable =
-				UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
-			InducementSet inducementSet = game.getTurnData().getInducementSet();
-			final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
-
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
+			List<ReRollProperty> teamReRollProperties =
+				mechanic.findTeamReRollProperties(getGameState(), actingPlayer.getPlayer());
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
@@ -228,7 +236,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer, singleDieReRollSource);
 
-				addReRollData(game, teamReRollAvailable, mascotAvailable, mechanic, roll);
+				addReRollData(game, teamReRollProperties, roll);
 
 				getResult().setSound(SoundId.BLOCK);
 				getGameState().removeAdditionalAssist(game.getActingTeam().getId());
@@ -265,17 +273,14 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 						roll.clearReRolls();
 					});
 
-				final boolean teamReRollAvailable =
-					UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
-				InducementSet inducementSet = game.getTurnData().getInducementSet();
-				final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
-
 				RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
+				List<ReRollProperty> teamReRollProperties =
+					mechanic.findTeamReRollProperties(getGameState(), actingPlayer.getPlayer());
 
 				state.blockRolls.stream().filter(BlockRollProperties::hasReRollsLeft).forEach(roll -> {
 					roll.clearReRolls();
 
-					addReRollData(game, teamReRollAvailable, mascotAvailable, mechanic, roll);
+					addReRollData(game, teamReRollProperties, roll);
 				});
 
 			}
@@ -330,16 +335,10 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void addReRollData(Game game, boolean teamReRollAvailable, boolean mascotAvailable, RollMechanic mechanic, BlockRollProperties roll) {
+	private void addReRollData(Game game, List<ReRollProperty> teamReRollProperties, BlockRollProperties roll) {
 		Map<ReRolledAction, ReRollSource> actionReRollSourceMap = new HashMap<>();
 
-		if (teamReRollAvailable) {
-			roll.add(ReRollProperty.TRR);
-		}
-		if (mascotAvailable) {
-			roll.add(ReRollProperty.MASCOT);
-		}
-		mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(roll::add);
+		teamReRollProperties.forEach(roll::add);
 
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
@@ -400,7 +399,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 	private void roll(BlockRollProperties roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {
 		if (reRolling) {
-			if (state.reRollSource == ReRollSources.PRO) {
+			ReRollSourceComposition composition = new ReRollSourceComposer().decompose(state.reRollSource);
+			if (composition != null && composition.isPro()) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollOncePerTurn,
 					new int[]{roll.getProIndex()});
 			} else if (singleDieReRollSource != null && state.reRollSource == singleDieReRollSource) {

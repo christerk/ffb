@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.server.skillbehaviour.mixed;
 
+import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -25,11 +25,12 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V extends StepStateMultipleRolls> extends StepModifier<T, V> {
+public abstract class AbstractStepModifierMultipleBlockBase<T extends IStep, V extends StepStateMultipleRolls> extends StepModifier<T, V> {
 
 	@Override
 	public StepCommandStatus handleCommandHook(T step, V state, ClientCommandUseSkill useSkillCommand) {
@@ -132,7 +133,8 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			} else {
 				state.reRollTarget = null;
 				state.reRollSource = null;
-				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(actingPlayer.getPlayer(), state, reRollSkill.orElse(null)), false);
+				UtilServerDialog.showDialog(step.getGameState(),
+					createDialogParameter(step.getGameState(), actingPlayer.getPlayer(), state, reRollSkill.orElse(null)), false);
 			}
 		}
 	}
@@ -171,9 +173,6 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract void failedRollEffect(T step);
 
-	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state, Skill skill) {
-		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),
-			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable,
-			skill, state.singleUseReRollSource, state.consummateAvailable);
-	}
+	protected abstract IDialogParameter createDialogParameter(com.fumbbl.ffb.server.GameState gameState,
+		Player<?> player, V state, Skill skill);
 }

@@ -7,6 +7,8 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.Pair;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSourceComposer;
+import com.fumbbl.ffb.ReRollSourceComposition;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -106,19 +108,31 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_BRAWLER:
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.BRAWLER, null)) {
+						break;
+					}
 					setReRollSource(ReRollSources.BRAWLER);
 					setReRolledAction(ReRolledActions.BLOCK);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_HATRED:
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.HATRED, null)) {
+						break;
+					}
 					setReRollSource(ReRollSources.HATRED);
 					setReRolledAction(ReRolledActions.BLOCK);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
 					ClientCommandUseProReRollForBlock command = (ClientCommandUseProReRollForBlock) pReceivedCommand.getCommand();
+					ReRollSource proReRollSource = command.getReRollSource() != null ? command.getReRollSource() : ReRollSources.PRO;
+					ReRollSourceComposition proComposition = new ReRollSourceComposer().decompose(proReRollSource);
+					if (proComposition == null || !proComposition.isPro()
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, proReRollSource, null)) {
+						break;
+					}
 					setReRolledAction(ReRolledActions.BLOCK);
-					setReRollSource(ReRollSources.PRO);
+					setReRollSource(proReRollSource);
 					dieIndex = command.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -128,15 +142,21 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					setReRolledAction(ReRolledActions.BLOCK);
 					Skill skill = getGameState().getGame().getActingPlayer().getPlayer()
 						.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-					if (skill != null) {
-						setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
+					if (skill == null
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, skill.getRerollSource(ReRolledActions.SINGLE_DIE), null)) {
+						break;
 					}
+					setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
 					dieIndex = consummateCommand.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
+					if (commandUseSkill.getReRollSource() == null
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, commandUseSkill.getReRollSource(), null)) {
+						break;
+					}
 					setReRolledAction(ReRolledActions.BLOCK);
 					setReRollSource(commandUseSkill.getReRollSource());
 					dieIndex = commandUseSkill.getDieIndex();
@@ -147,7 +167,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						(ClientCommandUseMultiBlockDiceReRoll) pReceivedCommand.getCommand();
 					Skill anyRrSkill =
 						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice);
-					if (anyRrSkill != null) {
+					if (anyRrSkill != null
+						&& isReRollSourceOffered(ReRolledActions.BLOCK, anyRrSkill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE), null)) {
 						setReRolledAction(ReRolledActions.BLOCK);
 						setReRollSource(anyRrSkill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE));
 						diceIndexes = commandMultiRrr.getDiceIndexes();
@@ -239,10 +260,12 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 		Skill reRollSkill = getReRollSource() != null ? getReRollSource().getSkill(game) : null;
 
-		if (getReRollSource() == ReRollSources.PRO ||
+		ReRollSourceComposition composition = new ReRollSourceComposer().decompose(getReRollSource());
+		boolean pro = composition != null && composition.isPro();
+		if (pro ||
 			(reRollSkill != null &&
 				reRollSkill.hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod))) {
-			if (getReRollSource() == ReRollSources.PRO) {
+			if (pro) {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 			}
 			int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
@@ -332,19 +355,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 
-			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer())) {
-				properties.add(ReRollProperty.TRR);
-			}
-
 			evaluateBrawlerAvailability(game, actingPlayer, actionToSource);
 			evaluateHatredAvailability(game, actingPlayer, actionToSource);
 
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
-			mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
-
-			if (mechanic.isMascotAvailable(getGameState(), actingPlayer.getPlayer())) {
-				properties.add(ReRollProperty.MASCOT);
-			}
+			properties.addAll(mechanic.findTeamReRollProperties(getGameState(), actingPlayer.getPlayer()));
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();

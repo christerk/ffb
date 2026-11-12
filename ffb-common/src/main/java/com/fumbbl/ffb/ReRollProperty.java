@@ -1,8 +1,7 @@
 package com.fumbbl.ffb;
 
 public enum ReRollProperty implements INamedObject {
-	TRR(true), BRILLIANT_COACHING, MASCOT(true), PRO(true), LONER, PUMP_UP_THE_CROWD,
-	SHOW_STAR;
+	TRR(true), DRIVE_BONUS, MASCOT(true), PRO(true), LONER, LEADER;
 
 	private final boolean actualReRoll;
 

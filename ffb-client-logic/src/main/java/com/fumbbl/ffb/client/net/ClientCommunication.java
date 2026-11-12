@@ -261,6 +261,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseProReRollForBlock(proIndex));
 	}
 
+	public void sendUseProReRollForBlock(int proIndex, ReRollSource reRollSource) {
+		send(new ClientCommandUseProReRollForBlock(proIndex, reRollSource));
+	}
+
 	public void sendUseConsummateReRollForBlock(int proIndex) {
 		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
 	}

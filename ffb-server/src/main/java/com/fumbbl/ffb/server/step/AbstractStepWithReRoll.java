@@ -47,6 +47,9 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
+					if (!isReRollSourceOffered(useReRollCommand.getReRolledAction(), useReRollCommand.getReRollSource(), null)) {
+						break;
+					}
 					setReRolledAction(useReRollCommand.getReRolledAction());
 					if (reRollSourceSuccessfully(useReRollCommand.getReRollSource())) {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
