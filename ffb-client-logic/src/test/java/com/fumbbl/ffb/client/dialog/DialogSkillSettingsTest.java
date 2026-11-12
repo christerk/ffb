@@ -122,6 +122,11 @@ class DialogSkillSettingsTest {
 		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntriesWithAllOptions());
 		Map<CommonProperty, JLabel> helpLabels = field(dialog, "settingHelpLabels");
 		JLabel helpLabel = helpLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
+		helpLabel.setToolTipText("<html><b>Short</b>: Text</html>");
+		JToolTip shortTooltip = helpLabel.createToolTip();
+		shortTooltip.setTipText(helpLabel.getToolTipText());
+		assertTrue(shortTooltip.getPreferredSize().width < desktop.getWidth());
+
 		StringBuilder longTooltip = new StringBuilder("<html>");
 		for (int index = 0; index < 100; index++) {
 			longTooltip.append("A long tooltip description that should wrap within the client area. ");

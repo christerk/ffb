@@ -221,6 +221,12 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 				desktopWidth = getClient().getUserInterface().getSize().width;
 			}
 			int width = Math.max(1, desktopWidth - 20);
+			JToolTip naturalTooltip = new JToolTip();
+			naturalTooltip.setComponent(this);
+			naturalTooltip.setTipText(tipText);
+			if (naturalTooltip.getPreferredSize().width <= width) {
+				return tipText;
+			}
 			String content = tipText.startsWith("<html>") ? tipText.substring(6) : tipText;
 			if (content.endsWith("</html>")) {
 				content = content.substring(0, content.length() - 7);
