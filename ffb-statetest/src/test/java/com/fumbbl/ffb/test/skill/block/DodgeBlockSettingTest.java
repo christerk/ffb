@@ -66,6 +66,7 @@ public class DodgeBlockSettingTest {
 	@Test
 	public void dialogOffersSettingInline() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 
 		stumble(state, "home1", "away1");
 
@@ -77,6 +78,7 @@ public class DodgeBlockSettingTest {
 	@Test
 	public void declinedDodgeMakesDefenderFall() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 		stumble(state, "home1", "away1");
 
 		IStep step = StepEngine.respond(state, useDodge(state, false));
@@ -88,6 +90,7 @@ public class DodgeBlockSettingTest {
 	@Test
 	public void acceptedDodgeKeepsDefenderStanding() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 		stumble(state, "home1", "away1");
 
 		IStep step = StepEngine.respond(state, useDodge(state, true));
@@ -182,6 +185,7 @@ public class DodgeBlockSettingTest {
 	@Test
 	public void settingOfAttackingCoachIsIgnored() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 		state.setGameplaySetting(true, CommonProperty.SETTING_DODGE_BLOCK, CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER);
 
 		assertDialogShown(state, stumble(state, "home1", "away1"));
@@ -198,6 +202,7 @@ public class DodgeBlockSettingTest {
 				.player("away1", p -> p.at(16, 7).stats(6, 3, 3, 5, 8).skill("Dodge"))
 				.player("away2", p -> p.at(16, 10).stats(6, 3, 3, 5, 8).skill("Dodge")))
 			.build();
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS);
 		TestRolls.on(state).block("stumble");
 
 		assertDialogShown(state, stumble(state, "home1", "away1"));
@@ -257,13 +262,13 @@ public class DodgeBlockSettingTest {
 	}
 
 	@Test
-	public void userSettingsWithoutValueResetToAlways() {
+	public void userSettingsWithoutValueResetToSituational() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
 		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER);
 
 		state.setGameplaySettings(false, Collections.emptyMap());
 
-		assertDialogShown(state, stumble(state, "home1", "away1"));
+		assertNoDialogAndDodgeUsed(state, stumble(state, "home1", "away1"));
 	}
 
 	@Test

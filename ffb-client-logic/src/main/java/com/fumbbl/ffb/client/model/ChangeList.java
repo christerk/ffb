@@ -61,6 +61,7 @@ public class ChangeList {
 			.addFeature("Dodge and Watch Out!: New setting Gameplay > Ask for Dodge on Stumble (Always, Widezone & Chainpush, Sideline & Chainpush, Never) to choose when you are asked whether to use the skill against a Stumble. The setting can also be changed directly in the dialog")
 			.addImprovement("Skill settings dialog now stays visible after changing the client layout or scale, and its tooltips stay within the client window and remain open while hovered")
 			.addBehaviorChange("Dodge and Watch Out!: By default you are now always asked whether to use the skill against a Stumble")
+			.addBugfix("Missing Dodge and Whirling Dervish settings now safely default to Sideline & Chainpush and Never, respectively")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
       .addFeature("Consummate Professional")
