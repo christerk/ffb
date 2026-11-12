@@ -425,13 +425,17 @@ public class TurnDiceStatusComponent extends JPanel
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
 		FantasyFootballClient client = getSideBar().getClient();
+		if (client.getUserInterface().isBackgroundInteractionBlocked()) {
+			return;
+		}
 		Game game = client.getGame();
 		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
 		GameMechanic mechanic = (GameMechanic) factory.forName(Mechanic.Type.GAME.name());
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
 			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()) {
-			if (userInterface.getDialogManager().isEndTurnAllowed()) {
+			if (!userInterface.isBackgroundInteractionBlocked()
+				&& userInterface.getDialogManager().isEndTurnAllowed()) {
 				markEndTurnPending();
 				fButtonSelected = false;
 				refreshButton();

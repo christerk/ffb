@@ -24,6 +24,7 @@ public class ClientData {
 	private boolean fActingPlayerUpdated;
 	private boolean fTurnTimerStopped;
 	private boolean fEndTurnButtonHidden;
+	private boolean userSettingsLoaded;
 
 	private int spectatorCount;
 	private SpecialEffect fWizardSpell;
@@ -127,6 +128,14 @@ public class ClientData {
 
 	public void setEndTurnButtonHidden(boolean pEndTurnButtonHidden) {
 		fEndTurnButtonHidden = pEndTurnButtonHidden;
+	}
+
+	public boolean isUserSettingsLoaded() {
+		return userSettingsLoaded;
+	}
+
+	public void setUserSettingsLoaded(boolean userSettingsLoaded) {
+		this.userSettingsLoaded = userSettingsLoaded;
 	}
 
 	public void setSpectators(List<String> spectators) {

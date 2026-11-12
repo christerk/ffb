@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +40,9 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private final FantasyFootballClient fClient;
 	private boolean fChatInputFocus;
 	private DialogKeyGuard keyGuard;
+	private boolean blockBackgroundInteraction;
+	private boolean backgroundInteractionBlockRegistered;
+	private final Map<java.awt.Component, Boolean> backgroundEnabledStates = new IdentityHashMap<>();
 
 	private final JPanel contentPanel;
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
@@ -70,6 +74,14 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			UserInterface userInterface = getClient().getUserInterface();
 			fChatInputFocus = userInterface.getChat().hasChatInputFocus();
 			userInterface.getDesktop().add(Dialog.this);
+			if (blockBackgroundInteraction) {
+				if (!backgroundInteractionBlockRegistered) {
+					userInterface.beginBackgroundInteractionBlock();
+					backgroundInteractionBlockRegistered = true;
+				}
+				restoreBackgroundInteraction();
+				disableBackgroundInteraction(userInterface.getRootPane(), Dialog.this);
+			}
 			installKeyGuard();
 			setVisible(true);
 			moveToFront();
@@ -90,7 +102,38 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 					userInterface.getChat().requestChatInputFocus();
 				}
 			}
+			restoreBackgroundInteraction();
+			if (backgroundInteractionBlockRegistered) {
+				getClient().getUserInterface().endBackgroundInteractionBlock();
+				backgroundInteractionBlockRegistered = false;
+			}
 		});
+	}
+
+	protected void setBlockBackgroundInteraction(boolean blockBackgroundInteraction) {
+		this.blockBackgroundInteraction = blockBackgroundInteraction;
+	}
+
+	private void disableBackgroundInteraction(Container parent, java.awt.Component dialog) {
+		for (java.awt.Component child : parent.getComponents()) {
+			if (child == dialog) {
+				continue;
+			}
+			if (child instanceof Container && ((Container) child).isAncestorOf(dialog)) {
+				disableBackgroundInteraction((Container) child, dialog);
+				continue;
+			}
+			backgroundEnabledStates.put(child, child.isEnabled());
+			child.setEnabled(false);
+			if (child instanceof Container) {
+				disableBackgroundInteraction((Container) child, dialog);
+			}
+		}
+	}
+
+	private void restoreBackgroundInteraction() {
+		backgroundEnabledStates.forEach(java.awt.Component::setEnabled);
+		backgroundEnabledStates.clear();
 	}
 
 	private void installKeyGuard() {

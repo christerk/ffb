@@ -205,6 +205,9 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (getSideBar().getClient().getUserInterface().isBackgroundInteractionBlocked()) {
+			return;
+		}
 		synchronized (getSideBar().getClient()) {
 			if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
 				UtilClientPlayerDrag.mousePressed(getSideBar().getClient(), pMouseEvent, true);
@@ -213,6 +216,9 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
+		if (getSideBar().getClient().getUserInterface().isBackgroundInteractionBlocked()) {
+			return;
+		}
 		synchronized (getSideBar().getClient()) {
 			if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
 				UtilClientPlayerDrag.mouseDragged(getSideBar().getClient(), pMouseEvent, true);
@@ -221,6 +227,9 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		if (getSideBar().getClient().getUserInterface().isBackgroundInteractionBlocked()) {
+			return;
+		}
 		synchronized (getSideBar().getClient()) {
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());

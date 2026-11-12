@@ -352,7 +352,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	public boolean isClickable() {
-		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() &&
+		return (fClickable && !getClient().getUserInterface().isBackgroundInteractionBlocked()
+			&& getClient().getUserInterface().getDialogManager().isDialogHidden() &&
 			(fPopupMenu == null || !fPopupMenu.isVisible()));
 	}
 

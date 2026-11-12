@@ -188,6 +188,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return userSettingsMenu.menuEntries(menuProperty);
 	}
 
+	public void showSkillSettingsDialog(boolean required) {
+		userSettingsMenu.showSkillSettingsDialog(required);
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
 		if (source == null) {

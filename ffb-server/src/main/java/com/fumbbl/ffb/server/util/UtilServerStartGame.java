@@ -71,6 +71,9 @@ public class UtilServerStartGame {
 		String[] players = playerList.toArray(new String[0]);
 
 		Map<CommonProperty, String> settingsMap = sendUserSettings(pGameState.getServer(), pCoach, pSession);
+		if (pMode == ClientMode.PLAYER) {
+			pGameState.setGameplaySettings(pHomeTeam, settingsMap);
+		}
 
 		boolean silentJoin = pMode == ClientMode.SPECTATOR && pAccountProperties.contains("ADMIN");
 		if (!silentJoin) {

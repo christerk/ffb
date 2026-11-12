@@ -401,6 +401,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseMotionListener
 	public void mouseMoved(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
 
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
@@ -415,6 +418,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
 
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
@@ -432,6 +438,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseClicked(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
 		if (!pMouseEvent.isShiftDown() && overlay.isPresent()) {
@@ -447,6 +456,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseEntered(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
 		if (overlay.isPresent()) {
@@ -462,6 +474,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseExited(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
 		if (overlay.isPresent()) {
@@ -477,6 +492,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
@@ -493,6 +511,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		if (isBackgroundInteractionBlocked()) {
+			return;
+		}
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
 		if (!pMouseEvent.isShiftDown() && overlay.isPresent()) {
@@ -508,6 +529,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	public FantasyFootballClient getClient() {
 		return fClient;
+	}
+
+	private boolean isBackgroundInteractionBlocked() {
+		return fClient.getUserInterface().isBackgroundInteractionBlocked();
 	}
 
 	public BufferedImage getImage() {

@@ -153,7 +153,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		getClient().initRulesDependentMembers();
 
 		return true;
-
 	}
 
 	public void dialogClosed(IDialog pDialog) {

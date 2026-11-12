@@ -3,12 +3,16 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.dialog.DialogSkillSettings;
+import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -23,6 +27,7 @@ import java.util.Map;
 
 import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_DODGE_BLOCK;
 import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_BLITZING_PLAYER;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
@@ -59,12 +64,12 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem markActingPlayerActionOnMenuItem;
 	private JRadioButtonMenuItem markActingPlayerActionOffMenuItem;
 
-	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
+	private JMenu reRollBallAndChainPanelMenu;
+	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 	private JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
 	private JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
-	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
-
-	private JMenu reRollBallAndChainPanelMenu;
+	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
+	private JMenuItem skillSettingsMenuItem;
 
 	// Player Mode
 	private JRadioButtonMenuItem tzPlayerNoneMenuItem;
@@ -90,7 +95,8 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem tzContourOffMenuItem;
 	private JRadioButtonMenuItem tzContourOnMenuItem;
 
-	private Map<CommonProperty, JMenu> exposedMenus;
+	private Map<CommonProperty, String> menuTitles;
+	private Map<CommonProperty, Map<String, String>> menuEntries;
 
 	protected GamePlayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Game Play", client, dimensionProvider, styleProvider, layoutSettings);
@@ -99,18 +105,44 @@ public class GamePlayMenu extends FfbMenu {
 
 	@Override
 	public void init() {
-		exposedMenus = new HashMap<>();
+		populateMenuMetadata();
 
 		createAutomoveMenu();
 		createBlitzPanelMenu();
 		createGazePanelMenu();
 		createRightClickMenu();
-		createBallAndChainMenu();
+		boolean bb2025 = client.getGame().getOptions().getRulesVersion() == RulesCollection.Rules.BB2025;
+		if (!bb2025) {
+			createBallAndChainMenu();
+		}
+		if (bb2025) {
+			createSkillSettingsMenu();
+		}
 		createRangegridMenu();
 		createMarkUsedPlayerMenu();
 		createMarkBlitzingPlayerMenu();
 		createMarkActingPlayerActionMenu();
 		createTacklezonesMenu();
+	}
+
+	private void populateMenuMetadata() {
+		menuTitles = new HashMap<>();
+		menuEntries = new HashMap<>();
+		menuTitles.put(SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_RE_ROLL_BALL_AND_CHAIN.getValue());
+		Map<String, String> reRollEntries = new LinkedHashMap<>();
+		reRollEntries.put(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, "Always");
+		reRollEntries.put(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT, "When not hitting an opponent");
+		reRollEntries.put(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE, "When hitting Team-mate");
+		reRollEntries.put(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER, "Never");
+		menuEntries.put(SETTING_RE_ROLL_BALL_AND_CHAIN, reRollEntries);
+
+		menuTitles.put(SETTING_DODGE_BLOCK, SETTING_DODGE_BLOCK.getValue());
+		Map<String, String> dodgeEntries = new LinkedHashMap<>();
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS, "Always");
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Widezone & Chainpush");
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Sideline & Chainpush");
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_NEVER, "Never");
+		menuEntries.put(SETTING_DODGE_BLOCK, dodgeEntries);
 	}
 
 	@Override
@@ -133,12 +165,6 @@ public class GamePlayMenu extends FfbMenu {
 		rightClickLegacyModeItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickEndActionSetting));
 		rightClickOpensContextMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU.equals(rightClickEndActionSetting));
 
-		String reRollBallAndChainSetting = client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
-		reRollBallAndChainAlwaysMenuItem.setSelected(true);
-		reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollBallAndChainSetting));
-		reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollBallAndChainSetting));
-		reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollBallAndChainSetting));
-
 		String rangeGridSetting = client.getProperty(CommonProperty.SETTING_RANGEGRID);
 		fRangeGridToggleMenuItem.setSelected(true);
 		fRangeGridAlwaysOnMenuItem.setSelected(IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSetting));
@@ -155,8 +181,16 @@ public class GamePlayMenu extends FfbMenu {
 		markActingPlayerActionOffMenuItem.setSelected(true);
 		markActingPlayerActionOnMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_ACTING_PLAYER_ACTION_ON.equals(markActingPlayerActionSetting));
 
-		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
-		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
+		if (reRollBallAndChainPanelMenu != null) {
+			boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+			reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
+			String reRollSetting = client.getProperty(SETTING_RE_ROLL_BALL_AND_CHAIN);
+			reRollBallAndChainAlwaysMenuItem.setSelected(reRollSetting == null
+				|| IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS.equals(reRollSetting));
+			reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollSetting));
+			reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollSetting));
+			reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollSetting));
+		}
 
 
 		// Tacklezone player mode
@@ -193,6 +227,15 @@ public class GamePlayMenu extends FfbMenu {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
+
+		if (source == skillSettingsMenuItem) {
+			showSkillSettingsDialog(false);
+		}
+		if (source == reRollBallAndChainAlwaysMenuItem || source == reRollBallAndChainNoOpponentMenuItem
+			|| source == reRollBallAndChainTeamMateMenuItem || source == reRollBallAndChainNeverMenuItem) {
+			client.setProperty(SETTING_RE_ROLL_BALL_AND_CHAIN, source.getName());
+			client.saveUserSettings(false);
+		}
 
 		if (source == fAutomoveOffMenuItem) {
 			client.setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
@@ -234,23 +277,6 @@ public class GamePlayMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
 			client.saveUserSettings(false);
 		}
-		if (source == reRollBallAndChainAlwaysMenuItem) {
-			client.setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
-			client.saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainTeamMateMenuItem) {
-			client.setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
-			client.saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainNoOpponentMenuItem) {
-			client.setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
-			client.saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainNeverMenuItem) {
-			client.setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
-			client.saveUserSettings(false);
-		}
-
 		if (source == fRangeGridAlwaysOnMenuItem) {
 			client.setProperty(CommonProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
 			client.saveUserSettings(false);
@@ -438,34 +464,52 @@ public class GamePlayMenu extends FfbMenu {
 
 	private void createBallAndChainMenu() {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
-		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN);
-		exposedMenus.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
-		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
+		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, menuTitles.get(SETTING_RE_ROLL_BALL_AND_CHAIN));
+		for (Map.Entry<String, String> entry : menuEntries.get(SETTING_RE_ROLL_BALL_AND_CHAIN).entrySet()) {
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(dimensionProvider, entry.getValue());
+			item.setName(entry.getKey());
+			item.addActionListener(this);
+			reRollBallAndChainPanelGroup.add(item);
+			reRollBallAndChainPanelMenu.add(item);
+			if (IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS.equals(entry.getKey())) {
+				reRollBallAndChainAlwaysMenuItem = item;
+			} else if (IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(entry.getKey())) {
+				reRollBallAndChainNoOpponentMenuItem = item;
+			} else if (IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(entry.getKey())) {
+				reRollBallAndChainTeamMateMenuItem = item;
+			} else if (IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(entry.getKey())) {
+				reRollBallAndChainNeverMenuItem = item;
+			}
+		}
 		add(reRollBallAndChainPanelMenu);
+	}
 
-		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always");
-		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
-		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
+	private void createSkillSettingsMenu() {
+		skillSettingsMenuItem = new JMenuItem(dimensionProvider, "Skill settings");
+		skillSettingsMenuItem.addActionListener(this);
+		add(skillSettingsMenuItem);
+	}
 
-		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent");
-		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
-		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
+	public void showSkillSettingsDialog(boolean required) {
+		Map<CommonProperty, Map<String, String>> settingEntries = new LinkedHashMap<>();
+		for (CommonProperty property : DialogSkillSettings.SETTING_PROPERTIES) {
+			settingEntries.put(property, getMenuEntries(property));
+		}
+		showDialog(new DialogSkillSettings(client, settingEntries, required));
+	}
 
-		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate");
-		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
-		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
-
-		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never");
-		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
-		reRollBallAndChainNeverMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
+	@Override
+	public void dialogClosed(IDialog dialog) {
+		super.dialogClosed(dialog);
+		if (dialog instanceof DialogSkillSettings) {
+			DialogSkillSettings skillSettings = (DialogSkillSettings) dialog;
+			if (skillSettings.isSaved()) {
+				for (CommonProperty property : DialogSkillSettings.SETTING_PROPERTIES) {
+					client.setProperty(property, skillSettings.getSetting(property));
+				}
+				client.saveUserSettings(false);
+			}
+		}
 	}
 
 	private void createRightClickMenu() {
@@ -683,21 +727,19 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	public String menuName(CommonProperty menuProperty) {
-		JMenu exposedMenu = exposedMenus.get(menuProperty);
-		return exposedMenu != null ? exposedMenu.getText() : "";
+		return menuTitles.getOrDefault(menuProperty, "");
 	}
 
 	public Map<String, String> menuEntries(CommonProperty menuProperty) {
-		Map<String, String> entries = new LinkedHashMap<>();
+		return getMenuEntries(menuProperty);
+	}
 
-		JMenu exposedMenu = exposedMenus.get(menuProperty);
-		if (exposedMenu != null) {
-			for (int i = 0; i < exposedMenu.getItemCount(); i++) {
-				javax.swing.JMenuItem item = exposedMenu.getItem(i);
-				entries.put(item.getName(), item.getText());
-			}
+	private Map<String, String> getMenuEntries(CommonProperty menuProperty) {
+		if (SETTING_DODGE_BLOCK.equals(menuProperty)
+			&& client.getGame().getOptions().getRulesVersion() != RulesCollection.Rules.BB2025) {
+			return new LinkedHashMap<>();
 		}
-
-		return entries;
+		Map<String, String> entries = menuEntries.get(menuProperty);
+		return entries != null ? new LinkedHashMap<>(entries) : new LinkedHashMap<>();
 	}
 }

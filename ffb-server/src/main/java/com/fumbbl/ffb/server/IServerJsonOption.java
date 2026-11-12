@@ -14,6 +14,7 @@ import com.fumbbl.ffb.json.JsonObjectOption;
 import com.fumbbl.ffb.json.JsonPlayerStateOption;
 import com.fumbbl.ffb.json.JsonStringArrayOption;
 import com.fumbbl.ffb.json.JsonStringListMapOption;
+import com.fumbbl.ffb.json.JsonStringMapOption;
 import com.fumbbl.ffb.json.JsonStringOption;
 
 /**
@@ -102,6 +103,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption FUMBBL_GAME_CREATED = new JsonBooleanOption("fumbblGameCreated");
     JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
     JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
+    JsonStringMapOption GAMEPLAY_SETTINGS_AWAY = new JsonStringMapOption("gameplaySettingsAway");
+    JsonStringMapOption GAMEPLAY_SETTINGS_HOME = new JsonStringMapOption("gameplaySettingsHome");
     JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
     JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
     JsonStringArrayOption GET_ADDITIONAL_CATCHES_SPP = new JsonStringArrayOption("getAdditionalCatchesSpp");

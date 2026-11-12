@@ -39,6 +39,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private final FantasyFootballClient fClient;
 	private IDialog currentDialog;
+	private IDialogCloseListener currentDialogCloseListener;
+	private int backgroundInteractionBlockCount;
 	private final FieldComponent fFieldComponent;
 	private final StatusReport fStatusReport;
 	private final SideBarComponent fSideBarHome;
@@ -124,6 +126,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	public void initComponents(boolean callInit) {
+		IDialog dialogToRedisplay = currentDialog;
+		IDialogCloseListener closeListener = currentDialogCloseListener;
 		if (fDesktop != null) {
 			getContentPane().remove(fDesktop);
 		}
@@ -169,6 +173,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		fDialogManager.setShownDialogParameter(null);
 		fDialogManager.updateDialog();
+		if (dialogToRedisplay != null && currentDialog == dialogToRedisplay) {
+			showDialog(dialogToRedisplay, closeListener);
+		}
 	}
 
 	private JPanel landscapeContent() {
@@ -295,6 +302,20 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public DialogManager getDialogManager() {
 		return fDialogManager;
+	}
+
+	public synchronized void beginBackgroundInteractionBlock() {
+		backgroundInteractionBlockCount++;
+	}
+
+	public synchronized void endBackgroundInteractionBlock() {
+		if (backgroundInteractionBlockCount > 0) {
+			backgroundInteractionBlockCount--;
+		}
+	}
+
+	public synchronized boolean isBackgroundInteractionBlocked() {
+		return backgroundInteractionBlockCount > 0;
 	}
 
 	public MarkerService getMarkerService() {
@@ -437,12 +458,14 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			currentDialog.hideDialog();
 		}
 		currentDialog = dialog;
+		currentDialogCloseListener = listener;
 		currentDialog.showDialog(listener);
 	}
 
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
 		currentDialog = null;
+		currentDialogCloseListener = null;
 		if (DialogId.LEAVE_GAME == pDialog.getId()) {
 			if (((DialogLeaveGame) pDialog).isChoiceYes()) {
 				System.exit(0);
