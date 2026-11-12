@@ -139,8 +139,8 @@ public class GamePlayMenu extends FfbMenu {
 		menuTitles.put(SETTING_DODGE_BLOCK, SETTING_DODGE_BLOCK.getValue());
 		Map<String, String> dodgeEntries = new LinkedHashMap<>();
 		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS, "Always");
-		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Situational (whole wide zone)");
-		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Situational");
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Widezone & Chainpush");
+		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Sideline & Chainpush");
 		dodgeEntries.put(IClientPropertyValue.SETTING_DODGE_BLOCK_NEVER, "Never");
 		menuEntries.put(SETTING_DODGE_BLOCK, dodgeEntries);
 	}

@@ -87,7 +87,8 @@ class DialogSkillSettingsTest {
 		assertTrue(reRollHelp.getToolTipText().contains("When hitting Team-mate"));
 		assertTrue(reRollHelp.getToolTipText().contains("Never"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Always"));
-		assertTrue(dodgeHelp.getToolTipText().contains("Situational (whole wide zone)"));
+		assertTrue(dodgeHelp.getToolTipText().contains("Widezone & Chainpush"));
+		assertTrue(dodgeHelp.getToolTipText().contains("Sideline & Chainpush"));
 		assertTrue(dodgeHelp.getToolTipText().contains("<b>Situational</b>"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Never"));
 		assertTrue(dodgeHelp.getToolTipText().contains("forced chain push"));
@@ -233,8 +234,8 @@ class DialogSkillSettingsTest {
 
 		Map<String, String> dodgeEntries = new LinkedHashMap<>();
 		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS, "Always");
-		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Situational (whole wide zone)");
-		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Situational");
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE, "Widezone & Chainpush");
+		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL, "Sideline & Chainpush");
 		dodgeEntries.put(CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER, "Never");
 		entries.put(CommonProperty.SETTING_DODGE_BLOCK, dodgeEntries);
 		return entries;

@@ -41,9 +41,12 @@ class GamePlayMenuRulesTest {
 			.containsKey(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS));
 		assertTrue(menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK)
 			.containsKey(IClientPropertyValue.SETTING_DODGE_BLOCK_ALWAYS));
-		assertEquals("Situational (whole wide zone)",
+		assertEquals("Widezone & Chainpush",
 			menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK)
 				.get(IClientPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE));
+		assertEquals("Sideline & Chainpush",
+			menu.menuEntries(CommonProperty.SETTING_DODGE_BLOCK)
+				.get(IClientPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL));
 	}
 
 	@Test
