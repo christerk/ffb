@@ -91,7 +91,7 @@ class DialogSkillSettingsTest {
 		assertTrue(dodgeHelp.getToolTipText().contains("Sideline & Chainpush"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Never"));
 		assertTrue(dodgeHelp.getToolTipText().contains("forced chain push"));
-		assertTrue(dodgeHelp.getToolTipText().contains("wide-zone row or end zone"));
+		assertTrue(dodgeHelp.getToolTipText().contains("wide-zone row or a four-square-deep endzone area"));
 		assertFalse(contains(dialog.getContentPane(), cancelButton));
 
 		reRollBox.setSelectedIndex(0);
