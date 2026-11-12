@@ -12,8 +12,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDesktopPane;
-import javax.swing.JToolTip;
 import javax.swing.JPanel;
+import javax.swing.JToolTip;
 import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -216,7 +216,11 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 				return null;
 			}
 			JDesktopPane desktop = getClient().getUserInterface().getDesktop();
-			int width = Math.max(1, desktop.getWidth() - 20);
+			int desktopWidth = desktop.getWidth();
+			if (desktopWidth <= 0) {
+				desktopWidth = getClient().getUserInterface().getSize().width;
+			}
+			int width = Math.max(1, desktopWidth - 20);
 			String content = tipText.startsWith("<html>") ? tipText.substring(6) : tipText;
 			if (content.endsWith("</html>")) {
 				content = content.substring(0, content.length() - 7);

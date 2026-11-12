@@ -31,6 +31,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JToolTip;
 import javax.swing.ToolTipManager;
 import javax.swing.border.LineBorder;
 
@@ -109,6 +110,28 @@ class DialogSkillSettingsTest {
 			dialog.getSetting(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
 		assertEquals(CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS,
 			dialog.getSetting(CommonProperty.SETTING_DODGE_BLOCK));
+	}
+
+	@Test
+	void helpTooltipWrapsWithinClientWidth() throws Exception {
+		FantasyFootballClient client = client();
+		UserInterface userInterface = client.getUserInterface();
+		JDesktopPane desktop = new JDesktopPane();
+		desktop.setSize(500, 400);
+		when(userInterface.getDesktop()).thenReturn(desktop);
+		DialogSkillSettings dialog = new DialogSkillSettings(client, settingsEntriesWithAllOptions());
+		Map<CommonProperty, JLabel> helpLabels = field(dialog, "settingHelpLabels");
+		JLabel helpLabel = helpLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
+		StringBuilder longTooltip = new StringBuilder("<html>");
+		for (int index = 0; index < 100; index++) {
+			longTooltip.append("A long tooltip description that should wrap within the client area. ");
+		}
+		helpLabel.setToolTipText(longTooltip.append("</html>").toString());
+
+		JToolTip tooltip = helpLabel.createToolTip();
+		tooltip.setTipText(helpLabel.getToolTipText());
+
+		assertTrue(tooltip.getPreferredSize().width <= desktop.getWidth());
 	}
 
 	@Test
