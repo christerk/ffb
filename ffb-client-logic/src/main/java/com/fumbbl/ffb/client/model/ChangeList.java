@@ -59,7 +59,7 @@ public class ChangeList {
 			.addBehaviorChange("Swift As The Breeze: On a dodge the skill is now offered together with the other optional modifiers and re-rolls instead of in a dialog of its own")
 			.addBugfix("Swift As The Breeze: A Diving Tackle declared after the skill was used on a dodge still tripped the dodger")
 			.addFeature("Dodge and Watch Out!: New setting Gameplay > Ask for Dodge on Stumble (Always, Widezone & Chainpush, Sideline & Chainpush, Never) to choose when you are asked whether to use the skill against a Stumble. The setting can also be changed directly in the dialog")
-			.addImprovement("Skill settings dialog now stays visible after changing the client layout or scale, and its tooltips stay within the client window")
+			.addImprovement("Skill settings dialog now stays visible after changing the client layout or scale, and its tooltips stay within the client window and remain open while hovered")
 			.addBehaviorChange("Dodge and Watch Out!: By default you are now always asked whether to use the skill against a Stumble")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
