@@ -42,8 +42,15 @@ public class DodgeBlockSettingTest {
 	}
 
 	@Test
-	public void missingSettingAsksInOpenField() {
+	public void missingSettingDoesNotAskInOpenField() {
 		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+
+		assertNoDialogAndDodgeUsed(state, stumble(state, "home1", "away1"));
+	}
+
+	@Test
+	public void missingSettingAsksNextToSideline() {
+		GameState state = buildState("BB2025", SIDELINE_Y, false, true);
 
 		assertDialogShown(state, stumble(state, "home1", "away1"));
 	}

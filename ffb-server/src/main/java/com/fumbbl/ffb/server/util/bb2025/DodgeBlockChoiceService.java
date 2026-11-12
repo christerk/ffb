@@ -29,10 +29,10 @@ public class DodgeBlockChoiceService {
 	};
 
 	/**
-	 * @param setting the defending coach's setting value, missing or unknown values count as "always"
+	 * @param setting the defending coach's setting value; a missing value counts as situational
 	 */
 	public boolean askForDodge(Game game, String setting) {
-		String mode = StringTool.isProvided(setting) ? setting : CommonPropertyValue.SETTING_DODGE_BLOCK_ALWAYS;
+		String mode = StringTool.isProvided(setting) ? setting : CommonPropertyValue.SETTING_DODGE_BLOCK_SITUATIONAL;
 		switch (mode) {
 			case CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER:
 				return false;

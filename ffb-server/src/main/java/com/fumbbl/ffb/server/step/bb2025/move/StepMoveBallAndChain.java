@@ -188,11 +188,11 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 					new int[]{scatterRoll}));
 				game.getFieldModel().add(new MoveSquare(fCoordinateTo, 0, 0));
 				if (getReRollSource() == null) {
-					boolean askForReRoll = true;
+					boolean askForReRoll = StringTool.isProvided(reRollSetting);
 
 					Player<?> hitPlayer = game.getFieldModel().getPlayer(fCoordinateTo);
 
-					if (StringTool.isProvided(reRollSetting)) {
+					if (askForReRoll) {
 						switch (reRollSetting) {
 							case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER:
 								askForReRoll = false;
