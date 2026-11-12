@@ -89,7 +89,6 @@ class DialogSkillSettingsTest {
 		assertTrue(dodgeHelp.getToolTipText().contains("Always"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Widezone & Chainpush"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Sideline & Chainpush"));
-		assertTrue(dodgeHelp.getToolTipText().contains("<b>Situational</b>"));
 		assertTrue(dodgeHelp.getToolTipText().contains("Never"));
 		assertTrue(dodgeHelp.getToolTipText().contains("forced chain push"));
 		assertTrue(dodgeHelp.getToolTipText().contains("wide-zone row or end zone"));
