@@ -361,19 +361,31 @@ public class StepInitMoving extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, ballAndChainRrSetting));
 			if (ArrayTool.isProvided(fMoveStack)) {
 				FieldCoordinate coordinateTo = fMoveStack[0];
+				MoveSquare moveSquare = null;
+				if (FieldCoordinateBounds.FIELD.isInBounds(coordinateTo)) {
+					// Recompute the reachable squares for the actual position since the cache is stale while following a
+					// multi-square path. A target without a move square (e.g. no movement or rushes left) must be rejected,
+					// otherwise a modified client could keep rushing beyond the allowed number of rushes.
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+					moveSquare = game.getFieldModel().getMoveSquare(coordinateTo);
+					if (moveSquare == null) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, new FieldCoordinate[0]));
+						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+						return;
+					}
+				}
 				FieldCoordinate[] newMoveStack = new FieldCoordinate[0];
 				if (fMoveStack.length > 1) {
 					newMoveStack = new FieldCoordinate[fMoveStack.length - 1];
 					System.arraycopy(fMoveStack, 1, newMoveStack, 0, newMoveStack.length);
 				}
 				publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, newMoveStack));
-				if (FieldCoordinateBounds.FIELD.isInBounds(coordinateTo)) {
+				if (moveSquare != null) {
 					FieldCoordinate coordinateFrom = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, coordinateFrom));
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
-					MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinateTo);
-					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
-					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
+					actingPlayer.setDodging(moveSquare.isDodging() && !actingPlayer.isJumping());
+					actingPlayer.setGoingForIt(moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
 					commitTargetSelection();
 					game.getTurnData().setTurnStarted(true);
