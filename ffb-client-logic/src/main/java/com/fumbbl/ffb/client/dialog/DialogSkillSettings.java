@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDesktopPane;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
+import javax.swing.ToolTipManager;
 import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -160,8 +161,27 @@ public class DialogSkillSettings extends Dialog implements ActionListener {
 
 	private class BoundedTooltipLabel extends JLabel {
 
+		private final ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+		private final int defaultDismissDelay = toolTipManager.getDismissDelay();
+
 		private BoundedTooltipLabel(javax.swing.Icon icon) {
 			super(dimensionProvider(), icon);
+		}
+
+		@Override
+		protected void processMouseEvent(MouseEvent event) {
+			if (event.getID() == MouseEvent.MOUSE_ENTERED) {
+				toolTipManager.setDismissDelay(Integer.MAX_VALUE);
+			} else if (event.getID() == MouseEvent.MOUSE_EXITED) {
+				toolTipManager.setDismissDelay(defaultDismissDelay);
+			}
+			super.processMouseEvent(event);
+		}
+
+		@Override
+		public void removeNotify() {
+			toolTipManager.setDismissDelay(defaultDismissDelay);
+			super.removeNotify();
 		}
 
 		@Override

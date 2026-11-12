@@ -140,6 +140,27 @@ class DialogSkillSettingsTest {
 	}
 
 	@Test
+	void helpTooltipDismissDelayIsExtendedOnlyWhileIconIsHovered() throws Exception {
+		int originalDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
+		try {
+			DialogSkillSettings dialog = new DialogSkillSettings(client(), settingsEntriesWithAllOptions());
+			Map<CommonProperty, JLabel> helpLabels = field(dialog, "settingHelpLabels");
+			JLabel helpLabel = helpLabels.get(CommonProperty.SETTING_DODGE_BLOCK);
+			helpLabel.dispatchEvent(new MouseEvent(helpLabel, MouseEvent.MOUSE_ENTERED,
+				System.currentTimeMillis(), 0, 0, 0, 0, false));
+
+			assertEquals(Integer.MAX_VALUE, ToolTipManager.sharedInstance().getDismissDelay());
+
+			helpLabel.dispatchEvent(new MouseEvent(helpLabel, MouseEvent.MOUSE_EXITED,
+				System.currentTimeMillis(), 0, 0, 0, 0, false));
+
+			assertEquals(originalDismissDelay, ToolTipManager.sharedInstance().getDismissDelay());
+		} finally {
+			ToolTipManager.sharedInstance().setDismissDelay(originalDismissDelay);
+		}
+	}
+
+	@Test
 	void requiredDialogBlocksAndRestoresBackgroundInteraction() throws Exception {
 		FantasyFootballClient client = client();
 		UserInterface userInterface = client.getUserInterface();
