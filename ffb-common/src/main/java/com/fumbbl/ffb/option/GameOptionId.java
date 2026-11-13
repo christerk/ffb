@@ -51,6 +51,7 @@ public enum GameOptionId implements INamedObject {
 	CARDS_SPECIAL_PLAY_COST("cardsSpecialPlayCost"),
 
 	INDUCEMENT_APOS_COST("inducementAposCost"), INDUCEMENT_APOS_MAX("inducementAposMax"),
+	INDUCEMENT_BRETONNIAN_PASTRIES_COST("inducementBretonnianPastriesCost"), INDUCEMENT_BRETONNIAN_PASTRIES_MAX("inducementBretonnianPastriesMax"),
 	INDUCEMENT_BRIBES_COST("inducementBribesCost"), INDUCEMENT_BRIBES_REDUCED_COST("inducementBribesReducedCost"),
 	INDUCEMENT_BRIBES_MAX("inducementBribesMax"), INDUCEMENT_BRIBES_REDUCED_MAX("inducementBribesReducedMax"),
 	INDUCEMENT_CHEFS_COST("inducementChefsCost"), INDUCEMENT_CHEFS_REDUCED_COST("inducementChefsReducedCost"),

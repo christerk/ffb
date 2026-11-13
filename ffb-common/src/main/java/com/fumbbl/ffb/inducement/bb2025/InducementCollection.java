@@ -107,6 +107,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
+		add(new InducementType("bretonnianPastries", "Bretonnian Pastries", "Bretonnian Pastries", "Bretonnian Pastries",
+			GameOptionId.INDUCEMENT_BRETONNIAN_PASTRIES_MAX, GameOptionId.INDUCEMENT_BRETONNIAN_PASTRIES_COST,
+			GameOptionId.INDUCEMENT_BRETONNIAN_PASTRIES_COST, true, IIconProperty.RESOURCE_PASTRIES, Usage.KNOCKOUT_RESERVE));
+
 		add(new InducementType("throwARock", "Throw A Rock", "Throw A Rock", "Throw A Rock", GameOptionId.INDUCEMENT_DUMMY, GameOptionId.INDUCEMENT_DUMMY, Usage.THROW_ROCK));
 
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
