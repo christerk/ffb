@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning prayers in the 2020 ruleset")
 			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
+			.addBugfix("Kick-off: Clicking the pitch after a kick-off return or blitz could show a misplaced ball until the client was restarted")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 			.addBugfix(
 				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
