@@ -1,9 +1,11 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -31,7 +33,8 @@ public class KickoffLogicModule extends LogicModule {
 	@Override
 	public void setUp() {
 		super.setUp();
-		fKicked = false;
+		// the state is re-entered after kick-off return or blitz turns, when the ball has already been kicked
+		fKicked = client.getGame().getFieldModel().getBallCoordinate() != null;
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public class KickoffLogicModule extends LogicModule {
 	@Override
 	public void endTurn() {
 		FieldCoordinate ballCoordinate = client.getGame().getFieldModel().getBallCoordinate();
-		if ((ballCoordinate != null) && FieldCoordinateBounds.HALF_AWAY.isInBounds(ballCoordinate)) {
+		if (!fKicked && (ballCoordinate != null) && FieldCoordinateBounds.HALF_AWAY.isInBounds(ballCoordinate)) {
 			fKicked = true;
 			client.getCommunication().sendKickoff(ballCoordinate);
 			client.getClientData().setEndTurnButtonHidden(true);
