@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("Pass Block: Team re-rolls could not be used for rolls of the active team during a pass block, e.g. Shadowing a pass blocker")
+			.addBugfix("Tasty Morsel: The server did not verify that a bitten opponent was an adjacent non-Star player with ST 3 or lower")
 			.addBugfix("Pass Block: The move squares of the last pass blocker were still shown after the pass block ended")
 			.addImprovement("Team Setup: Saving a setup under the name of an existing one now asks for confirmation before overwriting it")
 			.addBugfix("Team Setup: The setup list could still show a deleted setup or miss a just saved one")
