@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Safe Pair of Hands: Could be used when knocked down by a player with Strip Ball instead of the ball bouncing")
 			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning additional prayers to the underdog")
 			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning prayers in the 2020 ruleset")
+			.addBugfix("Prayers to Nuffle: Throw a Rock injuries were applied twice, e.g. a stat decrease was listed twice in the player result")
 			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Kick-off: Clicking the pitch after a kick-off return or blitz could show a misplaced ball until the client was restarted")
