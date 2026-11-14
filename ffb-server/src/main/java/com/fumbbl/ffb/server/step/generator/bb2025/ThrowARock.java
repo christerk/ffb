@@ -27,8 +27,8 @@ public class ThrowARock extends SequenceGenerator<ThrowARock.SequenceParams> {
 		sequence.add(StepId.STEADY_FOOTING, StepParameter.from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
-		sequence.add(StepId.APOTHECARY, StepParameter.from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		// apothecary and catch scatter throw in are handled by the surrounding inducement sequence,
+		// adding them here would apply the injury result twice
 
 		gameState.getStepStack().push(sequence.getSequence());
 
