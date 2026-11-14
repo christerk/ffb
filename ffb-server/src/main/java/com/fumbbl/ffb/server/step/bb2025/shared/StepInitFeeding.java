@@ -19,12 +19,11 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.server.util.bb2025.FeedingVictimService;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -106,17 +105,19 @@ public class StepInitFeeding extends AbstractStep {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
 					String playerId = playerChoiceCommand.getPlayerId();
-					fFeedOnPlayerChoice = StringTool.isProvided(playerId);
-					if (fFeedOnPlayerChoice) {
-						boolean victimOnSameTeam = game.getActingPlayer().getPlayer().getTeam() == game.getPlayerById(playerId).getTeam();
-						if (victimOnSameTeam || UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canBiteOpponents)) {
-							if (!victimOnSameTeam) {
-								game.getActingPlayer().markSkillUsed(NamedProperties.canBiteOpponents);
+					if (StringTool.isProvided(playerId)) {
+						ActingPlayer actingPlayer = game.getActingPlayer();
+						Player<?> victim = game.getPlayerById(playerId);
+						if ((victim != null) && findVictims(game, actingPlayer).contains(victim)) {
+							fFeedOnPlayerChoice = true;
+							if (actingPlayer.getPlayer().getTeam() != victim.getTeam()) {
+								actingPlayer.markSkillUsed(NamedProperties.canBiteOpponents);
 							}
 							game.setDefenderId(playerId);
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					} else {
+						fFeedOnPlayerChoice = false;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 				}
@@ -148,11 +149,7 @@ public class StepInitFeeding extends AbstractStep {
 		if (playerState.hasTacklezones() && (fFeedOnPlayerChoice == null)) {
 			game.setDefenderId(null);
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			Player<?>[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
-			List<Player<?>> allVictims = new ArrayList<>(Arrays.asList(victims));
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canBiteOpponents)) {
-				allVictims.addAll(findOpponentsToFeedOn(game, team, playerCoordinate));
-			}
+			List<Player<?>> allVictims = findVictims(game, actingPlayer);
 			if (!allVictims.isEmpty()) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED,
@@ -197,19 +194,11 @@ public class StepInitFeeding extends AbstractStep {
 		}
 	}
 
-	private List<Player<?>> findOpponentsToFeedOn(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-		List<Player<?>> adjacentPlayers = new ArrayList<>();
-		FieldModel fieldModel = pGame.getFieldModel();
-		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-			1, false);
-		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
-			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
-			if ((player != null) && (player.getTeam() != pTeam) && player.getPosition().getType() != PlayerType.STAR
-				&& player.getStrengthWithModifiers() <= 3) {
-				adjacentPlayers.add(player);
-			}
-		}
-		return adjacentPlayers;
+	private List<Player<?>> findVictims(Game game, ActingPlayer actingPlayer) {
+		Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		return new FeedingVictimService().findVictims(game, team, playerCoordinate,
+			UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canBiteOpponents));
 	}
 
 	// JSON serialization
