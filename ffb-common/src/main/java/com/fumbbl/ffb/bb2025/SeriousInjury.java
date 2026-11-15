@@ -18,6 +18,10 @@ public enum SeriousInjury implements com.fumbbl.ffb.SeriousInjury {
 			"is recovering from a broken arm (-1 PA)", InjuryAttribute.PA, true),
 	DISLOCATED_HIP("Dislocated Hip (-AG)", "Dislocated Hip (-1 AG)", "suffered a dislocated hip (-1 AG)",
 			"is recovering from a dislocated hip (-1 AG)", InjuryAttribute.AG, true),
+	BROKEN_SHOULDER("Broken Shoulder (-ST)", "Broken Shoulder (-1 ST)",
+			"suffered a broken shoulder (-1 ST)", "is recovering from a broken shoulder (-1 ST)",
+		InjuryAttribute.ST, true),
+	// Legacy value, kept only so existing injuries can still be resolved; new injuries use BROKEN_SHOULDER
 	DISLOCATED_SHOULDER("Dislocated Shoulder (-ST)", "Dislocated Shoulder (-1 ST)",
 			"suffered a dislocated shoulder (-1 ST)", "is recovering from a dislocated shoulder (-1 ST)",
 		InjuryAttribute.ST, true),

@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Casualty: The -ST lasting injury is now called Broken Shoulder instead of Dislocated Shoulder")
 			.addBugfix("Pass Block: Team re-rolls could not be used for rolls of the active team during a pass block, e.g. Shadowing a pass blocker")
 			.addBugfix("Tasty Morsel: The server did not verify that a bitten opponent was an adjacent non-Star player with ST 3 or lower")
 			.addBugfix("Pass Block: The move squares of the last pass blocker were still shown after the pass block ended")

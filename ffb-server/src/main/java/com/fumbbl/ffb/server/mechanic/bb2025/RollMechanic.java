@@ -98,7 +98,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		add(SeriousInjury.SMASHED_KNEE);
 		add(SeriousInjury.BROKEN_ARM);
 		add(SeriousInjury.DISLOCATED_HIP);
-		add(SeriousInjury.DISLOCATED_SHOULDER);
+		add(SeriousInjury.BROKEN_SHOULDER);
 	}};
 
 	@Override
