@@ -1,8 +1,10 @@
 # BB2025: Server-Side Validation of Client Input in Steps
 
 Status: **planned / not implemented**.
-Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour (see §3.1).
-Basis: audit of all server steps that accept client commands, done by code reading at commit `4a0f9d4`.
+Scope: **BB2025 only** for steps. `bb2016` and `bb2020` keep their current behaviour (see §3.1).
+The command handlers in WP12 are not ruleset specific and are fixed for all rulesets.
+Basis: audit of all server steps that accept client commands, done by code reading at commit `4a0f9d4`,
+followed by a read of the non-step command handlers (`handler/`) and the socket layer.
 Line numbers refer to that commit. Paths are relative to
 `ffb-server/src/main/java/com/fumbbl/ffb/server` unless they start with `ffb-`.
 
@@ -84,7 +86,8 @@ Behaviour changes apply to BB2025 only. Per `AGENTS.md`:
 - Where the client may have changed its local view optimistically (setup moves), re-send the server
   state as `AbstractStep.handleSetupCommand` and `UtilServerSetup.setupPlayer` already do with
   `fieldModel.sendPosition(player)`.
-- Log each rejection once at debug level with step id, command id and reason.
+- The sender gets no feedback (decided). Log each rejection once at **warn** level with game id, coach,
+  step id, command id and reason, so attempts are visible in the server log.
 
 ### 3.3 The official client must keep working
 
@@ -137,11 +140,11 @@ command → service → state.
 
 ## 5. Order of work
 
-1. **WP1** (server-wide hang) on its own, first.
+1. **WP1** (server-wide hang) and **12.1** (a spectator can shut down a match), each on its own, first.
 2. **WP0** (foundations). Removes R1, R2, R6, R9 and most of R8 for every step at once.
 3. **WP2, WP4, WP9, WP10** (largest advantage for a cheating coach).
 4. **WP3, WP5, WP6, WP7, WP8.**
-5. **WP11** (remaining crash-only inputs).
+5. **WP11** (remaining crash-only inputs) and the rest of **WP12** (command handlers).
 
 One pull request per work package; WP2, WP4, WP6 and WP9 can be cut further along their rows.
 
@@ -291,7 +294,7 @@ New services in `util/bb2025`: `PlayerActionLegalityService` (is this action leg
 | 7.1 | H | `step/mixed/StepUnchannelledFury:80-93`, `skillbehaviour/bb2025/UnchannelledFuryBehaviour:53-62,81-83` | Any `CLIENT_USE_SKILL` re-runs the step: a failed roll is dropped; Fury of the Blood God grants a second block without ownership. | Split. Handle only an offered, unused skill from the current coach. |
 | 7.2 | H | `step/bb2025/shared/StepBloodLust:69-75`, `skillbehaviour/bb2025/BloodLustBehaviour:80-82,110-111` | `CLIENT_BLOODLUST_ACTION` in any state from either coach; during the re-roll dialog it drops the failed roll. | Accept only in `WAIT_FOR_ACTION_CHANGE` from the current coach. |
 | 7.3 | H | `step/mixed/shared/StepAnimalSavagery:125-145`, `skillbehaviour/bb2025/AnimalSavageryBehaviour:82-85,128-130,218-232` | Lash-out target not compared with `state.playerIds`; the lash-out-at-opponent skill is accepted without ownership and `markUsed` is applied to the client's player id; no sender or dialog check. | Split. `OfferedPlayerChoiceService` with mode `ANIMAL_SAVAGERY`; skill via `isOffered` + `hasUnused` on the acting player. |
-| 7.4 | H | `step/bb2025/StepBalefulHex:82-86,162-184` | Target not compared with `findPlayers()`; any mode, any sender; re-sending during the re-roll dialog rolls again for free. | `OfferedPlayerChoiceService` with mode `BALEFUL_HEX`. |
+| 7.4 | H | `step/bb2025/StepBalefulHex:82-86,162-184` | Target not compared with `findPlayers()`; any mode, any sender; re-sending during the re-roll dialog rolls again for free. | `OfferedPlayerChoiceService` with mode `BALEFUL_HEX`. Also restrict `findPlayers:231-241` to players on the pitch: it filters by distance only, and dugout coordinates (x = -1…-7 / 30…36) can be within 5 of a player near the end zone. |
 | 7.5 | H | `step/bb2025/StepAutoGazeZoat:84-98,172-178`, `StepBlackInk:85-98,172-178` | Target not compared with `findPlayers()`; the opponent can answer or decline. | `OfferedPlayerChoiceService`. |
 | 7.6 ✔ | H | `step/bb2025/StepRaidingParty:98-119,197-216` | Neither the player id nor the coordinate is compared with `findPlayers()` / `findSquares()`; no sender check; the coordinate is accepted before a player is chosen; the "no legal squares" path returns without `resetState`. | Current coach; player in `findPlayers`, coordinate in `findSquares(game, player)` and only after the player was chosen; call `resetState` on every exit. |
 | 7.7 | H | `step/bb2025/StepThenIStartedBlastin:64-87,100-103,165` | Target unchecked in both phases (rule only in `ThenIStartedBlastinLogicModule.isValidTarget`); no sender check including `CLIENT_END_TURN`; leaving phase 2 does not flip `homePlaying` back. | Phase 1: current coach, standing opponent within 3 of the acting player. Phase 2: the other coach, standing target within 3 of the first target. End turn only from the acting coach in phase 1. Restore `homePlaying` on every exit. |
@@ -339,14 +342,15 @@ New `util/bb2025` services: `SetupCommandService` (replaces the `UtilServerSetup
 | # | Sev | Location | Gap | Fix |
 |---|---|---|---|---|
 | 10.1 ✔ | H | `step/bb2025/start/StepBuyInducements:111-148,342-365,579` | The team is taken from the command (anything that is not the home id is treated as away); the sender is never compared with it; no phase or "already submitted" check; used gold is overwritten, not summed. A coach can skip the opponent's purchase, submit twice and pay once, or spend the opponent's treasury. | Sender must be the coach of `command.getTeamId()`; the team must match the phase; one submission per team. |
-| 10.2 ✔ | H | `step/bb2025/start/StepBuyInducements:150-185,397,415-417,462,525,568-574` | The only value check is total cost ≤ available gold. Counts may be negative (negative cost pays for everything else); no maximum / availability check; types without cost id are free; `uses` is copied from the client; positions are not checked for type, duplicates or limits; mercenary skills are arbitrary; prayers are unbounded. | `InducementPurchaseService`: per inducement `0 < value <= type.availability(team, options)`, `uses == 0`, a real cost id; positions of the right type and within limits; skills from the position's categories; over-budget is ignored, not thrown. |
+| 10.2 ✔ | H | `step/bb2025/start/StepBuyInducements:150-185,397,415-417,462,525,568-574` | The only value check is total cost ≤ available gold. Counts may be negative (negative cost pays for everything else); no maximum / availability check; types without cost id are free; `uses` is copied from the client; positions are not checked for type, duplicates or limits; mercenary skills are arbitrary; prayers are unbounded. | `InducementPurchaseService`: per inducement `0 < value <= type.availability(team, options)`, `uses == 0`, a real cost id; positions of the right type and within limits; skills from the position's categories; over-budget is ignored, not thrown. Limits come from what the server already has (decided): game options, `InducementType.availability` and the team's roster positions; no external rule source. |
 | 10.3 | H | `step/bb2025/inducements/StepInitInducement:103-108,130-143` | Any coach, any inducement type; the type is not compared with `findUseableInducements()`. | Sender must be the coach of `fHomeTeam`; type is null or one of the offered types. |
 | 10.4 | H | `step/bb2025/inducements/StepWeatherMage:53-65,78-84` | Any weather value from any sender (the offered options are a local variable); `CLIENT_CONFIRM` from the opponent. | Store the offered options; accept only from the mage's coach and only an offered name; confirm only for the information dialog. |
-| 10.5 | H | `step/bb2025/StepWizard:105-117` | The opponent can cast or cancel the wizard; a null coordinate from the away coach throws. | Sender must be the coach matching `fHomeTeam`; null guard. |
+| 10.5 | H | `step/bb2025/StepWizard:105-117,150-153`, `special/StepSpecialEffect:122-146` | The opponent can cast or cancel the wizard; a null coordinate from the away coach throws. The target coordinate is not required to be on the pitch: Zap takes `fieldModel.getPlayer(fTargetCoordinate)`, so a dugout coordinate zaps a benched player (`StepSpecialEffect` has no on-pitch check). | Sender must be the coach matching `fHomeTeam`; null guard; target inside `FieldCoordinateBounds.FIELD`. |
 | 10.6 | M | `step/bb2025/StepWizard:144-148`, `kickoff/StepDwarfenWisdom:178`, `inducements/StepThrowARock:100` | The boolean result of `UtilServerInducementUse.useInducement` is ignored, so a used-up inducement may be usable again. | Require `hasUsesLeft(type)` and apply the effect only if `useInducement` returns true. |
 | 10.7 ✔ | H | `step/bb2025/StepPrayer:71-81,118`; `inducements/mixed/prayers/IntensiveTrainingHandler:47-51`, `SelectPlayerPrayerHandler:26-30` | Player id and skill for Intensive Training / Iron Man / Knuckle Dusters are passed to the handlers unchecked, from any sender. | In `StepPrayer`: sender is the praying team's coach; id and skill come from the `DialogSelectSkillParameter` / `DialogPlayerChoiceParameter` currently shown. The mixed handlers stay untouched. |
 | 10.8 | H | `step/bb2025/end/StepMvp:74-88,121-131,185-202` | Nominations are not compared with `findPlayerIdsForMvp(team)` or `maxSelects`; unlimited commands add awards. | Exactly `maxSelects` distinct ids from the own team's list; ignore once `fNrOf*Choices >= fNrOf*Mvps`. |
 | 10.9 | M | `step/bb2025/end/StepAssignTouchdowns:69-77,113-124` | Any coach, any player id. | `OfferedPlayerChoiceService` with mode `ASSIGN_TOUCHDOWN`. |
+| 10.10 ✔ | M | `step/bb2025/end/StepMvp:134-170` | Not an input gap, found during the audit: with MVP nominations enabled and exactly one eligible player (or none), the step adds the player (or sets the MVP count to 0) and returns with neither a dialog nor a next action, so the game waits forever. | Loop until a dialog is shown or all MVPs are assigned, then continue to the existing completion path. |
 
 ### WP11 — Remaining crash-only inputs
 
@@ -363,6 +367,41 @@ the command. Check each location after WP0–WP10 and add a guard only where the
 | Null action | `StepInitMoving:261`, `StepInitFouling:112`, `StepInitPassing:166`, `StepEndMoving:169` |
 | Explicit exceptions on client values | `StepApplyKickoffResult:202-204`, `StepDwarfenWisdom:135-140`, `StepWeatherMage:56`, `StepWisdomOfTheWhiteDwarf:149-150`, `StepBuyInducements:142-146,178-182,397,415,462,525` |
 | Illegal punt input | `StepPuntDirection:141-144` → `ThrowInMechanic:73`; crowd punt away from the edge → `mechanics/bb2025/ThrowInMechanic:52` |
+
+### WP12 — Command handlers and socket layer (all rulesets)
+
+These commands are handled by `handler/ServerCommandHandler*` before any step sees them. They are
+reachable by spectators and partly by sockets that have not joined anything. The code is not ruleset
+specific, so the fixes apply to all rulesets.
+
+| # | Sev | Location | Gap | Fix |
+|---|---|---|---|---|
+| 12.1 ✔ | H | `net/ServerCommunication:139-143,200-228`; trigger e.g. `handler/ServerCommandHandlerJoin:43` | An exception in any handler calls `shutdown(command, any)`, which disconnects every session of the sender's game (or shared replay). Handlers run for spectators too. `CLIENT_JOIN` without a client mode dereferences `getClientMode().getName()`; sent by a spectator this shuts down the match being watched, repeatably. | On a handler exception for a client command, log it and close only the sending session. Null-guard `ServerCommandHandlerJoin:43,63` and `ServerCommandHandlerJoinReplay:50`. |
+| 12.2 ✔ | H | `handler/ServerCommandHandlerJoinReplay:47-60`, `net/ReplaySessionManager.addSession`, `transferControl` | No authentication: any socket joins any shared replay under a client-supplied coach name. Names are not unique, so a session can pose as another participant in chat and receive control when it is transferred to that name. Only the displayed replay name is truncated; the map key is the full client string. | Require a session that was authenticated through `CLIENT_JOIN` with mode `REPLAY` and take the coach name from that; reject a second session with the same name in one replay; build the key from the truncated name. |
+| 12.3 ✔ | M | `handler/ServerCommandHandlerReplay:33-57` | No authentication and a client-supplied game id: every command runs a blocking DB read on the single command thread and puts the loaded game into the game cache. | Require a joined (or replay-authenticated) session; move the DB load to the request processor; do not add games loaded only for a replay to the live game cache. |
+| 12.4 ✔ | M | `handler/ServerCommandHandlerLoadAutomaticPlayerMarkings:21-25`, `request/fumbbl/FumbblRequestLoadPlayerMarkingsForGameVersion` | No authentication; the command carries a complete `Game` and a coach name. The server loads that coach's auto-marking configuration from FUMBBL and the settings table and returns markings computed with it. | Require an authenticated session and use its coach, not the command's. |
+| 12.5 | M | `handler/AbstractServerCommandHandlerSketch:26-36`, `ServerSketchManager:17-37`, `ReplayState:53-59` | "Prevent sketching" is stored and broadcast but never checked when a sketch command arrives. Number of sketches and coordinates per session is unlimited and every one is broadcast. A sketch without id makes later `sketch.getId().equals(id)` throw, which with 12.1 open shuts the replay down. | Ignore sketch commands of coaches in `coachesPreventedFromSketching`; cap sketches per session and coordinates per sketch; ignore sketches without id. |
+| 12.6 ✔ | L | `ReplayState:19-31`, `handler/ServerCommandHandlerReplayStatus:32-45` | `ReplayState` stores `CLIENT_REPLAY_STATUS` from any replay session; only the push to others checks `hasControl`. A participant without control changes the state new joiners receive and can suppress the controller's next update (it is only pushed if it differs from the stored state). | Store the status only if the session has control. |
+| 12.7 ✔ | M | `handler/ServerCommandHandlerSetMarker:53-85` | Text is truncated and only coaches may set markers, but the coordinate is not required to be on the pitch and the player id is not required to exist. Each new id or coordinate adds a marker to the field model, which is synced to all clients. | Coordinate inside `FieldCoordinateBounds.FIELD`; player id must be a player of the game. |
+| 12.8 | L | `handler/ServerCommandHandlerTalk:42-110`, `ServerCommandHandlerUserSettings:35-49` | Talk and setting values have no length limit of their own (only the 64 KB message limit) and talk has no rate limit; every talk line is broadcast and, in FUMBBL mode, uploaded. | Cap talk length and setting value length; rate-limit talk per session. |
+
+Checked and sound, no work needed:
+
+- **Internal commands cannot be injected.** `NetCommandId.createNetCommand` has no case for internal
+  ids and throws; `CommandSocket.onTextMessage` catches it. Malformed JSON ends there as well.
+- **Chat slash-commands** are gated on the server (`handler/talk/TalkHandler.handles`,
+  `TalkRequirements`): test commands need a coach session in a test game or on a test server, live
+  state-edit commands need a non-coach session with the `STATE_EDIT` account property, and each handler
+  runs inside its own try/catch.
+- **Marker text** is truncated to `IDbTablePlayerMarkers.MAX_TEXT_LENGTH`; each coach can only write
+  their own side of a marker.
+- **User settings** are stored for the session's coach, not for a name from the command.
+- **Replay control** (`CLIENT_TRANSFER_REPLAY_CONTROL`, `CLIENT_SET_PREVENT_SKETCHING`) requires the
+  sending session to have control.
+- **Steps** only receive commands from the two coach sessions (`ServerCommunication:185-190`).
+
+Not checked: what FUMBBL verifies in the authorisation, team-load and game-check requests
+(`request/fumbbl/*`), and when games loaded through 12.3 leave the cache.
 
 ---
 
@@ -387,24 +426,27 @@ These are fixes to released behaviour, so each work package adds bugfix entries 
 one per row, in the style of the existing "Tasty Morsel: The server did not verify that …" entry.
 No rules version in the text.
 
-## 9. Open questions
+## 9. Decisions
 
-1. **Shared concrete steps.** Decided: split (§3.1). Shared concrete steps and behaviours are duplicated
+1. **Shared concrete steps.** Split (§3.1). Shared concrete steps and behaviours are duplicated
    into the ruleset packages; they do not call `CommandValidationMechanic`.
-2. **Feedback for rejected commands.** The plan ignores them silently and logs at debug level (§3.2).
-   Decide whether the sender should get a message.
-3. **Inducement purchase limits (10.2).** It was not checked whether maxima are also enforced outside
-   the server (e.g. on result upload). The server check is needed either way; the question is whether
-   the limits must match an external rule set.
-4. **`StepMvp:136-149`.** With exactly one MVP candidate the step seems to add the player and return
-   without a next action. Not an input-validation issue; confirm and fix with 10.8 if real.
-5. **Not audited, needs a look before closing this plan:** `step/mixed/StepInitLookIntoMyEyes` (sets the
-   target for `StepLookIntoMyEyes`), `step/bb2025/StepTreacherous`, `step/bb2025/inducements/StepThrowARock`
-   beyond 10.6, `StepSpecialEffect` zapping a player via a dugout coordinate, and
-   `StepBalefulHex.findPlayers:235-239` (distance-only filter can include dugout players).
-6. **Corrupted state.** The downstream effect of the `homePlaying` / turn-mode corruptions (4.13, 6.11,
-   7.7, 9.9) was not traced to the end. The fixes prevent the corruption; no repair of affected stored
-   games is planned.
-7. **Other rulesets.** `bb2016` and `bb2020` very likely share many of these gaps. Out of scope unless
-   requested.
-8. **Out of scope of the audit:** `handler/ServerCommandHandler*` classes and command deserialisation.
+2. **Feedback for rejected commands.** None for the sender; rejections are logged at warn level (§3.2).
+3. **Inducement purchase limits (10.2).** Taken from the game options and roster data the server already
+   has (`InducementType.availability`, roster positions).
+4. **`StepMvp` with a single candidate.** Confirmed by reading the code; added as 10.10.
+5. **Places the step audit had not covered.** Read afterwards:
+   - `step/mixed/StepInitLookIntoMyEyes`, `step/bb2025/StepTreacherous`,
+     `step/bb2025/inducements/StepThrowARock`: no client input; targets are computed by the server.
+     Only 10.6 (ignored `useInducement` result) applies to `StepThrowARock`.
+   - Zap on a dugout coordinate: real, added to 10.5.
+   - `StepBalefulHex.findPlayers`: real, added to 7.4.
+6. **Corrupted state** (4.13, 6.11, 7.7, 9.9). The fixes prevent the corruption. No repair of running or
+   stored games and no further tracing of the downstream effects.
+7. **Other rulesets.** Steps stay BB2025 only; `bb2016` and `bb2020` are not audited or changed.
+8. **Command handlers.** Audited; findings are WP12 and apply to all rulesets.
+
+## 10. Still open
+
+- What FUMBBL checks in the authorisation, team-load and game-check requests was not looked at (WP12).
+- Whether an off-pitch pass target ends in an exception or a lost ball (2.6); the fix rejects it either way.
+- 8.7: whether the Bribery and Corruption re-roll answer is dropped today needs a test.
