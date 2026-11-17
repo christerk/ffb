@@ -49,7 +49,7 @@ public class FumbblRequestPasswordChallenge extends ServerRequest {
 			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_AUTH_CHALLENGE.url(server.getProperties()),
 				URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
 			server.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-			String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
+			String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl(), new FumbblRequestHeaders().from(server.getProperties()));
 			if (StringTool.isProvided(responseXml)) {
 				server.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {

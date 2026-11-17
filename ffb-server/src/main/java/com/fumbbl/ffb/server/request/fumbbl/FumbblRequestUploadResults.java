@@ -61,7 +61,8 @@ public class FumbblRequestUploadResults extends ServerRequest {
 		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 		try {
 
-			String responseXml = UtilServerHttpClient.postMultipartXml(getRequestUrl(), challengeResponse, resultXml);
+			String responseXml = UtilServerHttpClient.postMultipartXml(getRequestUrl(), challengeResponse, resultXml,
+				new FumbblRequestHeaders().from(server.getProperties()));
 			server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), DebugLog.FUMBBL_RESPONSE, responseXml);
 
 			if (StringTool.isProvided(responseXml)) {

@@ -92,7 +92,7 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 					new String[]{URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
 						URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)}));
 				server.getDebugLog().log(IServerLogLevel.DEBUG, getGameId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
-				String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
+				String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl(), new FumbblRequestHeaders().from(server.getProperties()));
 				server.getDebugLog().log(IServerLogLevel.DEBUG, getGameId(), DebugLog.FUMBBL_RESPONSE, responseXml);
 				if (StringTool.isProvided(responseXml)) {
 					try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {

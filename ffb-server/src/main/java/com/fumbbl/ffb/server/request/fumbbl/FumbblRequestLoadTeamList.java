@@ -53,7 +53,7 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
 		try {
 			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_TEAMS.url(server.getProperties()),
 					URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
-			String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
+			String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl(), new FumbblRequestHeaders().from(server.getProperties()));
 			if (StringTool.isProvided(teamsXml)) {
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml))) {
 					InputSource xmlSource = new InputSource(xmlReader);

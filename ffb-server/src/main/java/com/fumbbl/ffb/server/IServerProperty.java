@@ -25,6 +25,7 @@ public interface IServerProperty {
 	String FUMBBL_PASSWORD = "fumbbl.password";
 	String FUMBBL_BASE = "fumbbl.base";
 	String FUMBBL_PORT = "fumbbl.port";
+	String FUMBBL_HEADER_PREFIX = "fumbbl.header.";
 
 	String ADMIN_SALT = "admin.salt";
 	String ADMIN_PASSWORD = "admin.password";
