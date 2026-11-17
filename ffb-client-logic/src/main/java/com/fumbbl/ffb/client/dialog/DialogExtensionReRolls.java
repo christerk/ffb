@@ -7,6 +7,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.TurnData;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -35,9 +36,26 @@ public class DialogExtensionReRolls {
 			return "Leader Re-Roll";
 		}
 		if (teamReRollSource == ReRollSources.DRIVE_BONUS_RE_ROLL) {
-			return "Drive Bonus Re-Roll";
+			return driveBonusLabel(game);
 		}
 		return teamReRollSource.getName(game);
+	}
+
+	// mirrors the server side order in which drive bonus re-rolls are consumed
+	private String driveBonusLabel(Game game) {
+		TurnData turnData = game != null ? game.getTurnDataHome() : null;
+		if (turnData != null) {
+			if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+				return "Brilliant Coaching";
+			}
+			if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+				return "Pump up the Crowd";
+			}
+			if (turnData.getReRollShowStarOneDrive() > 0) {
+				return "Star of the Show";
+			}
+		}
+		return "Drive Bonus Re-Roll";
 	}
 
 	public int mnemonic(ReRollSource teamReRollSource) {
