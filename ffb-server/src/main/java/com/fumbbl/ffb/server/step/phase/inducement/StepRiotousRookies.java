@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.report.ReportRiotousRookies;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.ServerUrlProperty;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestHeaders;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
@@ -99,7 +100,8 @@ public class StepRiotousRookies extends AbstractStep {
 		url.append(generator).append("/").append(gender.getName());
 
 		try {
-			String name = unquote(UtilServerHttpClient.fetchPage(url.toString()));
+			String name = unquote(UtilServerHttpClient.fetchPage(url.toString(),
+				new FumbblRequestHeaders().from(getGameState().getServer().getProperties())));
 			if (StringTool.isProvided(name)) {
 				return name;
 			}

@@ -43,7 +43,7 @@ public class UtilFumbblRequest {
 			return null;
 		}
 		try {
-			String responseXml = UtilServerHttpClient.fetchPage(pRequestUrl);
+			String responseXml = UtilServerHttpClient.fetchPage(pRequestUrl, new FumbblRequestHeaders().from(pServer.getProperties()));
 			pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 			return processFumbblGameStateResponse(pServer, pRequestUrl, responseXml);
 		} catch (IOException ioe) {
@@ -98,7 +98,7 @@ public class UtilFumbblRequest {
 			String challengeUrl = StringTool.bind(ServerUrlProperty.FUMBBL_AUTH_CHALLENGE.url(pServer.getProperties()),
 					URLEncoder.encode(pCoach, CHARACTER_ENCODING));
 			pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
-			String responseXml = UtilServerHttpClient.fetchPage(challengeUrl);
+			String responseXml = UtilServerHttpClient.fetchPage(challengeUrl, new FumbblRequestHeaders().from(pServer.getProperties()));
 			if (StringTool.isProvided(responseXml)) {
 				pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
@@ -140,7 +140,7 @@ public class UtilFumbblRequest {
 		TeamSkeleton team = null;
 		try {
 			String teamUrl = StringTool.bind(ServerUrlProperty.FUMBBL_TEAM.url(pServer.getProperties()), pTeamId);
-			String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
+			String teamXml = UtilServerHttpClient.fetchPage(teamUrl, new FumbblRequestHeaders().from(pServer.getProperties()));
 			if (StringTool.isProvided(teamXml)) {
 				team = new TeamSkeleton(pServer);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml))) {
@@ -162,7 +162,7 @@ public class UtilFumbblRequest {
 		Roster roster = null;
 		try {
 			String rosterUrl = StringTool.bind(ServerUrlProperty.FUMBBL_ROSTER_TEAM.url(pServer.getProperties()), pTeamId);
-			String rosterXml = UtilServerHttpClient.fetchPage(rosterUrl);
+			String rosterXml = UtilServerHttpClient.fetchPage(rosterUrl, new FumbblRequestHeaders().from(pServer.getProperties()));
 			if (StringTool.isProvided(rosterXml)) {
 				roster = new Roster();
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(rosterXml))) {

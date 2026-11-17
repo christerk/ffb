@@ -36,7 +36,8 @@ public class FumbblRequestUploadTalk extends ServerRequest {
 			setRequestUrl(ServerUrlProperty.FUMBBL_TALK.url(server.getProperties()));
 			server.getDebugLog().log(IServerLogLevel.DEBUG, gameId, DebugLog.FUMBBL_REQUEST, getRequestUrl() + " with payload " + chatJson);
 
-			String response = UtilServerHttpClient.postAuthorizedForm(getRequestUrl(), challengeResponse, "chat", chatJson);
+			String response = UtilServerHttpClient.postAuthorizedForm(getRequestUrl(), challengeResponse, "chat", chatJson,
+				new FumbblRequestHeaders().from(server.getProperties()));
 			server.getDebugLog().log(IServerLogLevel.DEBUG, gameId, response);
 
 		} catch (Exception ex) {

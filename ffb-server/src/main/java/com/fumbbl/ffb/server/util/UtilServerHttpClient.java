@@ -7,6 +7,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -19,7 +20,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +39,10 @@ public class UtilServerHttpClient {
 	}
 
 	public static String fetchPage(String url) throws IOException {
+		return fetchPage(url, Collections.emptyMap());
+	}
+
+	public static String fetchPage(String url, Map<String, String> headers) throws IOException {
 
 		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
@@ -43,6 +50,7 @@ public class UtilServerHttpClient {
 
 			HttpGet request = new HttpGet(url);
 			request.addHeader("Accept-Encoding", "gzip");
+			addHeaders(request, headers);
 
 			try (CloseableHttpResponse response = client.execute(request)) {
 				HttpEntity entity = response.getEntity();
@@ -79,6 +87,11 @@ public class UtilServerHttpClient {
 	}
 
 	public static String postMultipartXml(String url, String challengeResponse, String resultXml) throws IOException {
+		return postMultipartXml(url, challengeResponse, resultXml, Collections.emptyMap());
+	}
+
+	public static String postMultipartXml(String url, String challengeResponse, String resultXml,
+		Map<String, String> headers) throws IOException {
 
 		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
@@ -86,11 +99,16 @@ public class UtilServerHttpClient {
 		entityBuilder.addTextBody("response", challengeResponse);
 		entityBuilder.addBinaryBody("f", resultXml.getBytes(CHARACTER_ENCODING), ContentType.TEXT_XML, "result.xml");
 
-		return post(clientBuilder, url, entityBuilder.build());
+		return post(clientBuilder, url, entityBuilder.build(), headers);
 
 	}
 
 	public static String postAuthorizedForm(String url, String challengeResponse, String key, String payload) throws IOException {
+		return postAuthorizedForm(url, challengeResponse, key, payload, Collections.emptyMap());
+	}
+
+	public static String postAuthorizedForm(String url, String challengeResponse, String key, String payload,
+		Map<String, String> headers) throws IOException {
 
 		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
@@ -99,27 +117,35 @@ public class UtilServerHttpClient {
 		params.add(new BasicNameValuePair(key, payload));
 
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params);
-		return post(clientBuilder, url, entity);
+		return post(clientBuilder, url, entity, headers);
 	}
 
 	public static String post(String url, File file) throws IOException {
 
 		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
-		return post(clientBuilder, url, new FileEntity(file));
+		return post(clientBuilder, url, new FileEntity(file), Collections.emptyMap());
 
 	}
 
-	private static String post(HttpClientBuilder clientBuilder, String url, HttpEntity entity) throws IOException {
+	private static String post(HttpClientBuilder clientBuilder, String url, HttpEntity entity,
+		Map<String, String> headers) throws IOException {
 		try (CloseableHttpClient client = clientBuilder.build()) {
 
 			HttpPost request = new HttpPost(url);
 			request.setEntity(entity);
+			addHeaders(request, headers);
 
 			try (CloseableHttpResponse response = client.execute(request)) {
 				return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
 			}
 
+		}
+	}
+
+	private static void addHeaders(HttpRequestBase request, Map<String, String> headers) {
+		if (headers != null) {
+			headers.forEach(request::addHeader);
 		}
 	}
 

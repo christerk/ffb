@@ -25,7 +25,7 @@ public abstract class AbstractFumbblRequestLoadPlayerMarkings extends ServerRequ
 			coach));
 
 		try {
-			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
+			String response = UtilServerHttpClient.fetchPage(getRequestUrl(), new FumbblRequestHeaders().from(server.getProperties()));
 			@SuppressWarnings("deprecation") JsonValue jsonValue = JsonValue.readFrom(response);
 			if (jsonValue != null && !jsonValue.isNull()) {
 				config.initFrom(rules, jsonValue);
