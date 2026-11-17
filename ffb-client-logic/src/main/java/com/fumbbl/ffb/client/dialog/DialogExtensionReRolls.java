@@ -46,13 +46,13 @@ public class DialogExtensionReRolls {
 		TurnData turnData = game != null ? game.getTurnDataHome() : null;
 		if (turnData != null) {
 			if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-				return "Brilliant Coaching Re-Roll";
+				return "Brilliant Coaching";
 			}
 			if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-				return "Pump up the Crowd Re-Roll";
+				return "Pump up the Crowd";
 			}
 			if (turnData.getReRollShowStarOneDrive() > 0) {
-				return "Star of the Show Re-Roll";
+				return "Star of the Show";
 			}
 		}
 		return "Drive Bonus Re-Roll";

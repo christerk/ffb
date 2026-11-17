@@ -30,7 +30,7 @@ class DialogExtensionReRollsTest {
 		when(turnData.getReRollsPumpUpTheCrowdOneDrive()).thenReturn(1);
 		when(turnData.getReRollShowStarOneDrive()).thenReturn(1);
 
-		assertEquals("Brilliant Coaching Re-Roll", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
+		assertEquals("Brilliant Coaching", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
 	}
 
 	@Test
@@ -38,14 +38,14 @@ class DialogExtensionReRollsTest {
 		when(turnData.getReRollsPumpUpTheCrowdOneDrive()).thenReturn(1);
 		when(turnData.getReRollShowStarOneDrive()).thenReturn(1);
 
-		assertEquals("Pump up the Crowd Re-Roll", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
+		assertEquals("Pump up the Crowd", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
 	}
 
 	@Test
 	void driveBonusLabelNamesStarOfTheShow() {
 		when(turnData.getReRollShowStarOneDrive()).thenReturn(1);
 
-		assertEquals("Star of the Show Re-Roll", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
+		assertEquals("Star of the Show", extension.label(ReRollSources.DRIVE_BONUS_RE_ROLL, game));
 	}
 
 	@Test
