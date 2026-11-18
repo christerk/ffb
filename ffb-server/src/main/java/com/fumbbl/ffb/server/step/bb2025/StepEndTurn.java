@@ -804,7 +804,7 @@ public class StepEndTurn extends AbstractStep {
 					modifiedRoll += biasedRefBonus;
 
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
-					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
+					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
 					getResult().addReport(
 						new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef,
 							biasedRefBonus));
