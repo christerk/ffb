@@ -195,6 +195,9 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case FURIOUS_OUTPBURST:
 									clientStateId = ClientStateId.FURIOUS_OUTBURST;
 									break;
+								case SQUIG_RAGE:
+									clientStateId = ClientStateId.SELECT_PLAYER;
+									break;
 								default:
 									break;
 							}

@@ -74,6 +74,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 				put(IPlayerPopupMenuKeys.KEY_CHOMP, ClientAction.CHOMP);
 				put(IPlayerPopupMenuKeys.KEY_PUNT, ClientAction.PUNT);
+				put(IPlayerPopupMenuKeys.KEY_SQUIG_RAGE, ClientAction.SQUIG_RAGE);
 			} else {
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, ClientAction.SHOT_TO_NOTHING);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, ClientAction.SHOT_TO_NOTHING_BOMB);
@@ -314,6 +315,8 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			new MenuItemConfig("\"Blastin' Solves Everything\"", IIconProperty.ACTION_STARTED_BLASTIN,
 				IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 		configs.put(ClientAction.CHOMP, new MenuItemConfig("Chomp", IIconProperty.ACTION_CHOMP, IPlayerPopupMenuKeys.KEY_CHOMP));
+		configs.put(ClientAction.SQUIG_RAGE,
+			new MenuItemConfig("Roll for Squig Rage", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_SQUIG_RAGE));
 		configs.put(ClientAction.PUNT, new MenuItemConfig("Punt", IIconProperty.ACTION_PUNT, IPlayerPopupMenuKeys.KEY_PUNT));
 
 		return configs;

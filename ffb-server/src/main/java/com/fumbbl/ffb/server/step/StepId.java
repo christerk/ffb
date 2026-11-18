@@ -62,6 +62,7 @@ public enum StepId implements INamedObject {
 	END_FEEDING("endFeeding"), // action.end
 	END_FOULING("endFouling"), // action.foul
 	END_FURIOUS_OUTBURST("endFuriousOutburst"),
+	END_SQUIG_RAGE("endSquigRage"),
 	END_GAME("endGame"), // game.end
 	END_INDUCEMENT("endInducement"), // phase.inducement
 	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
@@ -195,6 +196,7 @@ public enum StepId implements INamedObject {
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common
 	TREACHEROUS("treacherous"), // action.special
+	SQUIG_RAGE("squigRage"),
 	TRICKSTER("trickster"),
 	TOUCHBACK("touchback"), // phase.kickoff
 	UNCHANNELLED_FURY("unchannelledFury"), // action.common

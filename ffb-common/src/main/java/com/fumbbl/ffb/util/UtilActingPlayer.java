@@ -38,17 +38,24 @@ public class UtilActingPlayer {
 			if (currentState.getBase() == PlayerState.MOVING) {
 				boolean isThrowBombAction = PlayerAction.THROW_BOMB == actingPlayer.getPlayerAction();
 				boolean isHailMaryBombAction = PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction();
+				Skill squigRage = oldPlayer.getSkillWithProperty(NamedProperties.requiresRageRollBeforeDeclaringAction);
+				// a prone player only activated by the Squig Rage roll did not stand up yet
+				boolean stillProneAfterSquigRage = squigRage != null && actingPlayer.isSkillUsed(squigRage)
+					&& actingPlayer.isStandingUp() && !actingPlayer.hasActedIgnoringNegativeTraits();
 				if (actingPlayer.hasActed() && ((!isThrowBombAction && !isHailMaryBombAction)
 					|| (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.enableThrowBombAction)
 					&& !UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction)))) {
 					pGame.getFieldModel().setPlayerState(oldPlayer,
-						currentState.changeBase(PlayerState.STANDING).changeActive(false));
+						currentState.changeBase(stillProneAfterSquigRage ? PlayerState.PRONE : PlayerState.STANDING).changeActive(false));
 				} else if (actingPlayer.isStandingUp() || actingPlayer.wasProne()) {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.PRONE));
 				} else {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING));
 				}
 
+			} else if (PlayerAction.SQUIG_RAGE == actingPlayer.getPlayerAction() && actingPlayer.hasActed()) {
+				// the player has been activated by rolling for Squig Rage but never declared an action
+				pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeActive(false));
 			}
 			if (!actingPlayer.hasActed()) {
 				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
@@ -80,8 +87,16 @@ public class UtilActingPlayer {
 				PlayerState oldState = pGame.getFieldModel().getPlayerState(newPlayer);
 				actingPlayer.setOldPlayerState(oldState);
 				actingPlayer.setStandingUp(oldState.getBase() == PlayerState.PRONE);
-				// show acting player as moving
-				fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));
+				// Squig Rage is rolled before an action is declared, so the player keeps the current base until then
+				if (pPlayerAction != PlayerAction.SQUIG_RAGE) {
+					// show acting player as moving
+					fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));
+				}
+			} else if (actingPlayer.getPlayerAction() == PlayerAction.SQUIG_RAGE && pPlayerAction != PlayerAction.SQUIG_RAGE) {
+				PlayerState currentState = fieldModel.getPlayerState(newPlayer);
+				if (currentState.getBase() != PlayerState.MOVING) {
+					fieldModel.setPlayerState(newPlayer, currentState.changeBase(PlayerState.MOVING));
+				}
 			}
 			actingPlayer.setPlayerAction(pPlayerAction);
 			actingPlayer.setJumping(jumping);

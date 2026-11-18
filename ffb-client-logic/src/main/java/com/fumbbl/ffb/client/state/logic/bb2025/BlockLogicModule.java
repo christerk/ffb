@@ -42,6 +42,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			} else {
 				ActionContext actionContext = actionContext(actingPlayer);
 				if (actionContext.getActions().isEmpty()) {
+					if (isBlockForcedBySquigRage(actingPlayer)) {
+						return InteractionResult.ignore();
+					}
 					deselectActingPlayer();
 					return InteractionResult.handled();
 				} else {
@@ -99,6 +102,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 		if (isIllCarryYouAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
+		if (isBlockForcedBySquigRage(actingPlayer)) {
+			return actionContext;
+		}
 		if (!actionContext.getActions().isEmpty() || actingPlayer.hasActed()) {
 			actionContext.add(ClientAction.END_MOVE);
 			if (actingPlayer.hasActed()) {
@@ -118,7 +124,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 
 		switch (action) {
 			case END_MOVE:
-				communication.sendActingPlayer(null, null, false);
+				if (!isBlockForcedBySquigRage(actingPlayer)) {
+					communication.sendActingPlayer(null, null, false);
+				}
 				break;
 			case MOVE:
 				communication.sendActingPlayer(player, PlayerAction.MOVE, client.getGame().getActingPlayer().isJumping());
@@ -162,5 +170,10 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			default:
 				break;
 		}
+	}
+
+	private boolean isBlockForcedBySquigRage(ActingPlayer actingPlayer) {
+		return actingPlayer.isMustCompleteAction() && actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+			&& !actingPlayer.hasBlocked();
 	}
 }
