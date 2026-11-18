@@ -83,7 +83,8 @@ public class UtilServerGame {
 		boolean playerChanged = UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping);
 		if (pPlayerAction != null) {
 			boolean differentAction = (oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType());
-			if ((playerChanged && differentAction) || pPlayerAction.forceLog()) {
+			boolean declaredAfterSquigRage = oldPlayerAction == PlayerAction.SQUIG_RAGE && differentAction;
+			if ((playerChanged && differentAction) || declaredAfterSquigRage || pPlayerAction.forceLog()) {
 				if (oldPlayerAction == null) {
 					pStep.getResult().setSound(SoundId.CLICK);
 				}

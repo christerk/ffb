@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 /**
@@ -63,6 +64,7 @@ public final class StepInitSelecting extends AbstractStep {
 
 	private final StallingExtension stallingExtension = new StallingExtension();
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+	private final SquigRageService squigRageService = new SquigRageService();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -113,11 +115,18 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
+					// a block forced by Squig Rage has to be performed
+					if (actingPlayer.isMustCompleteAction() && actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+						&& !actingPlayer.hasBlocked()) {
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()
 						// the moving player of a pass block is the one whose action was interrupted by a dump-off
 						&& !(game.getTurnMode().isPassBlock() && playerState.getBase() == PlayerState.MOVING)
-						&& turnActionLimitService.isActionAvailable(game, selectedPlayer, actingPlayerCommand.getPlayerAction())) {
+						&& turnActionLimitService.isActionAvailable(game, selectedPlayer, actingPlayerCommand.getPlayerAction())
+						&& squigRageService.requiresRoll(game, selectedPlayer) == (actingPlayerCommand.getPlayerAction() == PlayerAction.SQUIG_RAGE)) {
 						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
 						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;

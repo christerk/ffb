@@ -23,7 +23,7 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 		Card, EndGame, EndPlayerAction, EndTurn, Foul, FuriousOutburst, IllCarryYou, Inducement, KickTeamMate, Kickoff,
 		LookIntoMyEyes, MultiBlock, Move, Pass, PileDriver, Punt,
 		QuickBite, RaidingParty, RiotousRookies, ScatterPlayer, Select, SelectBlitzTarget, SelectGazeTarget,
-		SpecialEffect, SpikedBallApo, StartGame, ThenIStartedBlastin, ThrowARock, ThrowKeg, ThrowTeamMate, Treacherous, Wizard
+		SpecialEffect, SpikedBallApo, SquigRage, StartGame, ThenIStartedBlastin, ThrowARock, ThrowKeg, ThrowTeamMate, Treacherous, Wizard
 	}
 
 	public static class SequenceParams {

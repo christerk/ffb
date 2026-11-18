@@ -61,7 +61,8 @@ public enum PlayerAction implements INamedObject {
 	INCORPOREAL("incorporeal", 55, "becomes incorporeal"),
 	CHOMP("chomp", 56, "starts a Chomp action", IIconProperty.ACTION_CHOMP),
 	PUNT("punt", 57, null),
-	PUNT_MOVE("puntMove", 57, "starts a Punt action", IIconProperty.ACTION_PUNT);
+	PUNT_MOVE("puntMove", 57, "starts a Punt action", IIconProperty.ACTION_PUNT),
+	SQUIG_RAGE("squigRage", 58, "rolls for Squig Rage");
 
 	private final String fName;
 	private final int fType;
@@ -169,6 +170,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean forceDispatch() {
-		return this == PlayerAction.FURIOUS_OUTPBURST || this == PlayerAction.FORGO || this == PlayerAction.PUNT;
+		return this == PlayerAction.FURIOUS_OUTPBURST || this == PlayerAction.FORGO || this == PlayerAction.PUNT
+			|| this == PlayerAction.SQUIG_RAGE;
 	}
 }

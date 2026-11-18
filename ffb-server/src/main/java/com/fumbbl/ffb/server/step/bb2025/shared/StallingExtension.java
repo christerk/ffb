@@ -45,6 +45,7 @@ public class StallingExtension {
 		add(NamedProperties.needsToRollForActionBlockingIsEasier);
 		add(NamedProperties.needsToRollForActionButKeepsTacklezone);
 		add(NamedProperties.becomesImmovable);
+		add(NamedProperties.requiresRageRollBeforeDeclaringAction);
 	}};
 
 	public boolean isConsideredStalling(Game game, Player<?> player) {

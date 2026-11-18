@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import java.util.Set;
 public class SelectLogicModule extends LogicModule {
 
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+	private final SquigRageService squigRageService = new SquigRageService();
 
 	public SelectLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
@@ -95,6 +97,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.CHOMP);
 			add(ClientAction.PUNT);
+			add(ClientAction.SQUIG_RAGE);
 		}};
 	}
 
@@ -108,6 +111,11 @@ public class SelectLogicModule extends LogicModule {
 		if (player != null) {
 			ClientCommunication communication = client.getCommunication();
 			switch (action) {
+				case SQUIG_RAGE:
+					if (squigRageService.requiresRoll(client.getGame(), player)) {
+						communication.sendActingPlayer(player, PlayerAction.SQUIG_RAGE, false);
+					}
+					break;
 				case BLOCK:
 					communication.sendActingPlayer(player, PlayerAction.BLOCK, false);
 					break;
@@ -261,6 +269,12 @@ public class SelectLogicModule extends LogicModule {
 	protected ActionContext actionContext(Player<?> player) {
 		ActionContext context = new ActionContext();
 		Game game = client.getGame();
+
+		// Squig Rage has to be rolled for before any action can be declared
+		if (squigRageService.requiresRoll(game, player)) {
+			context.add(ClientAction.SQUIG_RAGE);
+			return context;
+		}
 
 		boolean treacherousAvailable = isTreacherousAvailable(player);
 		if (treacherousAvailable) {

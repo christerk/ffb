@@ -1,0 +1,65 @@
+package com.fumbbl.ffb.util.bb2025;
+
+import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilPlayer;
+
+/**
+ * Evaluates the Squig Rage trait which has to be rolled for on activation before an action is declared.
+ */
+public class SquigRageService {
+
+	public Skill squigRageSkill(Player<?> player) {
+		return player == null ? null : player.getSkillWithProperty(NamedProperties.requiresRageRollBeforeDeclaringAction);
+	}
+
+	public boolean requiresRoll(Game game, Player<?> player) {
+		Skill skill = squigRageSkill(player);
+		TurnMode turnMode = game.getTurnMode();
+		if (skill == null || turnMode == null || !turnMode.checkNegatraits()) {
+			return false;
+		}
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return !player.getId().equals(actingPlayer.getPlayerId()) || !actingPlayer.isSkillUsed(skill);
+	}
+
+	/**
+	 * Opponents the player is able to block. Ball &amp; Chain does not prevent this block.
+	 */
+	public Player<?>[] blockTargets(Game game, Player<?> player) {
+		FieldModel fieldModel = game.getFieldModel();
+		PlayerState playerState = fieldModel.getPlayerState(player);
+		if (playerState == null || !playerState.isActive()
+			|| fieldModel.hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)) {
+			return new Player<?>[0];
+		}
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		if (!mechanic.isBlockActionAllowed(game.getTurnMode())) {
+			return new Player<?>[0];
+		}
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		boolean prone = playerState.getBase() == PlayerState.PRONE
+			|| (player.getId().equals(actingPlayer.getPlayerId()) && actingPlayer.isStandingUp());
+		if (prone ? !player.hasSkillProperty(NamedProperties.canStandUpForFree) : !playerState.hasTacklezones()) {
+			return new Player<?>[0];
+		}
+		FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
+		return UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(player.getTeam()), coordinate);
+	}
+
+	public Player<?>[] teamMateTargets(Game game, Player<?> player) {
+		FieldCoordinate coordinate = game.getFieldModel().getPlayerCoordinate(player);
+		return UtilPlayer.findAdjacentBlockablePlayers(game, player.getTeam(), coordinate);
+	}
+}
