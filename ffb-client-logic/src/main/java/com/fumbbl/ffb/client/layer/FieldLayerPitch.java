@@ -4,7 +4,6 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
@@ -19,6 +18,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -45,19 +45,14 @@ public class FieldLayerPitch extends FieldLayer {
 	}
 
 	protected void drawPitch(BufferedImage pImage) {
-		Graphics2D g2d = fImage.createGraphics();
+		Graphics2D g2d = createWorldGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		int origin = pitchViewport.gridOffset();
-		double scale = (double) pitchViewport.squareSize() / LayoutSettings.BASE_SQUARE_SIZE;
-		if (uiDimensionProvider.isPitchPortrait()) {
-			g2d.translate(origin, origin + 26 * pitchViewport.squareSize());
-			g2d.rotate(-Math.PI / 2);
-		} else {
-			g2d.translate(origin, origin);
-		}
-		g2d.scale(scale, scale);
-		g2d.drawImage(pImage, -1, -1, 782, 452, null);
+		// Pitch artwork includes a one-base-unit border around the 780 x 450 grid.
+		AffineTransform imageToWorld = AffineTransform.getTranslateInstance(-1, -1);
+		imageToWorld.scale((PitchViewport.WORLD_WIDTH + 2.0) / pImage.getWidth(),
+			(PitchViewport.WORLD_HEIGHT + 2.0) / pImage.getHeight());
+		g2d.drawImage(pImage, imageToWorld, null);
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);

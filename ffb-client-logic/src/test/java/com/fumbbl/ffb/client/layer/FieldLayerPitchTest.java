@@ -1,48 +1,62 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ClientLayout;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
+import com.fumbbl.ffb.client.layout.ClientLayoutCalculator;
+import com.fumbbl.ffb.client.layout.ClientLayoutResult;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 class FieldLayerPitchTest {
 	@Test
-	void artworkDotsAlignWithGridInBothOrientationsAtMultipleScales() {
-		for (ClientLayout layout : new ClientLayout[] {ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT}) {
-			for (int square : new int[] {30, 45}) {
-				LayoutSettings settings = new LayoutSettings(layout, 1);
-				UiDimensionProvider ui = new UiDimensionProvider(settings);
-				PitchViewport viewport = new PitchViewport(ui, settings);
-				viewport.setRuntimePitchScale(square / 30.0);
-				int border = viewport.gridOffset();
-				int columns = layout.isPortrait() ? 15 : 26;
-				int rows = layout.isPortrait() ? 26 : 15;
-				viewport.setViewportBounds(new Rectangle(0, 0, columns * square + 2 * border,
-					rows * square + 2 * border));
-				FieldLayerPitch layer = new FieldLayerPitch(mock(FantasyFootballClient.class), ui,
-					new PitchDimensionProvider(settings, viewport), viewport, null);
-				layer.initLayout();
-				BufferedImage artwork = new BufferedImage(782, 452, BufferedImage.TYPE_INT_ARGB);
-				Graphics2D graphics = artwork.createGraphics();
-				graphics.setColor(Color.WHITE);
-				graphics.fillRect(29, 29, 4, 4);
-				graphics.dispose();
-				layer.drawPitch(artwork);
-				int x = border + square - 1;
-				int y = border + (layout.isPortrait() ? 25 : 1) * square - 1;
-				assertEquals(Color.WHITE.getRGB(), layer.getImage().getRGB(x, y), layout + " square " + square);
+	void artworkAndInputUseTheSameGridInEveryLayoutAndAtDifferentSourceResolutions() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			for (double scale : new double[]{0.73, 1.0, 1.25}) {
+				LayoutSettings settings = new LayoutSettings(layout, scale);
+				ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+				ClientLayoutResult result = calculator.calculate(settings, calculator.referenceContentSize(settings));
+				PitchViewport viewport = new PitchViewport(new UiDimensionProvider(settings), settings);
+				viewport.setRuntimePitchScale(result.pitchScale());
+				viewport.setViewportBounds(result.fieldBounds());
+				for (int resolution : new int[]{1, 2}) {
+					BufferedImage artwork = new BufferedImage(782 * resolution, 452 * resolution, BufferedImage.TYPE_INT_ARGB);
+					Graphics2D graphics = artwork.createGraphics();
+					graphics.scale(resolution, resolution);
+					for (int y = 0; y < 15; y++) {
+						for (int x = 0; x < 26; x++) {
+							graphics.setColor(color(x, y));
+							graphics.fillRect(1 + x * 30, 1 + y * 30, 30, 30);
+						}
+					}
+					graphics.dispose();
+					FieldLayerPitch layer = new FieldLayerPitch(null, null, null, viewport, null);
+					layer.initLayout();
+					layer.drawPitch(artwork);
+					for (int y = 0; y < 15; y++) {
+						for (int x = 0; x < 26; x++) {
+							FieldCoordinate coordinate = new FieldCoordinate(x, y);
+							Dimension center = viewport.toLocal(coordinate, true);
+							assertEquals(color(x, y).getRGB(), layer.getImage().getRGB(center.width, center.height),
+								layout + " " + scale + " " + coordinate);
+							assertEquals(coordinate, viewport.toFieldCoordinate(new Point(center.width, center.height)));
+						}
+					}
+				}
 			}
 		}
+	}
+
+	private Color color(int x, int y) {
+		return new Color(20 + x * 8, 20 + y * 15, 100);
 	}
 }

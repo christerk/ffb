@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.layout.ClientLayoutCalculator;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -28,7 +29,12 @@ public class DialogScalingFactor extends Dialog {
 	private final JLabel overallLabel;
 	private final LayoutSettings initialSettings;
 	private final Dimension initialContentSize;
+	private final double initialOverallScale;
 	private final Timer previewTimer;
+	private double selectedScale;
+	private double selectedGuiRatio;
+	private int previousOverallStep;
+	private int previousGuiStep;
 	private boolean previewApplied;
 	private Double appliedGuiRatio;
 	private Double appliedFactor;
@@ -42,24 +48,39 @@ public class DialogScalingFactor extends Dialog {
 		initialSettings = new LayoutSettings(current.getLayout(), current.getScale());
 		initialSettings.setGuiRatio(current.getGuiRatio());
 		initialContentSize = new Dimension(client.getUserInterface().getDesktop().getSize());
+		initialOverallScale = new ClientLayoutCalculator().overallScale(initialSettings, initialContentSize);
+		selectedScale = initialOverallScale;
+		selectedGuiRatio = initialSettings.getGuiRatio();
 		previewTimer = new Timer(100, event -> preview());
 		previewTimer.setRepeats(false);
 
 		// Configure sliders and live preview.
-		overallSlider = new JSlider((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR),
-			(int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
-		overallSlider.setValue((int) Math.round(initialSettings.getScale() * SLIDER_FACTOR));
+		int initialStep = (int) Math.round(initialOverallScale * SLIDER_FACTOR);
+		overallSlider = new JSlider(Math.min((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR), initialStep),
+			Math.max((int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR), initialStep), initialStep);
+		previousOverallStep = initialStep;
 		guiSlider = new JSlider((int) (LayoutSettings.MIN_GUI_RATIO * SLIDER_FACTOR),
 			(int) (LayoutSettings.MAX_GUI_RATIO * SLIDER_FACTOR));
 		guiSlider.setValue((int) Math.round(dimensionProvider().getLayoutSettings().getGuiRatio() * SLIDER_FACTOR));
+		previousGuiStep = guiSlider.getValue();
 		guiLabel = new JLabel(dimensionProvider(), "100%");
 		overallLabel = new JLabel(dimensionProvider(), "500%");
 		overallLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		overallSlider.addChangeListener(event -> {
+			if (overallSlider.getValue() == previousOverallStep) {
+				return;
+			}
+			previousOverallStep = overallSlider.getValue();
+			selectedScale = (double) previousOverallStep / SLIDER_FACTOR;
 			updateSettingLabel();
 			queuePreview();
 		});
 		guiSlider.addChangeListener(event -> {
+			if (guiSlider.getValue() == previousGuiStep) {
+				return;
+			}
+			previousGuiStep = guiSlider.getValue();
+			selectedGuiRatio = (double) previousGuiStep / SLIDER_FACTOR;
 			updateSettingLabel();
 			queuePreview();
 		});
@@ -127,10 +148,8 @@ public class DialogScalingFactor extends Dialog {
 	}
 
 	private void preview() {
-		double factor = (double) overallSlider.getValue() / SLIDER_FACTOR;
-		double ratio = (double) guiSlider.getValue() / SLIDER_FACTOR;
 		UserInterface userInterface = getClient().getUserInterface();
-		userInterface.previewScale(factor, ratio, initialSettings, initialContentSize);
+		userInterface.previewScale(selectedScale, selectedGuiRatio, initialSettings, initialContentSize);
 		previewApplied = true;
 		Dimension desktop = userInterface.getDesktop().getSize();
 		setLocation(Math.max(0, Math.min(getX(), desktop.width - getWidth())),
@@ -138,15 +157,17 @@ public class DialogScalingFactor extends Dialog {
 	}
 
 	private void updateSettingLabel() {
-		overallLabel.setText((overallSlider.getValue() * 100 / SLIDER_FACTOR) + "%");
-		guiLabel.setText((guiSlider.getValue() * 100 / SLIDER_FACTOR) + "%");
+		overallLabel.setText(Math.round(selectedScale * 100) + "%");
+		guiLabel.setText(Math.round(selectedGuiRatio * 100) + "%");
 	}
 
 	private void confirm() {
 		previewTimer.stop();
-		preview();
-		appliedFactor = (double) overallSlider.getValue() / SLIDER_FACTOR;
-		appliedGuiRatio = (double) guiSlider.getValue() / SLIDER_FACTOR;
+		if (selectedScale != initialOverallScale || selectedGuiRatio != initialSettings.getGuiRatio()) {
+			preview();
+			appliedFactor = selectedScale;
+			appliedGuiRatio = selectedGuiRatio;
+		}
 		internalFrameClosing(null);
 	}
 
@@ -154,8 +175,7 @@ public class DialogScalingFactor extends Dialog {
 	public void hideDialog() {
 		previewTimer.stop();
 		if (appliedFactor == null && previewApplied) {
-			getClient().getUserInterface().previewScale(initialSettings.getScale(), initialSettings.getGuiRatio(),
-				initialSettings, initialContentSize);
+			getClient().getUserInterface().restoreScalePreview(initialSettings, initialContentSize);
 			previewApplied = false;
 		}
 		super.hideDialog();

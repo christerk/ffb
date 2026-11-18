@@ -291,7 +291,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		LayoutSettings target = new LayoutSettings(initialSettings.getLayout(), initialSettings.getScale());
 		target.setGuiRatio(guiRatio);
 		Dimension targetReference = layoutCalculator.referenceContentSize(target);
-		double overallChange = scale / initialSettings.getScale();
+		double overallChange = scale / layoutCalculator.overallScale(initialSettings, initialContentSize);
 		double widthChange = (double) targetReference.width / initialReference.width;
 		double heightChange = (double) targetReference.height / initialReference.height;
 		Dimension contentSize = new Dimension(
@@ -300,7 +300,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		layoutSettings.setScale(scale);
 		layoutSettings.setGuiRatio(guiRatio);
+		setScalePreviewSize(contentSize);
+	}
 
+	public void restoreScalePreview(LayoutSettings initialSettings, Dimension initialContentSize) {
+		layoutSettings.setScale(initialSettings.getScale());
+		layoutSettings.setGuiRatio(initialSettings.getGuiRatio());
+		setScalePreviewSize(initialContentSize);
+	}
+
+	private void setScalePreviewSize(Dimension contentSize) {
 		Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
 		Insets frameInsets = getInsets();
 		Insets contentInsets = getContentPane().getInsets();

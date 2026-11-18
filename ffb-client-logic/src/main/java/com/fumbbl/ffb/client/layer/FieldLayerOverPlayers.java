@@ -8,7 +8,13 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -20,7 +26,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -127,15 +132,13 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			}
 
 			Dimension dimensionWithOffset = pitchViewport.toLocal(pMoveSquare.getCoordinate(), true);
-			Dimension dimension = pitchViewport.toLocal(pMoveSquare.getCoordinate());
-			int x = dimension.width + 2;
-			int y = dimension.height + 2;
+			int x;
+			int y;
 			Graphics2D g2d = getImage().createGraphics();
 			GraphicsEnhancer.applyAAHints(g2d);
 
 			g2d.setPaint(COLOR_MOVE_SQUARE);
-			Rectangle bounds = new Rectangle(x, y, pitchViewport.squareSize() - 4, pitchViewport.squareSize() - 4);
-			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			fillSquare(g2d, pMoveSquare.getCoordinate(), 2);
 
 			g2d.setColor(COLOR_TARGET_NUMBER);
 			if ((pMoveSquare.getMinimumRollGoForIt() > 0) && (pMoveSquare.getMinimumRollDodge() > 0)) {
@@ -270,11 +273,9 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
-			Dimension dimension = pitchViewport.toLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, pitchViewport.squareSize() - 2, pitchViewport.squareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
-			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			fillSquare(g2d, pCoordinate, 1);
 			g2d.dispose();
 		}
 	}

@@ -38,19 +38,17 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 public class FieldLayerTackleZones extends FieldLayer {
 
 	private static final float ALPHA = 0.15f;
-	private static final float[] TZ_DASH = {6f, 4f};
-	private static final BasicStroke STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, TZ_DASH, 0f);
 
 	private final StyleProvider styleProvider;
 
@@ -77,8 +75,10 @@ public class FieldLayerTackleZones extends FieldLayer {
 		boolean showPassiveOnly = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(setting);
 		boolean showPassiveBothOnSetup = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP.equals(setting);
 
-		Graphics2D g2d = getImage().createGraphics();
-		g2d.setStroke(STROKE);
+		Graphics2D g2d = createWorldGraphics();
+		float pixel = (float) (1 / pitchViewport.effectiveScale());
+		g2d.setStroke(new BasicStroke(pixel, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+			10f, new float[]{6 * pixel, 4 * pixel}, 0f));
 
 		if (showPassiveOnly || showPassiveBothOnSetup) {
 			// Handle both passive modes
@@ -152,9 +152,25 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 	private void drawContours(Graphics2D g2d, FieldCoordinate coordinate, Set<FieldCoordinate> processedCoords) {
 		List<Direction> directions = borderDirections(coordinate, processedCoords);
-		Dimension origin = pitchViewport.toLocal(coordinate);
+		Rectangle2D bounds = pitchViewport.worldSquare(coordinate);
 		for (Direction direction : directions) {
-			drawContour(g2d, contourOrigin(origin, direction), contourTarget(origin, direction));
+			g2d.setComposite(AlphaComposite.SrcOver);
+			switch (direction) {
+				case NORTH:
+					g2d.draw(new Line2D.Double(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMinY()));
+					break;
+				case SOUTH:
+					g2d.draw(new Line2D.Double(bounds.getMinX(), bounds.getMaxY(), bounds.getMaxX(), bounds.getMaxY()));
+					break;
+				case WEST:
+					g2d.draw(new Line2D.Double(bounds.getMinX(), bounds.getMinY(), bounds.getMinX(), bounds.getMaxY()));
+					break;
+				case EAST:
+					g2d.draw(new Line2D.Double(bounds.getMaxX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY()));
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -172,56 +188,12 @@ public class FieldLayerTackleZones extends FieldLayer {
 		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX() + 1, coordinate.getY()))) {
 			directions.add(Direction.EAST);
 		}
-		return directions.stream().map(pitchViewport::toLocal).collect(Collectors.toList());
+		return directions;
 	}
 
 	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate) {
-		Dimension origin = pitchViewport.toLocal(coordinate);
-		paintZoneRect(g2d, origin.width, origin.height);
-	}
-
-	private Dimension contourOrigin(Dimension upperLeft, Direction fromPlayer) {
-		switch (fromPlayer) {
-			case SOUTH:
-				return new Dimension(upperLeft.width, upperLeft.height + pitchViewport.squareSize());
-
-			case EAST:
-				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height);
-
-			default:
-				return upperLeft;
-		}
-	}
-
-	private Dimension contourTarget(Dimension upperLeft, Direction fromPlayer) {
-		switch (fromPlayer) {
-			case NORTH:
-				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height);
-
-			case WEST:
-				return new Dimension(upperLeft.width, upperLeft.height + pitchViewport.squareSize());
-
-			case EAST:
-			case SOUTH:
-				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height + pitchViewport.squareSize());
-			default:
-				return upperLeft;
-		}
-	}
-
-	// Paints a single colored translucent zone square.
-	private void paintZoneRect(Graphics2D g2d, int x, int y) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
-		g2d.fillRect(x, y, pitchViewport.squareSize(), pitchViewport.squareSize());
-	}
-
-	//Draws a dashed contour for the given edges list.
-	//Reuses the same originX/originY arrays from drawTackleZoneTiles.
-	private void drawContour(Graphics2D g2d, Dimension from, Dimension to) {
-
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-		g2d.drawLine(from.width, from.height, to.width, to.height);
-
+		fillWorldSquare(g2d, coordinate);
 	}
 
 	private String getCurrentTackleZoneSetting() {

@@ -6,6 +6,12 @@ import com.fumbbl.ffb.FieldCoordinate;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import static com.fumbbl.ffb.client.LayoutSettings.BASE_SQUARE_SIZE;
 
 /**
  * Owns the runtime pitch viewport and pitch/world coordinate conversion.
@@ -16,6 +22,8 @@ import java.awt.Rectangle;
  */
 
 public class PitchViewport {
+	public static final int WORLD_WIDTH = FieldCoordinate.FIELD_WIDTH * BASE_SQUARE_SIZE;
+	public static final int WORLD_HEIGHT = FieldCoordinate.FIELD_HEIGHT * BASE_SQUARE_SIZE;
 
 	private final LayoutSettings layoutSettings;
 	private Rectangle viewportBounds;
@@ -44,20 +52,48 @@ public class PitchViewport {
 		return runtimePitchScale * layoutSettings.getLayout().getPitchScale();
 	}
 
+	/** Rounded display length for decorations; use worldSquare/localSquare for tile coverage. */
 	public int squareSize() {
-		return (int) Math.round(unscaledFieldSquare() * effectiveScale());
+		return squareSize(1);
 	}
 
 	public int squareSize(double factor) {
-		return (int) (squareSize() * factor);
+		return (int) (unscaledFieldSquare() * factor * effectiveScale());
 	}
 
 	public int imageOffset() {
 		return squareSize() / 2;
 	}
 
-	public int gridOffset() {
-		return (squareSize() + unscaledFieldSquare() - 1) / unscaledFieldSquare();
+	/**
+	 * Maps pitch geometry (30 world units per square) into the field's image buffers.
+	 * The grid is centered within the existing field allowance. Bounds are only used
+	 * for its origin; the exact scale still comes from layout, not rounded bounds.
+	 * Returns a new transform so callers cannot mutate viewport state.
+	 */
+	public AffineTransform worldToLocalTransform() {
+		double scale = effectiveScale();
+		boolean portrait = layoutSettings.getLayout().isPortrait();
+		double width = (portrait ? WORLD_HEIGHT : WORLD_WIDTH) * scale;
+		double height = (portrait ? WORLD_WIDTH : WORLD_HEIGHT) * scale;
+		AffineTransform transform = AffineTransform.getTranslateInstance(
+			(viewportBounds.width - width) / 2, (viewportBounds.height - height) / 2);
+		transform.scale(scale, scale);
+		if (portrait) {
+			transform.translate(0, WORLD_WIDTH);
+			transform.quadrantRotate(-1);
+		}
+		return transform;
+	}
+
+	public Rectangle2D worldSquare(FieldCoordinate coordinate) {
+		return new Rectangle2D.Double(coordinate.getX() * BASE_SQUARE_SIZE,
+			coordinate.getY() * BASE_SQUARE_SIZE, BASE_SQUARE_SIZE, BASE_SQUARE_SIZE);
+	}
+
+	/** Exact projected edges, for screen-facing decorations and pixel-width insets. */
+	public Rectangle2D localSquare(FieldCoordinate coordinate) {
+		return worldToLocalTransform().createTransformedShape(worldSquare(coordinate)).getBounds2D();
 	}
 
 	public Dimension toLocal(FieldCoordinate coordinate) {
@@ -69,19 +105,9 @@ public class PitchViewport {
 	}
 
 	public Dimension toLocal(int x, int y, boolean center) {
-		int offset = center ? squareSize() / 2 : 0;
-		int localX;
-		int localY;
-
-		if (layoutSettings.getLayout().isPortrait()) {
-			localX = y * squareSize() + offset;
-			localY = (25 - x) * squareSize() + offset;
-		} else {
-			localX = x * squareSize() + offset;
-			localY = y * squareSize() + offset;
-		}
-
-		return new Dimension(gridOffset() + localX, gridOffset() + localY);
+		Rectangle2D bounds = localSquare(new FieldCoordinate(x, y));
+		return new Dimension((int) Math.floor(center ? bounds.getCenterX() : bounds.getMinX()),
+			(int) Math.floor(center ? bounds.getCenterY() : bounds.getMinY()));
 	}
 
 	public Point worldToScreen(FieldCoordinate coordinate) {
@@ -98,21 +124,28 @@ public class PitchViewport {
 	}
 
 	public FieldCoordinate toFieldCoordinate(Point localPoint) {
-		FieldCoordinate coordinate = null;
-		int x = localPoint.x - gridOffset();
-		int y = localPoint.y - gridOffset();
-		int columns = layoutSettings.getLayout().isPortrait() ? 15 : 26;
-		int rows = layoutSettings.getLayout().isPortrait() ? 26 : 15;
-
-		if ((x >= 0) && (x < columns * squareSize()) && (y >= 0) && (y < rows * squareSize())) {
-			coordinate = new FieldCoordinate(
-				x / squareSize(),
-				y / squareSize()
-			);
-			coordinate = toGlobal(coordinate);
+		if (localPoint.x < 0 || localPoint.y < 0
+			|| localPoint.x >= viewportBounds.width || localPoint.y >= viewportBounds.height) {
+			return null;
 		}
-
-		return coordinate;
+		try {
+			// Mouse coordinates identify pixels; test their centers against world geometry.
+			Point2D world = worldToLocalTransform().inverseTransform(
+				new Point2D.Double(localPoint.x + 0.5, localPoint.y + 0.5), null);
+			// Raster coverage includes the top/left edge and excludes bottom/right.
+			// Portrait reverses world X: its intervals are (left, right], not [left, right).
+			int x = layoutSettings.getLayout().isPortrait()
+				? (int) Math.ceil(world.getX() / BASE_SQUARE_SIZE) - 1
+				: (int) Math.floor(world.getX() / BASE_SQUARE_SIZE);
+			int y = (int) Math.floor(world.getY() / BASE_SQUARE_SIZE);
+			if (x < 0 || y < 0 || x >= FieldCoordinate.FIELD_WIDTH
+				|| y >= FieldCoordinate.FIELD_HEIGHT) {
+				return null;
+			}
+			return new FieldCoordinate(x, y);
+		} catch (NoninvertibleTransformException exception) {
+			throw new IllegalStateException("Pitch scale must produce an invertible transform", exception);
+		}
 	}
 
 	// Screen coordinates are currently client content coordinates, not OS/global monitor coordinates.
@@ -166,10 +199,4 @@ public class PitchViewport {
 		return Component.FIELD_SQUARE.dimension(layoutSettings.getLayout()).width;
 	}
 
-	private FieldCoordinate toGlobal(FieldCoordinate fieldCoordinate) {
-		if (layoutSettings.getLayout().isPortrait()) {
-			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
-		}
-		return fieldCoordinate;
-	}
 }

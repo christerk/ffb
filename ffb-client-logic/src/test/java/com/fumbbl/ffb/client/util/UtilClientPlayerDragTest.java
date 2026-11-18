@@ -41,14 +41,14 @@ class UtilClientPlayerDragTest {
 	}
 
 	@Test
-	void landscapeFieldModeRejectsBorderAndOutsidePoints() {
+	void landscapeFieldModeRejectsPitchBorders() {
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 781, 451, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 782, 1, false));
 		assertNull(getFieldCoordinate(ClientLayout.LANDSCAPE, 1, 452, false));
 	}
 
 	@Test
-	void portraitFieldModeMapsPitchCoordinates() {
+	void portraitFieldModeUsesViewportMapping() {
 		assertEquals(new FieldCoordinate(25, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 1, false));
 		assertEquals(new FieldCoordinate(15, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 330, false));
 		assertEquals(new FieldCoordinate(14, 0), getFieldCoordinate(ClientLayout.PORTRAIT, 1, 331, false));

@@ -43,7 +43,7 @@ class SetupDragHitTesterTest {
 	}
 
 	@Test
-	void rejectsLandscapeBorderAndOutsidePoints() {
+	void rejectsPitchBorderInsteadOfReturningOutOfBoundsCoordinates() {
 		SetupDragHitTester hitTester = hitTester(ClientLayout.LANDSCAPE);
 
 		assertNull(hitTester.toFieldCoordinate(new Point(926, 451), 0));
@@ -66,7 +66,7 @@ class SetupDragHitTesterTest {
 	}
 
 	@Test
-	void mapsPortraitPitchHitsFromContentCoordinates() {
+	void mapsPortraitPitchHitsUsingTheSameViewportAsNormalInput() {
 		SetupDragHitTester hitTester = hitTester(ClientLayout.PORTRAIT);
 
 		assertEquals(new FieldCoordinate(25, 0), hitTester.toFieldCoordinate(new Point(166, 1), 0));

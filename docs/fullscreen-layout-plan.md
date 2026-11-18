@@ -13,7 +13,7 @@ The requested direction is:
 
 ## Current Status
 
-Phases 1-13 are implemented or partially implemented. Phase 13 is complete. Phases 14 and 15 should be planned together and implemented separately: equal-sized pitch tiles affect the space available to surrounding components.
+Phases 1-13 are implemented or partially implemented. Phases 13 and 14 are complete. Phase 14 uses shared world-coordinate rendering in place of the integer-tile implementation preserved on `gui-placement`. GUI placement and fullscreen policy remain separate decisions.
 
 Phase 12 completed in this branch:
 
@@ -214,17 +214,17 @@ The client offers an overall scale and a GUI scale control. Changing overall sca
 
 The earlier on/off resize policy has been removed. The reference layout uses the selected GUI scale so it does not reserve space for larger interface components.
 
-## Phase 14: Equal-Sized Pitch Tiles
+## Phase 14: Consistent Pitch Geometry
 
 Status: Done.
 
-The goal is for every pitch tile to have the same whole-pixel width and height. Fractional boundaries alone cannot guarantee equal rasterized tile sizes: adjacent tiles can differ by a pixel.
+The goal is consistent pitch artwork, overlays, clearing and input at continuous scales. Equal whole-pixel square sizes are not a requirement. Adjacent squares can cover different numbers of pixels while remaining equal in world coordinates.
 
-Plan this phase together with phase 15, but implement them separately. Investigate fitting the largest integer tile size into the available pitch area, then derive pitch bounds and effective scale from that size. Resizing would make the pitch grow in tile-size steps and can leave unused space until phase 15 handles placement. Confirm the approach against the existing two-pixel field allowance, pitch artwork, wide layout scale, and minimum window sizes before implementation.
+Keep phase 13's continuous fitting and scale controls. `PitchViewport` supplies one world-to-field transform, using 30 world units per square, and inverse mapping for input. The playable grid is centered inside the field allowance; the exact scale still comes from the layout calculation. The source artwork's one-unit border surrounds that same grid.
 
-The pitch artwork, overlays, clearing and repaint regions, normal input, and setup drag hit testing must agree on the same grid in both orientations. Define edge and border behavior explicitly. Keep pitch fitting in the layout calculation and coordinate mapping in the viewport; avoid coupling the viewport to GUI placement.
+Keep the existing display-sized layer buffers and compositor. Square geometry is transformed at drawing time. Fills and clears use the same non-antialiased shape path; screen-facing decorations retain pixel insets, and sprites retain their existing cached scale and upright orientation. Repaint rectangles enclose the transformed geometry; their integer rounding must not be reused to determine fill coverage. Normal input and setup dragging share the viewport inverse, testing pixel centers and excluding the decorative border.
 
-Verify integer and fractional window sizes, both orientations, tile boundaries and adjacent input pixels, setup dragging, redraws, and artwork alignment. Do not add a change list entry for phase 14.
+Validation covers all four layouts at fractional scales, including adjacent fills, clearing, artwork alignment, input boundaries and setup dragging. The client was visually checked and the project passed `mvn clean install`.
 
 ## Phase 15: Move GUI To Rule-Based Placement
 
@@ -237,7 +237,7 @@ Move non-pitch GUI components toward rule-based placement:
 - score/status/timer components pinned to top or bottom
 - pitch takes the remaining available area
 
-Phase 14's integer tile fit may leave space around the pitch. Plan how to use that space per layout without assuming every component can stretch. The current landscape and wide layouts place information below the central pitch area; portrait places it below the game area; square places it to the right. Consider both axes for each topology, including moving rails and expanding log/chat containers without scaling their contents. Decide which gaps are acceptable and account for different window aspect ratios, minimum sizes, and existing component constraints. Do not promise a gap-free result until these rules are validated.
+Plan how to use available space per layout without assuming every component can stretch. The current landscape and wide layouts place information below the central pitch area; portrait places it below the game area; square places it to the right. Consider both axes for each topology, including moving rails and expanding log/chat containers without scaling their contents. Decide which gaps are acceptable and account for different window aspect ratios, minimum sizes, and existing component constraints. Do not promise a gap-free GUI layout until these rules are validated.
 
 This is where the client can start moving away from fixed `ClientLayout` variants.
 
@@ -259,6 +259,5 @@ No special pitch coordinate logic should be needed for fullscreen.
 
 - `LayoutSettings` scale naming is still confusing because GUI, pitch, and dugout scale are now separate but the final resize-policy API is not done.
 - `ClientLayoutResult.runtimeGuiScale()` is present for the upcoming resize-policy work.
-- `PitchViewport` manually implements transform behavior instead of exposing `AffineTransform` objects.
 - `ClientLayoutCalculator` still has local rectangle arithmetic for score/log/chat placement.
 - The branch is broad because layout, coordinate conversion, rendering, input, animation, dialogs, and setup drag all depend on pitch position/scale.

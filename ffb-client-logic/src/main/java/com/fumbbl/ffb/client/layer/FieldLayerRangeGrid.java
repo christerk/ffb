@@ -4,12 +4,15 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -59,13 +62,9 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchViewport.toLocal(pCoordinate);
-			int x = dimension.width;
-			int y = dimension.height;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, pitchViewport.squareSize() - 2, pitchViewport.squareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
-			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			fillSquare(g2d, pCoordinate, 1);
 			g2d.dispose();
 		}
 	}

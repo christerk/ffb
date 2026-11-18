@@ -314,11 +314,12 @@ public class IconCache {
 
 
 	public BufferedImage getUnscaledPitch(Game game, Weather weather) {
-		BufferedImage pitch = getUnscaledIconByUrl(findPitchUrl(game, weather));
-		if (weather == Weather.INTRO || pitch == null) {
+		BufferedImage weatherPitch = getUnscaledIconByUrl(findPitchUrl(game, weather));
+		if (weather == Weather.INTRO || weatherPitch == null) {
 			return getUnscaledIconByProperty(IIconProperty.PITCH_INTRO);
+		} else {
+			return weatherPitch;
 		}
-		return pitch;
 	}
 
 	public void loadIconFromUrl(String pUrl) {

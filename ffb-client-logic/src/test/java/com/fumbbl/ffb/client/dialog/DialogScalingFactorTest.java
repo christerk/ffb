@@ -13,6 +13,7 @@ import org.mockito.ArgumentCaptor;
 import javax.swing.JDesktopPane;
 import javax.swing.JButton;
 import javax.swing.JSlider;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Container;
@@ -23,13 +24,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,8 +65,8 @@ class DialogScalingFactorTest {
 		assertTrue(previewed.await(5, TimeUnit.SECONDS));
 		SwingUtilities.invokeAndWait(() -> dialog[0].hideDialog());
 
-		verify(userInterface).previewScale(eq(1.5), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
-		verify(userInterface).previewScale(eq(1.0), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		verify(userInterface).previewScale(eq(1.5), eq(1.0), any(LayoutSettings.class), eq(new Dimension(1072, 712)));
+		verify(userInterface).restoreScalePreview(any(LayoutSettings.class), eq(new Dimension(1072, 712)));
 	}
 
 	@Test
@@ -81,7 +83,7 @@ class DialogScalingFactorTest {
 			dialog.hideDialog();
 		});
 
-		verify(userInterface, times(1)).previewScale(eq(1.5), eq(0.75), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		verify(userInterface, times(1)).previewScale(eq(1.5), eq(0.75), any(LayoutSettings.class), eq(new Dimension(1072, 712)));
 	}
 
 	@Test
@@ -104,27 +106,83 @@ class DialogScalingFactorTest {
 			dialog[0].hideDialog();
 		});
 
-		verify(userInterface).previewScale(eq(1.0), eq(0.7), any(LayoutSettings.class), eq(new Dimension(800, 600)));
-		verify(userInterface).previewScale(eq(1.0), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		verify(userInterface).previewScale(eq(1.0), eq(0.7), any(LayoutSettings.class), eq(new Dimension(1072, 712)));
+		verify(userInterface).restoreScalePreview(any(LayoutSettings.class), eq(new Dimension(1072, 712)));
 		ArgumentCaptor<LayoutSettings> settings = ArgumentCaptor.forClass(LayoutSettings.class);
-		verify(userInterface, times(2)).previewScale(eq(1.0), anyDouble(), settings.capture(), eq(new Dimension(800, 600)));
-		assertSame(settings.getAllValues().get(0), settings.getAllValues().get(1));
+		verify(userInterface).previewScale(eq(1.0), eq(0.7), settings.capture(), eq(new Dimension(1072, 712)));
 		assertEquals(1.0, settings.getValue().getScale());
 		assertEquals(1.0, settings.getValue().getGuiRatio());
 	}
 
+	@Test
+	void manualResizeIsShownWithoutChangingOrSavingTheScale() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		SwingUtilities.invokeAndWait(() -> {
+			DialogScalingFactor dialog = dialog(userInterface, new Dimension(1844, 1225));
+			assertEquals(34, sliders(dialog).get(0).getValue());
+			assertTrue(hasLabel(dialog, "172%"));
+			button(dialog, "Confirm").doClick();
+			assertNull(dialog.getFactor());
+			dialog.hideDialog();
+		});
+		verify(userInterface, never()).previewScale(anyDouble(), anyDouble(), any(LayoutSettings.class), any(Dimension.class));
+	}
+
+	@Test
+	void sliderChangeUsesFivePercentStepsAfterManualResize() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		SwingUtilities.invokeAndWait(() -> {
+			DialogScalingFactor dialog = dialog(userInterface, new Dimension(1844, 1225));
+			sliders(dialog).get(0).setValue(35);
+			button(dialog, "Confirm").doClick();
+			assertEquals(1.75, dialog.getFactor());
+			dialog.hideDialog();
+		});
+		verify(userInterface).previewScale(eq(1.75), eq(1.0), any(LayoutSettings.class), eq(new Dimension(1844, 1225)));
+	}
+
+	@Test
+	void guiOnlyChangePreservesTheExactRuntimeScale() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		SwingUtilities.invokeAndWait(() -> {
+			DialogScalingFactor dialog = dialog(userInterface, new Dimension(1844, 1225));
+			sliders(dialog).get(1).setValue(15);
+			button(dialog, "Confirm").doClick();
+			dialog.hideDialog();
+		});
+		ArgumentCaptor<Double> scale = ArgumentCaptor.forClass(Double.class);
+		verify(userInterface).previewScale(scale.capture(), eq(0.75), any(LayoutSettings.class), eq(new Dimension(1844, 1225)));
+		assertEquals(1844.0 / 1072, scale.getValue(), 0.000001);
+	}
+
 	private DialogScalingFactor dialog(UserInterface userInterface) {
+		return dialog(userInterface, new Dimension(1072, 712));
+	}
+
+	private DialogScalingFactor dialog(UserInterface userInterface, Dimension size) {
 		FantasyFootballClient client = mock(FantasyFootballClient.class);
 		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
 		PitchViewport viewport = new PitchViewport(new UiDimensionProvider(settings), settings);
 		JDesktopPane desktop = new JDesktopPane();
-		desktop.setSize(800, 600);
+		desktop.setSize(size);
 		when(client.getUserInterface()).thenReturn(userInterface);
 		when(userInterface.getSize()).thenReturn(new Dimension(800, 600));
 		when(userInterface.getDesktop()).thenReturn(desktop);
 		when(userInterface.getPitchViewport()).thenReturn(viewport);
 		when(userInterface.getPitchDimensionProvider()).thenReturn(new PitchDimensionProvider(settings, viewport));
 		return new DialogScalingFactor(client);
+	}
+
+	private boolean hasLabel(Container container, String text) {
+		for (Component component : container.getComponents()) {
+			if (component instanceof JLabel && text.equals(((JLabel) component).getText())) {
+				return true;
+			}
+			if (component instanceof Container && hasLabel((Container) component, text)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<JSlider> sliders(Container container) {

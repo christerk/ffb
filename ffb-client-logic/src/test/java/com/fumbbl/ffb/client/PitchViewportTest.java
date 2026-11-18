@@ -98,7 +98,7 @@ class PitchViewportTest {
 	}
 
 	@Test
-	void portraitLocalPointMapsToFieldCoordinateUsingCurrentCoordinateConverterBehavior() {
+	void portraitLocalPointMapsToFieldCoordinate() {
 		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
 
 		assertEquals(new FieldCoordinate(25, 0), viewport.toFieldCoordinate(new Point(1, 1)));
@@ -107,7 +107,7 @@ class PitchViewportTest {
 	}
 
 	@Test
-	void localPointOutsideStrictCurrentBoundsReturnsNull() {
+	void localPointOutsideGridReturnsNull() {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 
 		assertNull(viewport.toFieldCoordinate(new Point(0, 1)));
@@ -254,6 +254,20 @@ class PitchViewportTest {
 		viewport.setViewportBounds(new Rectangle(158, 0, 955, 552));
 
 		assertEquals(new Dimension(955, 552), viewport.fieldSize());
+	}
+
+	@Test
+	void pixelCentersOnRotatedEdgesBelongToTheSquareBelow() {
+		for (ClientLayout layout : new ClientLayout[]{ClientLayout.PORTRAIT, ClientLayout.SQUARE}) {
+			PitchViewport viewport = viewport(layout);
+			// Half-pixel grid origin places boundaries exactly at pixel centers.
+			viewport.setViewportBounds(new Rectangle(0, 0, 451, 781));
+			assertEquals(new FieldCoordinate(13, 0), viewport.toFieldCoordinate(new Point(15, 389)));
+			assertEquals(new FieldCoordinate(12, 0), viewport.toFieldCoordinate(new Point(15, 390)));
+			assertEquals(new FieldCoordinate(12, 0), viewport.toFieldCoordinate(new Point(15, 391)));
+			assertEquals(new FieldCoordinate(25, 0), viewport.toFieldCoordinate(new Point(15, 0)));
+			assertNull(viewport.toFieldCoordinate(new Point(15, 780)));
+		}
 	}
 
 	@Test

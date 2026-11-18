@@ -2,13 +2,20 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -47,6 +54,32 @@ public abstract class FieldLayer {
 
 	public BufferedImage getImage() {
 		return fImage;
+	}
+
+	/** Draws world geometry directly into the display-sized layer, without rescaling the layer. */
+	protected Graphics2D createWorldGraphics() {
+		Graphics2D graphics = fImage.createGraphics();
+		graphics.transform(pitchViewport.worldToLocalTransform());
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		return graphics;
+	}
+
+	/** Uses the same shape path for opaque fills, translucent fills and clearing. */
+	protected void fillWorldSquare(Graphics2D graphics, FieldCoordinate coordinate) {
+		// Java2D's optimized rectangle pipelines can round differently by composite.
+		graphics.fill(new Path2D.Double(pitchViewport.worldSquare(coordinate)));
+	}
+
+	/** Insets are screen pixels, as used by the existing movement and range decorations. */
+	protected void fillSquare(Graphics2D graphics, FieldCoordinate coordinate, double inset) {
+		Rectangle2D bounds = pitchViewport.localSquare(coordinate);
+		Graphics2D fill = (Graphics2D) graphics.create();
+		fill.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		fill.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		fill.fill(new Path2D.Double(new Rectangle2D.Double(bounds.getX() + inset, bounds.getY() + inset,
+			Math.max(0, bounds.getWidth() - 2 * inset), Math.max(0, bounds.getHeight() - 2 * inset))));
+		fill.dispose();
 	}
 
 	public synchronized Rectangle fetchUpdatedArea() {
@@ -133,10 +166,14 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchViewport.toLocal(pCoordinate);
-			int fieldX = dimension.width;
-			int fieldY = dimension.height;
-			clear(fieldX, fieldY, pitchViewport.squareSize(), pitchViewport.squareSize(), pUpdateArea);
+			Graphics2D graphics = createWorldGraphics();
+			graphics.setComposite(AlphaComposite.Clear);
+			fillWorldSquare(graphics, pCoordinate);
+			graphics.dispose();
+			if (pUpdateArea) {
+				// Outward rounding is for repaint coverage only, never for filling or clearing.
+				addUpdatedArea(pitchViewport.localSquare(pCoordinate).getBounds());
+			}
 		}
 	}
 

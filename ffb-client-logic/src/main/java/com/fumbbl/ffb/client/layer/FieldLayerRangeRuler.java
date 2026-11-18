@@ -5,7 +5,11 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -199,17 +203,17 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchViewport.toLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchViewport.squareSize(), pitchViewport.squareSize());
+			Rectangle2D bounds = pitchViewport.localSquare(pCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
-			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			fillSquare(g2d, pCoordinate, 0);
 			if (border != null) {
 				g2d.setPaint(border);
-				g2d.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2);
+				g2d.draw(new Rectangle2D.Double(bounds.getX() + 1, bounds.getY() + 1,
+					Math.max(0, bounds.getWidth() - 2), Math.max(0, bounds.getHeight() - 2)));
 			}
 			g2d.dispose();
-			addUpdatedArea(bounds);
+			addUpdatedArea(bounds.getBounds());
 		}
 	}
 

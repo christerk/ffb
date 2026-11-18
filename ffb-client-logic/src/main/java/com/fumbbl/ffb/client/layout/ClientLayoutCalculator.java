@@ -28,8 +28,7 @@ public class ClientLayoutCalculator {
 
 	public ClientLayoutResult calculate(LayoutSettings layoutSettings, Dimension availableSize) {
 		Dimension naturalSize = referenceContentSize(layoutSettings);
-		double resizeScale = Math.min((double) availableSize.width / naturalSize.width,
-			(double) availableSize.height / naturalSize.height);
+		double resizeScale = resizeScale(naturalSize, availableSize);
 		double effectiveRatio = Math.max(LayoutSettings.MIN_GUI_RATIO,
 			Math.min(layoutSettings.getGuiRatio(), LayoutSettings.MAX_GUI_RATIO));
 		double guiScale = layoutSettings.getScale() * effectiveRatio * resizeScale;
@@ -39,13 +38,14 @@ public class ClientLayoutCalculator {
 		Dimension score = dimension(layoutSettings, Component.SCORE_BOARD, guiScale);
 		Dimension log = dimension(layoutSettings, Component.LOG, guiScale);
 		Dimension chat = dimension(layoutSettings, Component.CHAT, guiScale);
+		Dimension pitch = unscaledDimension(layoutSettings, Component.FIELD);
 
 		Dimension layoutSize = scale(naturalSize, resizeScale);
 		Rectangle content = new Rectangle((availableSize.width - layoutSize.width) / 2,
 			(availableSize.height - layoutSize.height) / 2, layoutSize.width, layoutSize.height);
 
 		LayoutAreas areas = LayoutAreas.arrange(layoutSettings.getLayout(), content, sidebar.width, score, log, chat);
-		PitchFit pitchFit = fitPitch(areas.pitchArea, layoutSettings);
+		PitchFit pitchFit = fitPitch(areas.pitchArea, pitch);
 		LayoutAreas.HudBounds hudBounds = areas.placeHud(pitchFit.bounds, reserveBox, score, log, chat);
 
 		return new ClientLayoutResult(
@@ -62,25 +62,22 @@ public class ClientLayoutCalculator {
 			guiScale);
 	}
 
-	private PitchFit fitPitch(Rectangle pitchArea, LayoutSettings settings) {
-		boolean portrait = settings.getLayout().isPortrait();
-		int columns = portrait ? 15 : 26;
-		int rows = portrait ? 26 : 15;
-		int square = Math.max(1, Math.min(pitchArea.width / columns, pitchArea.height / rows));
-		while (square > 1 && (columns * square + 2 * border(square) > pitchArea.width
-			|| rows * square + 2 * border(square) > pitchArea.height)) {
-			square--;
-		}
-		int pitchWidth = columns * square + 2 * border(square);
-		int pitchHeight = rows * square + 2 * border(square);
-		int pitchX = pitchArea.x + ((pitchArea.width - pitchWidth) / 2);
-		int pitchY = pitchArea.y;
-		double scale = (double) square / LayoutSettings.BASE_SQUARE_SIZE / settings.getLayout().getPitchScale();
-		return new PitchFit(new Rectangle(pitchX, pitchY, pitchWidth, pitchHeight), scale);
+	public double overallScale(LayoutSettings settings, Dimension availableSize) {
+		return settings.getScale() * resizeScale(referenceContentSize(settings), availableSize);
 	}
 
-	private int border(int square) {
-		return (int) Math.ceil((double) square / LayoutSettings.BASE_SQUARE_SIZE);
+	private double resizeScale(Dimension reference, Dimension availableSize) {
+		return Math.min((double) availableSize.width / reference.width,
+			(double) availableSize.height / reference.height);
+	}
+
+	private PitchFit fitPitch(Rectangle pitchArea, Dimension pitch) {
+		double scale = Math.min((double) pitchArea.width / pitch.width, (double) pitchArea.height / pitch.height);
+		int pitchWidth = scaled(pitch.width, scale);
+		int pitchHeight = scaled(pitch.height, scale);
+		int pitchX = pitchArea.x + ((pitchArea.width - pitchWidth) / 2);
+		int pitchY = pitchArea.y;
+		return new PitchFit(new Rectangle(pitchX, pitchY, pitchWidth, pitchHeight), scale);
 	}
 
 	private int scaled(int size, double scale) {
