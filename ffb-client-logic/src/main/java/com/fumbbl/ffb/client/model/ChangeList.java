@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Argue the Call: A natural 1 did not send off the coach for secret weapons when Biased Referee was used")
 			.addBugfix("Casualty: The -ST lasting injury is now called Broken Shoulder instead of Dislocated Shoulder")
 			.addBugfix("Pass Block: Team re-rolls could not be used for rolls of the active team during a pass block, e.g. Shadowing a pass blocker")
 			.addBugfix("Tasty Morsel: The server did not verify that a bitten opponent was an adjacent non-Star player with ST 3 or lower")
