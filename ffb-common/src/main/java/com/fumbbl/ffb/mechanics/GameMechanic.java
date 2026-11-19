@@ -1,9 +1,11 @@
 package com.fumbbl.ffb.mechanics;
 
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
@@ -55,6 +57,18 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract String weatherDescription(Weather weather);
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory);
+
+	/**
+	 * Whether the action activates the player before an actual action is declared. Such a player keeps their base
+	 * state until an action is declared.
+	 */
+	public abstract boolean isActivationWithoutDeclaredAction(PlayerAction playerAction);
+
+	/**
+	 * Whether the acting player has to be left prone when deactivated, as they were activated while prone but never
+	 * stood up.
+	 */
+	public abstract boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer);
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
 

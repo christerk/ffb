@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -8,6 +9,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
@@ -186,6 +188,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return "No weather at all, but the intro screen shown by the client.";
 		}
 
+	}
+
+	@Override
+	public boolean isActivationWithoutDeclaredAction(PlayerAction playerAction) {
+		return false;
+	}
+
+	@Override
+	public boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer) {
+		return false;
 	}
 
 	@Override

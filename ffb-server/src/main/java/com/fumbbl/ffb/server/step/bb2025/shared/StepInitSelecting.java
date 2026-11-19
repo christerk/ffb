@@ -184,6 +184,10 @@ public final class StepInitSelecting extends AbstractStep {
 									if (onlyMarkedAsStandingUp) {
 										oldState = oldState.changeBase(PlayerState.PRONE);
 									}
+									// the player has been activated by rolling for Squig Rage, so the activation is used anyway
+									if (squigRageService.hasRolled(actingPlayer)) {
+										oldState = oldState.changeActive(false);
+									}
 									fieldModel.setPlayerState(actingPlayer.getPlayer(), oldState);
 								}
 								if (usingAvoidDodge) {

@@ -35,6 +35,32 @@ public class SquigRageService {
 	}
 
 	/**
+	 * Whether the acting player has already rolled for Squig Rage during this activation.
+	 */
+	public boolean hasRolled(ActingPlayer actingPlayer) {
+		Skill skill = squigRageSkill(actingPlayer.getPlayer());
+		return skill != null && actingPlayer.isSkillUsed(skill);
+	}
+
+	/**
+	 * Whether the acting player has done anything apart from rolling for Squig Rage.
+	 */
+	public boolean hasActedApartFromRoll(ActingPlayer actingPlayer) {
+		Skill skill = squigRageSkill(actingPlayer.getPlayer());
+		if (skill == null) {
+			return actingPlayer.hasActed();
+		}
+		return actingPlayer.hasActedIgnoring(skill);
+	}
+
+	/**
+	 * Whether a prone acting player has only been activated by the Squig Rage roll and never stood up.
+	 */
+	public boolean isOnlyActivatedWhileProne(ActingPlayer actingPlayer) {
+		return hasRolled(actingPlayer) && actingPlayer.isStandingUp() && !actingPlayer.hasActedIgnoringNegativeTraits();
+	}
+
+	/**
 	 * Whether the acting player has been forced by Squig Rage to block and has not blocked yet.
 	 */
 	public boolean isBlockForced(ActingPlayer actingPlayer) {

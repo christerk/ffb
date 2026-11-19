@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.injury.modification;
+package com.fumbbl.ffb.server.injury.modification.bb2025;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.SkillUse;
@@ -19,6 +19,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.mixed.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
+import com.fumbbl.ffb.server.injury.modification.OldProModificationParams;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 

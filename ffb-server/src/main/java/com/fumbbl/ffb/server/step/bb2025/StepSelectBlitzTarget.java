@@ -49,12 +49,14 @@ import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 
 import java.util.Arrays;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepSelectBlitzTarget extends AbstractStep {
 
+	private final SquigRageService squigRageService = new SquigRageService();
 	private String gotoLabelOnEnd;
 	private String selectedPlayerId;
 	private boolean confirmed, endPlayerAction, endTurn, checkForgo;
@@ -230,7 +232,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 			}
 		} else {
 			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-				if (game.getActingPlayer().hasActed() && !confirmed) {
+				// rolling for Squig Rage does not prevent changing the target, deselecting the player still ends the activation
+				if (squigRageService.hasActedApartFromRoll(game.getActingPlayer()) && !confirmed) {
 					UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), game.getActingPlayer().getPlayerAction()), false);
 				} else {
 					Skill carrySkill = game.getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
@@ -247,7 +250,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
-				if (game.getActingPlayer().hasActed()) {
+				if (squigRageService.hasActedApartFromRoll(game.getActingPlayer())) {
 					targetSelectionState.commit(getGameState().getGame());
 				}
 				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());

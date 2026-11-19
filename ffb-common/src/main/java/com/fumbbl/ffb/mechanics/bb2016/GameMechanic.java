@@ -156,6 +156,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
+	public boolean isActivationWithoutDeclaredAction(PlayerAction playerAction) {
+		return false;
+	}
+
+	@Override
+	public boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer) {
+		return false;
+	}
+
+	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
 		return Collections.emptySet();
 	}
