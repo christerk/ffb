@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.util.bb2025;
 
-import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -40,8 +39,7 @@ public class SquigRageService {
 	public Player<?>[] blockTargets(Game game, Player<?> player) {
 		FieldModel fieldModel = game.getFieldModel();
 		PlayerState playerState = fieldModel.getPlayerState(player);
-		if (playerState == null || !playerState.isActive()
-			|| fieldModel.hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)) {
+		if (playerState == null || !playerState.isActive()) {
 			return new Player<?>[0];
 		}
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
@@ -51,7 +49,7 @@ public class SquigRageService {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		boolean prone = playerState.getBase() == PlayerState.PRONE
 			|| (player.getId().equals(actingPlayer.getPlayerId()) && actingPlayer.isStandingUp());
-		if (prone ? !player.hasSkillProperty(NamedProperties.canStandUpForFree) : !playerState.hasTacklezones()) {
+		if (prone && !player.hasSkillProperty(NamedProperties.canStandUpForFree)) {
 			return new Player<?>[0];
 		}
 		FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
