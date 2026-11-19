@@ -108,6 +108,10 @@ public final class StepInitSelecting extends AbstractStep {
 			TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_CONFIRM: // confirms ending target select action like blitz or gaze
+					// a block forced by Squig Rage has to be performed
+					if (squigRageService.isBlockForced(actingPlayer)) {
+						break;
+					}
 					fEndPlayerAction = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -116,8 +120,7 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
 					// a block forced by Squig Rage has to be performed
-					if (actingPlayer.isMustCompleteAction() && actingPlayer.getPlayerAction() == PlayerAction.BLOCK
-						&& !actingPlayer.hasBlocked()) {
+					if (squigRageService.isBlockForced(actingPlayer)) {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						break;
 					}
@@ -348,7 +351,9 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_END_TURN:
 					TurnMode turnMode = ((ClientCommandEndTurn) pReceivedCommand.getCommand()).getTurnMode();
-					boolean ignoreCommand = turnMode != null && turnMode != game.getTurnMode();
+					// a block forced by Squig Rage has to be performed before the turn can be ended
+					boolean ignoreCommand = (turnMode != null && turnMode != game.getTurnMode())
+						|| squigRageService.isBlockForced(actingPlayer);
 
 					if (!ignoreCommand && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;

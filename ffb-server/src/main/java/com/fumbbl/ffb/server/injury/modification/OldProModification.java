@@ -77,7 +77,13 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 		boolean hurtTeamMate = attacker != null && defender != null && attacker.getTeam() == defender.getTeam();
 
 		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomitLike() || injuryType.isChainsaw()))
-			|| (hurtTeamMate && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY);
+			|| (hurtTeamMate && !isLashOut(injuryContext));
+	}
+
+	// team-mates hurt by Animal Savagery or Squig Rage are not considered self-inflicted
+	private boolean isLashOut(InjuryContext injuryContext) {
+		return injuryContext.getApothecaryMode() == ApothecaryMode.ANIMAL_SAVAGERY
+			|| injuryContext.getApothecaryMode() == ApothecaryMode.SQUIG_RAGE;
 	}
 
 	@Override

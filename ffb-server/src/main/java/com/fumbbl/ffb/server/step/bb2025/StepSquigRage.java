@@ -13,7 +13,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -132,10 +131,7 @@ public class StepSquigRage extends AbstractStepWithReRoll {
 			return;
 		}
 
-		ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
-		if (reRolledAction == null) {
-			reRolledAction = ReRolledActions.SQUIG_RAGE;
-		}
+		ReRolledAction reRolledAction = ReRolledActions.SQUIG_RAGE;
 		boolean reRolling = reRolledAction == getReRolledAction();
 		if (reRolling) {
 			if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {

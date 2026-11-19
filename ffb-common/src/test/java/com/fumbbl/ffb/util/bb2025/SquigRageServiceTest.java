@@ -3,6 +3,7 @@ package com.fumbbl.ffb.util.bb2025;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.MechanicsFactory;
@@ -162,5 +163,26 @@ class SquigRageServiceTest {
 
 		when(fieldModel.getPlayerState(teamMate)).thenReturn(PRONE);
 		assertEquals(0, service.teamMateTargets(game, squig).length);
+	}
+
+	@Test
+	void blockIsForcedUntilPerformed() {
+		when(actingPlayer.isMustCompleteAction()).thenReturn(true);
+		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.BLOCK);
+
+		assertTrue(service.isBlockForced(actingPlayer));
+
+		when(actingPlayer.hasBlocked()).thenReturn(true);
+		assertFalse(service.isBlockForced(actingPlayer));
+	}
+
+	@Test
+	void blockIsNotForcedWithoutMustCompleteOrForOtherActions() {
+		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.BLOCK);
+		assertFalse(service.isBlockForced(actingPlayer));
+
+		when(actingPlayer.isMustCompleteAction()).thenReturn(true);
+		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.THROW_BOMB);
+		assertFalse(service.isBlockForced(actingPlayer));
 	}
 }

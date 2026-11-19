@@ -2,6 +2,7 @@ package com.fumbbl.ffb.util.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -31,6 +32,14 @@ public class SquigRageService {
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return !player.getId().equals(actingPlayer.getPlayerId()) || !actingPlayer.isSkillUsed(skill);
+	}
+
+	/**
+	 * Whether the acting player has been forced by Squig Rage to block and has not blocked yet.
+	 */
+	public boolean isBlockForced(ActingPlayer actingPlayer) {
+		return actingPlayer.isMustCompleteAction() && actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+			&& !actingPlayer.hasBlocked();
 	}
 
 	/**
