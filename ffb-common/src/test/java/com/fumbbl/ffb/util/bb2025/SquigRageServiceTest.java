@@ -166,6 +166,72 @@ class SquigRageServiceTest {
 	}
 
 	@Test
+	void hasRolledOnceSkillIsUsed() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		assertFalse(service.hasRolled(actingPlayer));
+
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		assertTrue(service.hasRolled(actingPlayer));
+	}
+
+	@Test
+	void playerWithoutSkillHasNotRolled() {
+		doReturn(teamMate).when(actingPlayer).getPlayer();
+
+		assertFalse(service.hasRolled(actingPlayer));
+	}
+
+	@Test
+	void rollAloneDoesNotCountAsActing() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.hasActed()).thenReturn(true);
+		when(actingPlayer.hasActedIgnoring(squigRage)).thenReturn(false);
+
+		assertFalse(service.hasActedApartFromRoll(actingPlayer));
+
+		when(actingPlayer.hasActedIgnoring(squigRage)).thenReturn(true);
+		assertTrue(service.hasActedApartFromRoll(actingPlayer));
+	}
+
+	@Test
+	void actingWithoutSkillIsRegularActing() {
+		doReturn(teamMate).when(actingPlayer).getPlayer();
+		when(actingPlayer.hasActed()).thenReturn(true);
+
+		assertTrue(service.hasActedApartFromRoll(actingPlayer));
+	}
+
+	@Test
+	void proneRolledPlayerWhoDidNothingElseStaysProne() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		when(actingPlayer.isStandingUp()).thenReturn(true);
+
+		assertTrue(service.isOnlyActivatedWhileProne(actingPlayer));
+	}
+
+	@Test
+	void proneRolledPlayerWhoActedDoesNotStayProne() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		when(actingPlayer.isStandingUp()).thenReturn(true);
+		when(actingPlayer.hasActedIgnoringNegativeTraits()).thenReturn(true);
+
+		assertFalse(service.isOnlyActivatedWhileProne(actingPlayer));
+	}
+
+	@Test
+	void standingOrNotRolledPlayerDoesNotStayProne() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		assertFalse(service.isOnlyActivatedWhileProne(actingPlayer));
+
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(false);
+		when(actingPlayer.isStandingUp()).thenReturn(true);
+		assertFalse(service.isOnlyActivatedWhileProne(actingPlayer));
+	}
+
+	@Test
 	void blockIsForcedUntilPerformed() {
 		when(actingPlayer.isMustCompleteAction()).thenReturn(true);
 		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.BLOCK);

@@ -466,6 +466,14 @@ public class ActingPlayer implements IJsonSerializable {
 			isForgone());
 	}
 
+	/**
+	 * Like {@link #hasActed()} but ignores the usage of the given skill.
+	 */
+	public boolean hasActedIgnoring(Skill ignoredSkill) {
+		return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect ||
+			fUsedSkills.stream().anyMatch(skill -> skill != ignoredSkill) || isForgone());
+	}
+
 	public boolean hasActedIgnoringNegativeTraits() {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() ||
 			fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait() || isForgone());
