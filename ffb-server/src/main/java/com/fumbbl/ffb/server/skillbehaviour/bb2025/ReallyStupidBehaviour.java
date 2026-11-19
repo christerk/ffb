@@ -76,7 +76,8 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                                 playerCoordinate);
                             goodConditions = false;
                             for (Player<?> teamMate : teamMates) {
-                                if (!UtilCards.hasSkill(teamMate, skill)) {
+                                if (!UtilCards.hasSkill(teamMate, skill)
+                                    && !game.getFieldModel().getPlayerState(teamMate).isDistracted()) {
                                     goodConditions = true;
                                     break;
                                 }
