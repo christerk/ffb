@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class BlockLogicModule extends AbstractBlockLogicModule {
 
 	protected final BlockLogicExtension extension;
+	private final SquigRageService squigRageService = new SquigRageService();
 
 	public BlockLogicModule(FantasyFootballClient client) {
 		super(client);
@@ -42,7 +44,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			} else {
 				ActionContext actionContext = actionContext(actingPlayer);
 				if (actionContext.getActions().isEmpty()) {
-					if (isBlockForcedBySquigRage(actingPlayer)) {
+					if (squigRageService.isBlockForced(actingPlayer)) {
 						return InteractionResult.ignore();
 					}
 					deselectActingPlayer();
@@ -102,7 +104,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 		if (isIllCarryYouAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
-		if (isBlockForcedBySquigRage(actingPlayer)) {
+		if (squigRageService.isBlockForced(actingPlayer)) {
 			return actionContext;
 		}
 		if (!actionContext.getActions().isEmpty() || actingPlayer.hasActed()) {
@@ -124,7 +126,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 
 		switch (action) {
 			case END_MOVE:
-				if (!isBlockForcedBySquigRage(actingPlayer)) {
+				if (!squigRageService.isBlockForced(actingPlayer)) {
 					communication.sendActingPlayer(null, null, false);
 				}
 				break;
@@ -172,8 +174,11 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 		}
 	}
 
-	private boolean isBlockForcedBySquigRage(ActingPlayer actingPlayer) {
-		return actingPlayer.isMustCompleteAction() && actingPlayer.getPlayerAction() == PlayerAction.BLOCK
-			&& !actingPlayer.hasBlocked();
+	@Override
+	public void endTurn() {
+		// a block forced by Squig Rage has to be performed before the turn can be ended
+		if (!squigRageService.isBlockForced(client.getGame().getActingPlayer())) {
+			super.endTurn();
+		}
 	}
 }
