@@ -119,6 +119,13 @@ class SquigRageServiceTest {
 	}
 
 	@Test
+	void playerWithoutTacklezonesMustStillBlock() {
+		when(fieldModel.getPlayerState(squig)).thenReturn(STANDING.changeConfused(true));
+
+		assertArrayEquals(new Player<?>[]{opponent}, service.blockTargets(game, squig));
+	}
+
+	@Test
 	void pronePlayerBlocksOnlyWithJumpUp() {
 		when(fieldModel.getPlayerState(squig)).thenReturn(PRONE);
 		assertEquals(0, service.blockTargets(game, squig).length);
