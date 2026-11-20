@@ -64,6 +64,7 @@ public class ResourceComponent extends JPanel {
         setMinimumSize(size);
         setPreferredSize(size);
         setMaximumSize(size);
+        fRefreshNecessary = true;
     }
 
     private ResourceSlot[] createResourceSlots() {

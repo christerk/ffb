@@ -20,8 +20,9 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+													 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {
@@ -35,7 +36,7 @@ public class FieldLayerPlayers extends FieldLayer {
 	public void updateBallAndPlayers(FieldCoordinate pCoordinate, boolean pPlayerOverBall) {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate, true);
 			Dimension maxIconSize = pitchDimensionProvider.dimension(Component.MAX_ICON);
 			int x = dimension.width - (maxIconSize.width / 2);
 			int y = dimension.height - (maxIconSize.height / 2);

@@ -313,10 +313,10 @@ public class IconCache {
 	}
 
 
-	public BufferedImage getPitch(Game pGame, Weather pWeather, DimensionProvider dimensionProvider) {
-		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather), dimensionProvider);
-		if (pWeather == Weather.INTRO || weatherPitch == null) {
-			return getIconByProperty(IIconProperty.PITCH_INTRO, dimensionProvider);
+	public BufferedImage getUnscaledPitch(Game game, Weather weather) {
+		BufferedImage weatherPitch = getUnscaledIconByUrl(findPitchUrl(game, weather));
+		if (weather == Weather.INTRO || weatherPitch == null) {
+			return getUnscaledIconByProperty(IIconProperty.PITCH_INTRO);
 		} else {
 			return weatherPitch;
 		}

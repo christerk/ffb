@@ -135,6 +135,17 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fTurnDiceStatusComponent.init();
 	}
 
+	public boolean resizeIfNeeded() {
+		Dimension size = uiDimensionProvider.dimension(Component.SIDEBAR);
+		if (size.equals(getPreferredSize())) {
+			return false;
+		}
+
+		initLayout();
+		refresh();
+		return true;
+	}
+
 	public void refresh() {
 		fBoxButtons.refresh();
 		if (isBoxOpen()) {

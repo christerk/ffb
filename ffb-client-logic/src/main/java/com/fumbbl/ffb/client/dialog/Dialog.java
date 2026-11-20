@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
@@ -26,6 +25,7 @@ import javax.swing.event.InternalFrameListener;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.IdentityHashMap;
@@ -168,8 +168,12 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	protected void setLocationToCenter() {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
-		int y = (fClient.getUserInterface().getUiDimensionProvider().dimension(Component.FIELD).height - dialogSize.height) / 2;
-		setLocation((frameSize.width - dialogSize.width) / 2, Math.max(0, y));
+		Rectangle pitchBounds = getClient().getUserInterface().getPitchViewport().viewportBounds();
+
+		setLocation(
+			(frameSize.width - dialogSize.width) / 2,
+			Math.max(0, pitchBounds.y + ((pitchBounds.height - dialogSize.height) / 2))
+		);
 	}
 
 	public void mouseEntered(MouseEvent pMouseEvent) {

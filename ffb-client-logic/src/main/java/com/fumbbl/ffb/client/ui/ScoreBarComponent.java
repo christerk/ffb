@@ -308,6 +308,18 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		}
 	}
 
+	public boolean resizeIfNeeded() {
+		Dimension size = dimensionProvider.dimension(Component.SCORE_BOARD);
+		if (fImage != null && size.equals(getPreferredSize())) {
+			return false;
+		}
+
+		initLayout();
+		fRefreshNecessary = true;
+		refresh();
+		return true;
+	}
+
 	public void refresh() {
 		scoreFont = fontCache.font(Font.BOLD, 24, dimensionProvider);
 		turnNumberFont = fontCache.font(Font.BOLD, 22, dimensionProvider);

@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -16,6 +17,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -24,14 +27,16 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerPitch extends FieldLayer {
 
-	public FieldLayerPitch(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerPitch(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+												 PitchDimensionProvider pitchDimensionProvider,
+												 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawWeather(Weather pWeather) {
 		if (pWeather != null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather, uiDimensionProvider);
+			BufferedImage fieldImage = iconCache.getUnscaledPitch(getClient().getGame(), pWeather);
 			if (fieldImage != null) {
 				drawPitch(fieldImage);
 			}
@@ -40,15 +45,14 @@ public class FieldLayerPitch extends FieldLayer {
 	}
 
 	protected void drawPitch(BufferedImage pImage) {
-		Graphics2D g2d = fImage.createGraphics();
+		Graphics2D g2d = createWorldGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-		if (uiDimensionProvider.isPitchPortrait()) {
-			g2d.translate(0, size.height);
-			g2d.rotate(-Math.PI / 2);
-			g2d.drawImage(pImage, 0, 0, fImage.getHeight(), fImage.getWidth(),null);
-		} else {
-			g2d.drawImage(pImage, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
-		}
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// Pitch artwork includes a one-base-unit border around the 780 x 450 grid.
+		AffineTransform imageToWorld = AffineTransform.getTranslateInstance(-1, -1);
+		imageToWorld.scale((PitchViewport.WORLD_WIDTH + 2.0) / pImage.getWidth(),
+			(PitchViewport.WORLD_HEIGHT + 2.0) / pImage.getHeight());
+		g2d.drawImage(pImage, imageToWorld, null);
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);
@@ -72,10 +76,10 @@ public class FieldLayerPitch extends FieldLayer {
 			int translateY;
 			if (pitchDimensionProvider.isPitchPortrait()) {
 				translateX = (int) (((double) getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) (pitchDimensionProvider.fieldSquareSize(25.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) (pitchViewport.squareSize(25.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) (pitchViewport.squareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) (((double) getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(-Math.PI / 2.0);
@@ -88,10 +92,10 @@ public class FieldLayerPitch extends FieldLayer {
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
 			if (pitchDimensionProvider.isPitchPortrait()) {
 				translateX = (int) (((double) getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) (pitchViewport.squareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) (pitchDimensionProvider.fieldSquareSize(25) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) (pitchViewport.squareSize(25) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) (((double) getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(Math.PI / 2.0);

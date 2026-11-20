@@ -68,8 +68,8 @@ public abstract class ReportMessageBase<T extends IReport> implements IKeyedItem
 	}
 
 	protected Direction mapToLocal(Direction direction) {
-		PitchDimensionProvider dimensionProvider = statusReport.getClient().getUserInterface().getPitchDimensionProvider();
-		return dimensionProvider.mapToLocal(direction);
+		PitchViewport pitchViewport = statusReport.getClient().getUserInterface().getPitchViewport();
+		return pitchViewport.toLocal(direction);
 	}
 
 	@SuppressWarnings("unchecked")

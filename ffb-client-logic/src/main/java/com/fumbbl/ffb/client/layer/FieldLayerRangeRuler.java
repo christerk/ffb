@@ -5,7 +5,11 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -57,8 +61,9 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private FieldCoordinate fSelectSquareCoordinate;
 	private FieldCoordinate[] fMarkedCoordinates;
 
-	public FieldLayerRangeRuler(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerRangeRuler(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+															PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawRangeRuler(RangeRuler pRangeRuler) {
@@ -77,9 +82,9 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 				pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
-				Dimension startDimension = pitchDimensionProvider.mapToLocal(throwerCoordinate, true);
+				Dimension startDimension = pitchViewport.toLocal(throwerCoordinate, true);
 				Point startCenter = new Point(startDimension.width, startDimension.height);
-				Dimension endDimension = pitchDimensionProvider.mapToLocal(pRangeRuler.getTargetCoordinate(), true);
+				Dimension endDimension = pitchViewport.toLocal(pRangeRuler.getTargetCoordinate(), true);
 				Point endCenter = new Point(endDimension.width, endDimension.height);
 
 				int lengthY = startCenter.y - endCenter.y;
@@ -166,7 +171,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 		if (pMaxLength > 0) {
 
-			int halfRulerWidth = (int) (pitchDimensionProvider.fieldSquareSize() * UtilPassing.RULER_WIDTH / 2);
+			int halfRulerWidth = (int) (pitchViewport.squareSize() * UtilPassing.RULER_WIDTH / 2);
 			Point point1 = new Point(pStartCenter.x, pStartCenter.y - halfRulerWidth);
 			point1 = rotate(point1, pStartCenter, pSinPhi, pCosPhi);
 			Point point2 = new Point(pStartCenter.x, pStartCenter.y + halfRulerWidth);
@@ -198,17 +203,17 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
+			Rectangle2D bounds = pitchViewport.localSquare(pCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
-			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			fillSquare(g2d, pCoordinate, 0);
 			if (border != null) {
 				g2d.setPaint(border);
-				g2d.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2);
+				g2d.draw(new Rectangle2D.Double(bounds.getX() + 1, bounds.getY() + 1,
+					Math.max(0, bounds.getWidth() - 2), Math.max(0, bounds.getHeight() - 2)));
 			}
 			g2d.dispose();
-			addUpdatedArea(bounds);
+			addUpdatedArea(bounds.getBounds());
 		}
 	}
 

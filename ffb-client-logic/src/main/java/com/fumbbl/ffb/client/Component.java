@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client;
 
-import java.awt.*;
+import com.fumbbl.ffb.FieldCoordinate;
+
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,11 +80,11 @@ public enum Component {
 	}
 
 	private static int fieldLongSide(ClientLayout layout) {
-		return (int) (FIELD_SQUARE.dimension(layout).width * 26 * layout.getPitchScale() + 2);
+		return (int) (FIELD_SQUARE.dimension(layout).width * FieldCoordinate.FIELD_WIDTH * layout.getPitchScale() + 2);
 	}
 
 	private static int fieldShortSide(ClientLayout layout) {
-		return (int) (FIELD_SQUARE.dimension(layout).width * 15 * layout.getPitchScale() + 2);
+		return (int) (FIELD_SQUARE.dimension(layout).width * FieldCoordinate.FIELD_HEIGHT * layout.getPitchScale() + 2);
 	}
 
 	private static int fieldWidth(ClientLayout layout) {
