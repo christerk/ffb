@@ -72,6 +72,7 @@ class SquigRageServiceTest {
 		when(squig.getSkillWithProperty(NamedProperties.requiresRageRollBeforeDeclaringAction)).thenReturn(squigRage);
 		when(opponent.getTeam()).thenReturn(otherTeam);
 		when(teamMate.getTeam()).thenReturn(team);
+		when(team.getPlayers()).thenReturn(new Player<?>[]{squig, teamMate});
 
 		FieldCoordinate squigCoordinate = new FieldCoordinate(10, 7);
 		FieldCoordinate opponentCoordinate = new FieldCoordinate(11, 7);

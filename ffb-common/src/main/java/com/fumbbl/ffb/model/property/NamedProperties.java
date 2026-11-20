@@ -258,6 +258,7 @@ public class NamedProperties {
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
 	public static final ISkillProperty providesMultipleBlockAlternative = new NamedProperty("Provides Multiple Block Alternative");
+	public static final ISkillProperty preventsRageRollOfNearbyTeamMates = new NamedProperty("Prevents Rage Roll Of Nearby Team-Mates");
 	public static final ISkillProperty providesStabBlockAlternative = new NamedProperty("Provides Stab Block Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty reducesLonerRollIfPartnerIsHurt = new NamedProperty("Reduces Loner If Partner Is Hurt");

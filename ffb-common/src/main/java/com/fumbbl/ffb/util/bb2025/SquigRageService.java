@@ -2,6 +2,7 @@ package com.fumbbl.ffb.util.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
@@ -15,10 +16,15 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+
 /**
- * Evaluates the Squig Rage trait which has to be rolled for on activation before an action is declared.
+ * Evaluates the Squig Rage trait which has to be rolled for on activation before an action is declared, unless a
+ * team-mate with Squig Restraint is close enough.
  */
 public class SquigRageService {
+
+	private static final int RESTRAINT_RANGE = 3;
 
 	public Skill squigRageSkill(Player<?> player) {
 		return player == null ? null : player.getSkillWithProperty(NamedProperties.requiresRageRollBeforeDeclaringAction);
@@ -31,7 +37,36 @@ public class SquigRageService {
 			return false;
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return !player.getId().equals(actingPlayer.getPlayerId()) || !actingPlayer.isSkillUsed(skill);
+		if (player.getId().equals(actingPlayer.getPlayerId())) {
+			if (actingPlayer.isSkillUsed(skill)) {
+				return false;
+			}
+			// the roll is only made at the start of the activation, a player activated without it keeps acting as normal
+			PlayerAction playerAction = actingPlayer.getPlayerAction();
+			if (playerAction != null && playerAction != PlayerAction.SQUIG_RAGE) {
+				return false;
+			}
+		}
+		return !isRestrained(game, player);
+	}
+
+	/**
+	 * Whether a Standing team-mate with Squig Restraint is within 3 squares of the player.
+	 */
+	public boolean isRestrained(Game game, Player<?> player) {
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
+		if (player.getTeam() == null || !FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
+			return false;
+		}
+		return Arrays.stream(player.getTeam().getPlayers())
+			.filter(teamMate -> teamMate != player && teamMate.hasSkillProperty(NamedProperties.preventsRageRollOfNearbyTeamMates))
+			.anyMatch(teamMate -> {
+				FieldCoordinate teamMateCoordinate = fieldModel.getPlayerCoordinate(teamMate);
+				PlayerState teamMateState = fieldModel.getPlayerState(teamMate);
+				return FieldCoordinateBounds.FIELD.isInBounds(teamMateCoordinate) && teamMateState != null
+					&& teamMateState.isStanding() && coordinate.distanceInSteps(teamMateCoordinate) <= RESTRAINT_RANGE;
+			});
 	}
 
 	/**

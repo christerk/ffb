@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
@@ -40,21 +41,28 @@ public class StallingExtension {
 	// from this turn on the rock throwing coach runs out of time to be angry about stalling
 	private static final int LAST_STALLING_TURN = 6;
 
+	private final SquigRageService squigRageService = new SquigRageService();
+
 	private final Set<ISkillProperty> rollAtActivation = new HashSet<ISkillProperty>() {{
 		add(NamedProperties.appliesConfusion);
 		add(NamedProperties.needsToRollForActionBlockingIsEasier);
 		add(NamedProperties.needsToRollForActionButKeepsTacklezone);
 		add(NamedProperties.becomesImmovable);
-		add(NamedProperties.requiresRageRollBeforeDeclaringAction);
 	}};
 
 	public boolean isConsideredStalling(Game game, Player<?> player) {
 		return UtilPlayer.hasBall(game, player)
 			&& player.getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream())
 			.noneMatch(rollAtActivation::contains)
+			&& !rollsForSquigRage(game, player)
 			&& !ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(player.getTeam()),
 			game.getFieldModel().getPlayerCoordinate(player), false))
 			&& hasOpenPathToEndzone(game, player);
+	}
+
+	// a team-mate with Squig Restraint nearby removes the need to roll for Squig Rage
+	private boolean rollsForSquigRage(Game game, Player<?> player) {
+		return squigRageService.squigRageSkill(player) != null && !squigRageService.isRestrained(game, player);
 	}
 
 	/**
