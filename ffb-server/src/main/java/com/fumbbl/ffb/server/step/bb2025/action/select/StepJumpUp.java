@@ -210,9 +210,9 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		state.roll = IServerJsonOption.JUMP_UP_ROLL.getFrom(source, jsonObject);
-		state.awaitingRescue = IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject);
-		state.reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
-		state.endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		state.awaitingRescue = toPrimitive(IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject));
+		state.reRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
+		state.endPlayerAction = toPrimitive(IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject));
 		state.selectedModifierSkills.clear();
 		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
 		SkillFactory factory = source.getFactory(Factory.SKILL);
