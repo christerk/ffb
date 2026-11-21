@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.5.0")
+			.addBugfix("Games interrupted during the pre-match sequence could not be resumed, they are now recoverable once fans and weather are rolled")
 		);
 
 		versions.add(new VersionChangeList("3.4.0")

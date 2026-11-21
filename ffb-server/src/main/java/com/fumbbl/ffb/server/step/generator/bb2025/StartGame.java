@@ -20,6 +20,8 @@ public class StartGame extends com.fumbbl.ffb.server.step.generator.StartGame {
 		sequence.add(StepId.INIT_START_GAME);
 		sequence.add(StepId.SPECTATORS);
 		sequence.add(StepId.WEATHER);
+		// recovery point: an interrupted game resumes from here
+		sequence.add(StepId.CHECKPOINT);
 		sequence.add(StepId.PETTY_CASH);
 		sequence.add(StepId.BUY_INDUCEMENTS);
 		// inserts inducement sequence at this point
