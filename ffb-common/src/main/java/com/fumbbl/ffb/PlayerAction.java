@@ -62,7 +62,7 @@ public enum PlayerAction implements INamedObject {
 	CHOMP("chomp", 56, "starts a Chomp action", IIconProperty.ACTION_CHOMP),
 	PUNT("punt", 57, null),
 	PUNT_MOVE("puntMove", 57, "starts a Punt action", IIconProperty.ACTION_PUNT),
-	SQUIG_RAGE("squigRage", 58, "rolls for Squig Rage");
+	SQUIG_RAGE("squigRage", 58, "rolls for Squig Rage", IIconProperty.ACTION_SQUIG_RAGE);
 
 	private final String fName;
 	private final int fType;

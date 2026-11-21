@@ -204,6 +204,7 @@ public interface IIconProperty {
 	String ACTION_CHOMP = "action.chomp";
 	String ACTION_PUNT = "action.punt";
 	String ACTION_ILL_CARRY_YOU = "action.illCarryYou";
+	String ACTION_SQUIG_RAGE = "action.squigRage";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";
