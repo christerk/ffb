@@ -78,6 +78,23 @@ public class SquigRageService {
 	}
 
 	/**
+	 * Whether the acting player passed the Squig Rage roll and still has to declare an action. Until the activation is
+	 * ended no other player may be activated.
+	 */
+	public boolean isAwaitingActionDeclaration(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayer() != null && actingPlayer.getPlayerAction() == PlayerAction.SQUIG_RAGE
+			&& hasRolled(actingPlayer);
+	}
+
+	/**
+	 * Whether the given player may not be activated because the acting player still has to declare an action after
+	 * rolling for Squig Rage.
+	 */
+	public boolean isActivationBlocked(ActingPlayer actingPlayer, Player<?> player) {
+		return player != null && player != actingPlayer.getPlayer() && isAwaitingActionDeclaration(actingPlayer);
+	}
+
+	/**
 	 * Whether the acting player has done anything apart from rolling for Squig Rage.
 	 */
 	public boolean hasActedApartFromRoll(ActingPlayer actingPlayer) {

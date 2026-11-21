@@ -182,6 +182,35 @@ class StepInitSelectingSquigRageTest {
 		assertTrue(restoredState().isActive());
 	}
 
+	@Test
+	void selectingAnotherPlayerAfterRollIsIgnored() {
+		givenPassedRoll();
+		Player<?> teamMate = mock(Player.class);
+		when(game.getPlayerById("teamMate")).thenAnswer(invocation -> teamMate);
+
+		StepCommandStatus status = step.handleCommand(
+			command(new ClientCommandActingPlayer("teamMate", PlayerAction.MOVE, false)));
+
+		assertEquals(StepCommandStatus.SKIP_STEP, status);
+		assertEquals("squig", actingPlayer.getPlayerId());
+		assertFalse(isPublished(StepParameterKey.END_PLAYER_ACTION));
+	}
+
+	@Test
+	void deselectingAfterRollEndsActivation() {
+		givenPassedRoll();
+
+		StepCommandStatus status = step.handleCommand(command(new ClientCommandActingPlayer(null, null, false)));
+
+		assertEquals(StepCommandStatus.EXECUTE_STEP, status);
+		assertTrue(isPublished(StepParameterKey.END_PLAYER_ACTION));
+	}
+
+	private void givenPassedRoll() {
+		actingPlayer.markSkillUsed(squigRage);
+		actingPlayer.setPlayerAction(PlayerAction.SQUIG_RAGE);
+	}
+
 	private void givenForcedBlock() {
 		actingPlayer.markSkillUsed(squigRage);
 		actingPlayer.setPlayerAction(PlayerAction.BLOCK);

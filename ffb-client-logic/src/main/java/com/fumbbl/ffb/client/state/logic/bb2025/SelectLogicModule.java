@@ -56,7 +56,8 @@ public class SelectLogicModule extends LogicModule {
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
+		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()
+			&& !squigRageService.isActivationBlocked(game.getActingPlayer(), player)) {
 			return InteractionResult.selectAction(actionContext(player));
 		}
 		return InteractionResult.ignore();
@@ -98,6 +99,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.CHOMP);
 			add(ClientAction.PUNT);
 			add(ClientAction.SQUIG_RAGE);
+			add(ClientAction.END_MOVE);
 		}};
 	}
 
@@ -108,9 +110,14 @@ public class SelectLogicModule extends LogicModule {
 
 	@Override
 	protected void performAvailableAction(Player<?> player, ClientAction action) {
-		if (player != null) {
+		if (player != null && !squigRageService.isActivationBlocked(client.getGame().getActingPlayer(), player)) {
 			ClientCommunication communication = client.getCommunication();
 			switch (action) {
+				case END_MOVE:
+					if (squigRageService.isAwaitingActionDeclaration(client.getGame().getActingPlayer())) {
+						communication.sendActingPlayer(null, null, false);
+					}
+					break;
 				case SQUIG_RAGE:
 					if (squigRageService.requiresRoll(client.getGame(), player)) {
 						communication.sendActingPlayer(player, PlayerAction.SQUIG_RAGE, false);
@@ -393,6 +400,10 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (specialBlocksAvailable && isChompAvailable(player)) {
 			context.add(ClientAction.CHOMP);
+		}
+		// a player who rolled for Squig Rage may end the activation without declaring an action
+		if (squigRageService.isAwaitingActionDeclaration(game.getActingPlayer())) {
+			context.add(ClientAction.END_MOVE);
 		}
 		return context;
 	}
