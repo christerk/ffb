@@ -490,15 +490,22 @@ public class ActingPlayer implements IJsonSerializable {
 		return hasActedCounting(skill -> skill != ignoredSkill);
 	}
 
-	// whether the player has acted, where only used skills matching the given predicate count as acting
-	private boolean hasActedCounting(Predicate<Skill> countedSkill) {
-		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect || isForgone()
-			|| fUsedSkills.stream().anyMatch(countedSkill);
+	/**
+	 * Like {@link #hasActed()} but ignores the usage of negative traits and triggered effects.
+	 */
+	public boolean hasActedIgnoringNegativeTraits() {
+		return hasActedIgnoringTriggeredEffects(skill -> !skill.isNegativeTrait());
 	}
 
-	public boolean hasActedIgnoringNegativeTraits() {
+	// whether the player has acted, where only used skills matching the given predicate count as acting
+	private boolean hasActedCounting(Predicate<Skill> countedSkill) {
+		return hasTriggeredEffect || hasActedIgnoringTriggeredEffects(countedSkill);
+	}
+
+	// like hasActedCounting, but triggered effects (e.g. a committed blitz target) do not count as acting
+	private boolean hasActedIgnoringTriggeredEffects(Predicate<Skill> countedSkill) {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || isForgone()
-			|| fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
+			|| fUsedSkills.stream().anyMatch(countedSkill);
 	}
 
 	public StatBasedRollModifier statBasedModifier(ISkillProperty property) {
