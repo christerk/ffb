@@ -18,6 +18,7 @@ import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.NetCommand;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,8 +27,42 @@ import java.util.Map;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 
+	// the player the action menu was opened for automatically after passing the Squig Rage roll
+	private String menuShownForPlayerId;
+
 	public ClientStateSelect(FantasyFootballClientAwt pClient) {
 		super(pClient, new SelectLogicModule(pClient));
+	}
+
+	@Override
+	public void setUp() {
+		super.setUp();
+		showMenuAfterSquigRage();
+	}
+
+	@Override
+	public void tearDown() {
+		menuShownForPlayerId = null;
+		super.tearDown();
+	}
+
+	@Override
+	public void handleCommand(NetCommand netCommand) {
+		super.handleCommand(netCommand);
+		showMenuAfterSquigRage();
+	}
+
+	// once the Squig Rage roll is passed the action menu is opened, so the player can declare an action right away
+	private void showMenuAfterSquigRage() {
+		Player<?> player = logicModule.playerAwaitingActionDeclaration();
+		if (player == null) {
+			menuShownForPlayerId = null;
+			return;
+		}
+		if (getClient().getGame().getDialogParameter() == null && !player.getId().equals(menuShownForPlayerId)) {
+			menuShownForPlayerId = player.getId();
+			clickOnPlayer(player);
+		}
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {

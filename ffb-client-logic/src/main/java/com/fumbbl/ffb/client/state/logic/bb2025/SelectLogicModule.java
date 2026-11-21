@@ -408,6 +408,18 @@ public class SelectLogicModule extends LogicModule {
 		return context;
 	}
 
+	/**
+	 * The own acting player who passed the Squig Rage roll and still has to declare an action, null if there is none.
+	 */
+	public Player<?> playerAwaitingActionDeclaration() {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (game.isHomePlaying() && squigRageService.isAwaitingActionDeclaration(actingPlayer)) {
+			return actingPlayer.getPlayer();
+		}
+		return null;
+	}
+
 	@Override
 	public void endTurn() {
 		client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
