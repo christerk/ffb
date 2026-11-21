@@ -209,6 +209,7 @@ class StepInitSelectingSquigRageTest {
 	private void givenPassedRoll() {
 		actingPlayer.markSkillUsed(squigRage);
 		actingPlayer.setPlayerAction(PlayerAction.SQUIG_RAGE);
+		actingPlayer.setAwaitingActionDeclaration(true);
 	}
 
 	private void givenForcedBlock() {

@@ -187,10 +187,21 @@ class SquigRageServiceTest {
 		doReturn(squig).when(actingPlayer).getPlayer();
 		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.SQUIG_RAGE);
 		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		when(actingPlayer.isAwaitingActionDeclaration()).thenReturn(true);
 
 		assertTrue(service.isAwaitingActionDeclaration(actingPlayer));
 		assertTrue(service.isActivationBlocked(actingPlayer, teamMate));
 		assertFalse(service.isActivationBlocked(actingPlayer, squig));
+	}
+
+	@Test
+	void rolledPlayerDoesNotAwaitDeclarationWhileSequenceIsUnresolved() {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.SQUIG_RAGE);
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+
+		assertFalse(service.isAwaitingActionDeclaration(actingPlayer));
+		assertFalse(service.isActivationBlocked(actingPlayer, teamMate));
 	}
 
 	@Test
@@ -200,6 +211,7 @@ class SquigRageServiceTest {
 		assertFalse(service.isActivationBlocked(actingPlayer, teamMate));
 
 		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+		when(actingPlayer.isAwaitingActionDeclaration()).thenReturn(true);
 		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.MOVE);
 		assertFalse(service.isAwaitingActionDeclaration(actingPlayer));
 		assertFalse(service.isActivationBlocked(actingPlayer, teamMate));

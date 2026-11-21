@@ -78,12 +78,12 @@ public class SquigRageService {
 	}
 
 	/**
-	 * Whether the acting player passed the Squig Rage roll and still has to declare an action. Until the activation is
-	 * ended no other player may be activated.
+	 * Whether the acting player rolled for Squig Rage, the resulting sequence is resolved without ending the turn and an
+	 * action still has to be declared. Until the activation is ended no other player may be activated.
 	 */
 	public boolean isAwaitingActionDeclaration(ActingPlayer actingPlayer) {
 		return actingPlayer.getPlayer() != null && actingPlayer.getPlayerAction() == PlayerAction.SQUIG_RAGE
-			&& hasRolled(actingPlayer);
+			&& hasRolled(actingPlayer) && actingPlayer.isAwaitingActionDeclaration();
 	}
 
 	/**

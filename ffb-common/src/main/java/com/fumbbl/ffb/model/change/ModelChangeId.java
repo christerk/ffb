@@ -35,6 +35,7 @@ public enum ModelChangeId implements INamedObject {
 	ACTING_PLAYER_SET_HELD_IN_PLACE("actingPlayerSetHeldInPlace", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_MUST_COMPLETE_ACTION("actingPlayerSetMustCompleteAction", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_FELL_FROM_RUSH("actingPlayerSetFellFromRush", ModelChangeDataType.BOOLEAN),
+	ACTING_PLAYER_SET_AWAITING_ACTION_DECLARATION("actingPlayerSetAwaitingActionDeclaration", ModelChangeDataType.BOOLEAN),
 
 	FIELD_MODEL_ADD_BLOOD_SPOT("fieldModelAddBloodSpot", ModelChangeDataType.BLOOD_SPOT),
 	FIELD_MODEL_ADD_CARD("fieldModelAddCard", ModelChangeDataType.CARD),

@@ -2,9 +2,11 @@ package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -68,6 +70,11 @@ public class StepEndSquigRage extends AbstractStep {
 		if (endTurn) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 		} else {
+			// only now the player is offered to declare an action, intermediate states of the sequence must not do so
+			ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+			if (actingPlayer.getPlayerAction() == PlayerAction.SQUIG_RAGE) {
+				actingPlayer.setAwaitingActionDeclaration(true);
+			}
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
