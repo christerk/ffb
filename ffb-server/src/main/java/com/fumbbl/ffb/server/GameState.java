@@ -219,6 +219,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		stepExecutor.startNextStep();
 	}
 
+	/**
+	 * Continues with the next step if the current step had already finished when the game state was persisted.
+	 *
+	 * @return true if execution was continued
+	 */
+	public boolean resumeFinishedStep() {
+		return stepExecutor.resumeFinishedStep();
+	}
+
 	public void pushCurrentStepOnStack() {
 		stepExecutor.pushCurrentStepOnStack();
 	}

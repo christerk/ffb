@@ -77,6 +77,21 @@ class StepExecutor {
 		}
 	}
 
+	/**
+	 * Continues a restored step stack whose current step had already finished when the game state was persisted
+	 * (e.g. a checkpoint). Without this nothing would trigger the next step and the game would be stuck.
+	 *
+	 * @return true if execution was continued
+	 */
+	boolean resumeFinishedStep() {
+		if ((fCurrentStep == null) || (fCurrentStep.getResult() == null)
+			|| (fCurrentStep.getResult().getNextAction() != StepAction.NEXT_STEP)) {
+			return false;
+		}
+		startNextStep();
+		return true;
+	}
+
 	void handleCommand(ReceivedCommand receivedCommand) {
 		if (fCurrentStep == null) {
 			startNextStep();

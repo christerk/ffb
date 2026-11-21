@@ -164,6 +164,8 @@ public class UtilServerStartGame {
 			gameState.fetchChanges(); // clear changes after sending the whole model
 
 			if (resumed) {
+				// a game restored from a checkpoint has to continue with the next step on its own
+				gameState.resumeFinishedStep();
 				// Otherwise we will send all markers again which would overwrite new markings
 				// coaches with manual marking made in this game so far
 				// The markings are contained in the gamestate already anyway
