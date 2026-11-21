@@ -124,6 +124,11 @@ public final class StepInitSelecting extends AbstractStep {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						break;
 					}
+					// after rolling for Squig Rage the player stays activated until they declare an action or end the activation
+					if (squigRageService.isActivationBlocked(actingPlayer, selectedPlayer)) {
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()
 						// the moving player of a pass block is the one whose action was interrupted by a dump-off
