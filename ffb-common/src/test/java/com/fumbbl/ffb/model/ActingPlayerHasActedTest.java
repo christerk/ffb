@@ -54,5 +54,27 @@ class ActingPlayerHasActedTest {
 	void notActingAtAll() {
 		assertFalse(actingPlayer.hasActed());
 		assertFalse(actingPlayer.hasActedIgnoring(squigRage));
+		assertFalse(actingPlayer.hasActedIgnoringNegativeTraits());
+	}
+
+	@Test
+	void usingOnlyNegativeTraitsDoesNotCountAsActingIgnoringNegativeTraits() {
+		actingPlayer.markSkillUsed(squigRage);
+
+		assertFalse(actingPlayer.hasActedIgnoringNegativeTraits());
+	}
+
+	@Test
+	void usingAnotherSkillCountsAsActingIgnoringNegativeTraits() {
+		actingPlayer.markSkillUsed(otherSkill);
+
+		assertTrue(actingPlayer.hasActedIgnoringNegativeTraits());
+	}
+
+	@Test
+	void forgoingCountsAsActingIgnoringNegativeTraitsWithoutUsedSkills() {
+		actingPlayer.setForgone(true);
+
+		assertTrue(actingPlayer.hasActedIgnoringNegativeTraits());
 	}
 }

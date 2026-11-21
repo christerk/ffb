@@ -497,8 +497,8 @@ public class ActingPlayer implements IJsonSerializable {
 	}
 
 	public boolean hasActedIgnoringNegativeTraits() {
-		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() ||
-			fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait() || isForgone());
+		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || isForgone()
+			|| fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
 	}
 
 	public StatBasedRollModifier statBasedModifier(ISkillProperty property) {
