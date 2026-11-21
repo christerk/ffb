@@ -23,6 +23,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Kalimar
@@ -479,16 +480,20 @@ public class ActingPlayer implements IJsonSerializable {
 	}
 
 	public boolean hasActed() {
-		return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect || !fUsedSkills.isEmpty() ||
-			isForgone());
+		return hasActedCounting(skill -> true);
 	}
 
 	/**
 	 * Like {@link #hasActed()} but ignores the usage of the given skill.
 	 */
 	public boolean hasActedIgnoring(Skill ignoredSkill) {
-		return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect ||
-			fUsedSkills.stream().anyMatch(skill -> skill != ignoredSkill) || isForgone());
+		return hasActedCounting(skill -> skill != ignoredSkill);
+	}
+
+	// whether the player has acted, where only used skills matching the given predicate count as acting
+	private boolean hasActedCounting(Predicate<Skill> countedSkill) {
+		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect || isForgone()
+			|| fUsedSkills.stream().anyMatch(countedSkill);
 	}
 
 	public boolean hasActedIgnoringNegativeTraits() {
