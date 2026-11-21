@@ -44,6 +44,8 @@ import static com.fumbbl.ffb.inducement.Usage.STAR;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
+	private final SquigRageService squigRageService = new SquigRageService();
+
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {
 		String[] messages;
@@ -200,7 +202,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer) {
-		return new SquigRageService().isOnlyActivatedWhileProne(actingPlayer);
+		return squigRageService.isOnlyActivatedWhileProne(actingPlayer);
 	}
 
 	@Override
