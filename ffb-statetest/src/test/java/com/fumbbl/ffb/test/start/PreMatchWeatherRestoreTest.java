@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Verifies that a game restored from the pre-match checkpoint continues with the following step instead of
- * being stuck on the already finished checkpoint step.
+ * Verifies that a game restored from the recovery point persisted after the weather roll continues with the following
+ * step instead of being stuck on the already finished weather step.
  */
-public class PreMatchCheckpointRestoreTest {
+public class PreMatchWeatherRestoreTest {
 
 	private TestServer testServer;
 	private final List<JsonObject> snapshots = new ArrayList<>();
@@ -46,8 +46,8 @@ public class PreMatchCheckpointRestoreTest {
 	}
 
 	@Test
-	public void restoredCheckpointContinuesWithNextStep() {
-		GameState gameState = gameStateAtCheckpoint();
+	public void gameRestoredAfterWeatherContinuesWithNextStep() {
+		GameState gameState = gameStateBeforeWeather();
 
 		StepEngine.start(gameState);
 
@@ -56,7 +56,8 @@ public class PreMatchCheckpointRestoreTest {
 
 		GameState restored = restore(snapshots.get(0));
 
-		assertEquals(StepId.CHECKPOINT, restored.getCurrentStep().getId());
+		assertEquals(StepId.WEATHER, restored.getCurrentStep().getId());
+		assertEquals(gameState.getGame().getFieldModel().getWeather(), restored.getGame().getFieldModel().getWeather());
 		assertEquals(StepAction.NEXT_STEP, restored.getCurrentStep().getResult().getNextAction());
 		assertNull(restored.getGame().getDialogParameter());
 
@@ -68,7 +69,7 @@ public class PreMatchCheckpointRestoreTest {
 
 	@Test
 	public void restoredWaitingStepIsNotSkipped() {
-		GameState gameState = gameStateAtCheckpoint();
+		GameState gameState = gameStateBeforeWeather();
 		StepEngine.start(gameState);
 
 		GameState restored = restore(gameState.toJsonValue());
@@ -77,9 +78,23 @@ public class PreMatchCheckpointRestoreTest {
 		assertEquals(StepId.COIN_CHOICE, restored.getCurrentStep().getId());
 	}
 
-	private GameState gameStateAtCheckpoint() {
+	@Test
+	public void otherRulesetsDoNotPersistAfterWeather() {
+		GameState gameState = gameStateBeforeWeather("BB2020");
+
+		StepEngine.start(gameState);
+
+		assertEquals(StepId.COIN_CHOICE, gameState.getCurrentStep().getId());
+		assertTrue(snapshots.isEmpty());
+	}
+
+	private GameState gameStateBeforeWeather() {
+		return gameStateBeforeWeather("BB2025");
+	}
+
+	private GameState gameStateBeforeWeather(String rulesVersion) {
 		GameState gameState = new GameStateBuilder(testServer.getGameState())
-			.withRule("BB2025")
+			.withRule(rulesVersion)
 			.withTeam(true, team -> team.player("home1", player -> player.at(10, 7)))
 			.withTeam(false, team -> team.player("away1", player -> player.at(15, 7)))
 			.build();
@@ -88,7 +103,7 @@ public class PreMatchCheckpointRestoreTest {
 		gameState.fetchChanges();
 
 		Sequence sequence = new Sequence(gameState);
-		sequence.add(StepId.CHECKPOINT);
+		sequence.add(StepId.WEATHER);
 		sequence.add(StepId.COIN_CHOICE);
 		gameState.getStepStack().push(sequence.getSequence());
 		return gameState;

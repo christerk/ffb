@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.game.start;
+package com.fumbbl.ffb.server.step.mixed.start;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -19,7 +19,8 @@ import com.fumbbl.ffb.server.step.StepId;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepWeather extends AbstractStep {
 
 	public StepWeather(GameState pGameState) {
