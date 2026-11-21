@@ -9,6 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("3.5.0")
+		);
+
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("Really Stupid: Distracted team-mates (e.g. confused or hypnotized) granted the +2 bonus for adjacent team-mates")
 			.addBugfix("Argue the Call: A natural 1 did not send off the coach for secret weapons when Biased Referee was used")
