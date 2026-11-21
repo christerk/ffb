@@ -10,7 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.5.0")
-			.addBugfix("Catch: Catching an inaccurate pass wrongly applied a -1 modifier")
+			.addBugfix("Catch: Catching an inaccurate pass or bomb wrongly applied a -1 modifier")
 		);
 
 		versions.add(new VersionChangeList("3.4.0")

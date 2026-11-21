@@ -56,6 +56,26 @@ class InaccuratePassCatchTest {
 		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("receiver")));
 	}
 
+	@Test
+	void catchingInaccurateBombAppliesNoModifier() {
+		GameState state = new GameStateBuilder(server.getGameState())
+			.withRule("BB2025").withWeather(Weather.NICE).withBallAt(20, 1)
+			.withTeam(true, team -> team
+				.player("thrower", player -> player.at(10, 7).stats(6, 3, 3, 4, 8).skill("Bombardier"))
+				.player("receiver", player -> player.at(LANDING.getX(), LANDING.getY()).stats(6, 3, 3, 4, 8)))
+			.withTeam(false, team -> team.player("opponent", player -> player.at(20, 1).stats(6, 3, 3, 5, 8)))
+			.build();
+		// pass roll 3 (inaccurate), scatter 1, 5, 1, catch 3
+		TestRolls.on(state).general(3, 1, 5, 1, 3);
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.THROW_BOMB));
+		StepEngine.respond(state, Commands.pass("thrower", TARGET));
+
+		ReportCatchRoll catchRoll = singleCatchRoll(state);
+		assertEquals(3, catchRoll.getMinimumRoll());
+		assertEquals(0, catchRoll.getRollModifiers().length);
+	}
+
 	private GameState inaccuratePass(FieldCoordinate receiverCoordinate) {
 		return new GameStateBuilder(server.getGameState())
 			.withRule("BB2025").withWeather(Weather.NICE).withBallAt(10, 7)
@@ -72,7 +92,10 @@ class InaccuratePassCatchTest {
 		StepEngine.start(state);
 		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.PASS_MOVE));
 		StepEngine.respond(state, Commands.pass("thrower", TARGET));
+		return singleCatchRoll(state);
+	}
 
+	private ReportCatchRoll singleCatchRoll(GameState state) {
 		List<ReportCatchRoll> catchRolls = Arrays.stream(state.getGameLog().getServerCommands())
 			.filter(command -> command instanceof ServerCommandModelSync)
 			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
