@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import java.util.Set;
 public class SelectLogicModule extends LogicModule {
 
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+	private final SquigRageService squigRageService = new SquigRageService();
 
 	public SelectLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
@@ -54,7 +56,8 @@ public class SelectLogicModule extends LogicModule {
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
+		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()
+			&& !squigRageService.isActivationBlocked(game.getActingPlayer(), player)) {
 			return InteractionResult.selectAction(actionContext(player));
 		}
 		return InteractionResult.ignore();
@@ -95,6 +98,8 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.CHOMP);
 			add(ClientAction.PUNT);
+			add(ClientAction.SQUIG_RAGE);
+			add(ClientAction.END_MOVE);
 		}};
 	}
 
@@ -105,9 +110,19 @@ public class SelectLogicModule extends LogicModule {
 
 	@Override
 	protected void performAvailableAction(Player<?> player, ClientAction action) {
-		if (player != null) {
+		if (player != null && !squigRageService.isActivationBlocked(client.getGame().getActingPlayer(), player)) {
 			ClientCommunication communication = client.getCommunication();
 			switch (action) {
+				case END_MOVE:
+					if (squigRageService.isAwaitingActionDeclaration(client.getGame().getActingPlayer())) {
+						communication.sendActingPlayer(null, null, false);
+					}
+					break;
+				case SQUIG_RAGE:
+					if (squigRageService.requiresRoll(client.getGame(), player)) {
+						communication.sendActingPlayer(player, PlayerAction.SQUIG_RAGE, false);
+					}
+					break;
 				case BLOCK:
 					communication.sendActingPlayer(player, PlayerAction.BLOCK, false);
 					break;
@@ -262,6 +277,12 @@ public class SelectLogicModule extends LogicModule {
 		ActionContext context = new ActionContext();
 		Game game = client.getGame();
 
+		// Squig Rage has to be rolled for before any action can be declared
+		if (squigRageService.requiresRoll(game, player)) {
+			context.add(ClientAction.SQUIG_RAGE);
+			return context;
+		}
+
 		boolean treacherousAvailable = isTreacherousAvailable(player);
 		if (treacherousAvailable) {
 			context.add(Influences.BALL_ACTIONS_DUE_TO_TREACHEROUS);
@@ -370,8 +391,9 @@ public class SelectLogicModule extends LogicModule {
 		if (isSecureTheBallActionAvailable(player)) {
 			context.add(ClientAction.SECURE_THE_BALL);
 		}
+		// forgoing is no longer possible once the player has been activated by rolling for Squig Rage
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)
-			&& !playerState.isProneOrStunned()) {
+			&& !playerState.isProneOrStunned() && !squigRageService.isAwaitingActionDeclaration(game.getActingPlayer())) {
 			context.add(ClientAction.FORGO);
 		}
 		if (isThenIStartedBlastinAvailable(player)) {
@@ -380,7 +402,23 @@ public class SelectLogicModule extends LogicModule {
 		if (specialBlocksAvailable && isChompAvailable(player)) {
 			context.add(ClientAction.CHOMP);
 		}
+		// a player who rolled for Squig Rage may end the activation without declaring an action
+		if (squigRageService.isAwaitingActionDeclaration(game.getActingPlayer())) {
+			context.add(ClientAction.END_MOVE);
+		}
 		return context;
+	}
+
+	/**
+	 * The own acting player who passed the Squig Rage roll and still has to declare an action, null if there is none.
+	 */
+	public Player<?> playerAwaitingActionDeclaration() {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (game.isHomePlaying() && squigRageService.isAwaitingActionDeclaration(actingPlayer)) {
+			return actingPlayer.getPlayer();
+		}
+		return null;
 	}
 
 	@Override

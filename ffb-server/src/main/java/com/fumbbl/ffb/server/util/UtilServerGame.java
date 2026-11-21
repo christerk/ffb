@@ -4,6 +4,7 @@ import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.change.ModelChangeList;
@@ -83,7 +84,10 @@ public class UtilServerGame {
 		boolean playerChanged = UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping);
 		if (pPlayerAction != null) {
 			boolean differentAction = (oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType());
-			if ((playerChanged && differentAction) || pPlayerAction.forceLog()) {
+			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			// the actual action of a player activated without declaring one is declared later on
+			boolean declaredAfterActivation = differentAction && mechanic.isActivationWithoutDeclaredAction(oldPlayerAction);
+			if ((playerChanged && differentAction) || declaredAfterActivation || pPlayerAction.forceLog()) {
 				if (oldPlayerAction == null) {
 					pStep.getResult().setSound(SoundId.CLICK);
 				}

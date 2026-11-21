@@ -41,18 +41,21 @@ public class UtilActingPlayer {
 				if (actingPlayer.hasActed() && ((!isThrowBombAction && !isHailMaryBombAction)
 					|| (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.enableThrowBombAction)
 					&& !UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction)))) {
+					boolean remainsProne = mechanic(pGame).remainsProneWhenDeactivated(actingPlayer);
 					pGame.getFieldModel().setPlayerState(oldPlayer,
-						currentState.changeBase(PlayerState.STANDING).changeActive(false));
+						currentState.changeBase(remainsProne ? PlayerState.PRONE : PlayerState.STANDING).changeActive(false));
 				} else if (actingPlayer.isStandingUp() || actingPlayer.wasProne()) {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.PRONE));
 				} else {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING));
 				}
 
+			} else if (actingPlayer.hasActed() && mechanic(pGame).isActivationWithoutDeclaredAction(actingPlayer.getPlayerAction())) {
+				// the player has been activated but never declared an action
+				pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeActive(false));
 			}
 			if (!actingPlayer.hasActed()) {
-				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-				Set<String> enhancementsToRemove = mechanic.enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
+				Set<String> enhancementsToRemove = mechanic(pGame).enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 				enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), enhancement));
 
 				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
@@ -80,8 +83,17 @@ public class UtilActingPlayer {
 				PlayerState oldState = pGame.getFieldModel().getPlayerState(newPlayer);
 				actingPlayer.setOldPlayerState(oldState);
 				actingPlayer.setStandingUp(oldState.getBase() == PlayerState.PRONE);
-				// show acting player as moving
-				fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));
+				// a player activated without declaring an action keeps the current base until an action is declared
+				if (!mechanic(pGame).isActivationWithoutDeclaredAction(pPlayerAction)) {
+					// show acting player as moving
+					fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));
+				}
+			} else if (mechanic(pGame).isActivationWithoutDeclaredAction(actingPlayer.getPlayerAction())
+				&& !mechanic(pGame).isActivationWithoutDeclaredAction(pPlayerAction)) {
+				PlayerState currentState = fieldModel.getPlayerState(newPlayer);
+				if (currentState.getBase() != PlayerState.MOVING) {
+					fieldModel.setPlayerState(newPlayer, currentState.changeBase(PlayerState.MOVING));
+				}
 			}
 			actingPlayer.setPlayerAction(pPlayerAction);
 			actingPlayer.setJumping(jumping);
@@ -114,6 +126,10 @@ public class UtilActingPlayer {
 
 		return changed;
 
+	}
+
+	private static GameMechanic mechanic(Game game) {
+		return (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 	}
 
 }

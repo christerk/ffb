@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.marking.PlayerMarker;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.marking.TransientPlayerMarker;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -253,6 +255,16 @@ public class PlayerIconFactory {
 
 	}
 
+	// a player activated without declaring an action yet keeps the base state but is still the acting player
+	private boolean isActivatedWithoutDeclaredAction(Game game, Player<?> player) {
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayer() != player) {
+			return false;
+		}
+		GameMechanic mechanic = game.getMechanic(Mechanic.Type.GAME);
+		return mechanic.isActivationWithoutDeclaredAction(actingPlayer.getPlayerAction());
+	}
+
 	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, DimensionProvider dimensionProvider) {
 		return getIcon(pClient, pPlayer, false, dimensionProvider);
 	}
@@ -273,9 +285,10 @@ public class PlayerIconFactory {
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
 		boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
+		boolean shownAsActing = playerState.getBase() == PlayerState.MOVING || isActivatedWithoutDeclaredAction(game, pPlayer);
 		if (ignorePlayerState ||
 			(playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR)) {
-			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
+			icon = getBasicIcon(pClient, pPlayer, homePlayer, shownAsActing, withBall,
 				withBomb, dimensionProvider);
 		}
 
@@ -360,7 +373,7 @@ public class PlayerIconFactory {
 		}
 
 		if ((actingPlayer.getPlayer() == pPlayer)
-			&& (playerState.getBase() == PlayerState.MOVING)
+			&& shownAsActing
 			&& IClientPropertyValue.SETTING_MARK_ACTING_PLAYER_ACTION_ON.equals(
 				pClient.getProperty(CommonProperty.SETTING_MARK_ACTING_PLAYER_ACTION))) {
 			PlayerAction playerAction = actingPlayer.getPlayerAction();

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.injury.modification;
+package com.fumbbl.ffb.server.injury.modification.bb2025;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.SkillUse;
@@ -19,6 +19,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.mixed.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
+import com.fumbbl.ffb.server.injury.modification.OldProModificationParams;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -77,7 +79,13 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 		boolean hurtTeamMate = attacker != null && defender != null && attacker.getTeam() == defender.getTeam();
 
 		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomitLike() || injuryType.isChainsaw()))
-			|| (hurtTeamMate && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY);
+			|| (hurtTeamMate && !isLashOut(injuryContext));
+	}
+
+	// team-mates hurt by Animal Savagery or Squig Rage are not considered self-inflicted
+	private boolean isLashOut(InjuryContext injuryContext) {
+		return injuryContext.getApothecaryMode() == ApothecaryMode.ANIMAL_SAVAGERY
+			|| injuryContext.getApothecaryMode() == ApothecaryMode.SQUIG_RAGE;
 	}
 
 	@Override

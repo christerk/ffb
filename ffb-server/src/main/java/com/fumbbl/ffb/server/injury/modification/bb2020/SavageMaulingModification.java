@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.injury.modification;
+package com.fumbbl.ffb.server.injury.modification.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.SkillUse;
@@ -14,6 +14,8 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
+import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
 import java.util.HashSet;
 
