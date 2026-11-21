@@ -391,8 +391,9 @@ public class SelectLogicModule extends LogicModule {
 		if (isSecureTheBallActionAvailable(player)) {
 			context.add(ClientAction.SECURE_THE_BALL);
 		}
+		// forgoing is no longer possible once the player has been activated by rolling for Squig Rage
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)
-			&& !playerState.isProneOrStunned()) {
+			&& !playerState.isProneOrStunned() && !squigRageService.isAwaitingActionDeclaration(game.getActingPlayer())) {
 			context.add(ClientAction.FORGO);
 		}
 		if (isThenIStartedBlastinAvailable(player)) {

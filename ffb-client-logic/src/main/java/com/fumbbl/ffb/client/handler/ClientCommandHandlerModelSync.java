@@ -59,6 +59,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 	private boolean fUpdateTimeout;
 	private boolean fClearSelectedPlayer;
 	private boolean fReloadPitch;
+	private Player<?> previousActingPlayer;
 
 	protected ClientCommandHandlerModelSync(FantasyFootballClient pClient) {
 		super(pClient);
@@ -84,6 +85,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 			return true;
 		}
 
+		previousActingPlayer = game.getActingPlayer().getPlayer();
 		ModelChangeList modelChangeList = fSyncCommand.getModelChanges();
 		modelChangeList.applyTo(game, ClientMode.PLAYER == getClient().getMode() ? Collections.emptySet() : IGNORE_PLAYER_MARKER);
 
@@ -224,6 +226,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 					case ACTING_PLAYER_SET_SUFFERING_ANIMOSITY:
 					case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
 					case ACTING_PLAYER_SET_INITIAL_ADJACENT_PARTNER_IDS:
+					case ACTING_PLAYER_SET_AWAITING_ACTION_DECLARATION:
 						fUpdateActingPlayer = true;
 						break;
 					case TURN_DATA_SET_TURN_NR:
@@ -270,6 +273,11 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
 				userInterface.getFieldComponent().getLayerPlayers().updateBallAndPlayers(playerCoordinate, true);
+			}
+			// the icon of the previous acting player may depend on being the acting player, so it has to be redrawn as well
+			if (previousActingPlayer != null && previousActingPlayer != actingPlayer.getPlayer()) {
+				FieldCoordinate previousCoordinate = game.getFieldModel().getPlayerCoordinate(previousActingPlayer);
+				userInterface.getFieldComponent().getLayerPlayers().updateBallAndPlayers(previousCoordinate, true);
 			}
 		}
 

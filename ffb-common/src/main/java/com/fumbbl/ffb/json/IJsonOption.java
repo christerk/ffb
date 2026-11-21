@@ -232,6 +232,7 @@ public interface IJsonOption {
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
 	JsonIntOption HEAT_ROLL = new JsonIntOption("heatRoll");
 	JsonBooleanOption HELD_IN_PLACE = new JsonBooleanOption("heldInPlace");
+	JsonBooleanOption AWAITING_ACTION_DECLARATION = new JsonBooleanOption("awaitingActionDeclaration");
 	JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
 	JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
 	JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
