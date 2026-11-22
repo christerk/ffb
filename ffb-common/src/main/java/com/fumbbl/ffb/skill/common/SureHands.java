@@ -25,6 +25,7 @@ public class SureHands extends Skill {
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.forceOpponentToDropBallOnPushback));
 
+		registerProperty(NamedProperties.canRerollPickUp);
 		registerRerollSource(ReRolledActions.PICK_UP, ReRollSources.SURE_HANDS);
 	}
 

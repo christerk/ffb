@@ -123,6 +123,7 @@ public class NamedProperties {
 	public static final ISkillProperty canReRollAnyNumberOfBlockDice = new NamedProperty("Can Re-Roll Any Number Of Block Dice");
 	public static final ISkillProperty canRerollSingleBothDown = new NamedProperty("Can Reroll Single Both Down");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
+	public static final ISkillProperty canRerollPickUp = new NamedProperty("Can Reroll Pick Up");
 	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");
 	public static final ISkillProperty canReRollOnesOnKORecovery = new NamedProperty("Can Re-Roll Ones On KO Recovery");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
