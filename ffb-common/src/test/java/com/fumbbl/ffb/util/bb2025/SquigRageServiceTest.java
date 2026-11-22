@@ -310,12 +310,15 @@ class SquigRageServiceTest {
 	}
 
 	@Test
-	void activationWithoutDeclaredActionOrDispatchedActionMayNotBeChanged() {
+	void activationWithoutDeclaredActionMayNotBeChanged() {
 		givenActionDeclaredAfterRoll(PlayerAction.SQUIG_RAGE);
 		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+	}
 
+	@Test
+	void actionDispatchedRightAwayMayBeChangedUntilThePlayerActs() {
 		givenActionDeclaredAfterRoll(PlayerAction.PUNT);
-		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+		assertTrue(service.canChangeDeclaredAction(actingPlayer));
 	}
 
 	private void givenActionDeclaredAfterRoll(PlayerAction playerAction) {

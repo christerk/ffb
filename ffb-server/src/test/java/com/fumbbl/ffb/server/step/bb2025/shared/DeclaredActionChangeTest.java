@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.skill.bb2025.SquigRage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,7 @@ class DeclaredActionChangeTest {
 	private final Map<Player<?>, PlayerState> states = new HashMap<>();
 	private final DeclaredActionChange change = new DeclaredActionChange();
 	private GameState gameState;
+	private final PassState passState = mock(PassState.class);
 	private Game game;
 	private FieldModel fieldModel;
 	private TurnData turnData;
@@ -58,6 +60,7 @@ class DeclaredActionChangeTest {
 		target = mock(Player.class);
 
 		when(gameState.getGame()).thenReturn(game);
+		when(gameState.getPassState()).thenReturn(passState);
 		when(game.getFieldModel()).thenReturn(fieldModel);
 		when(game.getTurnData()).thenReturn(turnData);
 		doReturn(mechanic).when(game).getMechanic(Mechanic.Type.GAME);
@@ -114,6 +117,7 @@ class DeclaredActionChangeTest {
 		assertTrue(states.get(squig).isActive());
 		verify(fieldModel).clearMoveSquares();
 		verify(gameState).resetStalling();
+		verify(passState).reset();
 		verify(turnData, never()).setBlitzUsed(false);
 	}
 

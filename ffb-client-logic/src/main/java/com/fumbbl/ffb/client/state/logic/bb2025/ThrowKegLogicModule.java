@@ -26,6 +26,11 @@ public class ThrowKegLogicModule extends LogicModule {
 	}
 
 	@Override
+	protected boolean supportsChangeAction() {
+		return true;
+	}
+
+	@Override
 	public ClientStateId getId() {
 		return ClientStateId.THROW_KEG;
 	}

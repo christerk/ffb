@@ -181,10 +181,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 					Game game = getGameState().getGame();
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)
 						&& declaredActionChange.isRequested(game, (ClientCommandActingPlayer) pReceivedCommand.getCommand())) {
-						declaredActionChange.withdraw(getGameState());
 						game.setTurnMode(game.getLastTurnMode());
-						UtilServerDialog.hideDialog(getGameState());
-						getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+						declaredActionChange.returnToActionSelection(this);
 						status = StepCommandStatus.SKIP_STEP;
 					}
 					break;

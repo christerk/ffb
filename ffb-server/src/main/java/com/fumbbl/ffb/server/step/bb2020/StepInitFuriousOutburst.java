@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepInitFuriousOutburst extends AbstractStep {
 
 	private final Set<String> eligiblePlayers = new HashSet<>();

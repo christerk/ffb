@@ -24,9 +24,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.bb2025.SquigRage;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
@@ -185,6 +187,10 @@ class BlitzTargetAfterSquigRageTest {
 		actingPlayer.setOldPlayerState(new PlayerState(PlayerState.STANDING).changeActive(true));
 		when(fieldModel.getPlayerState(squig)).thenReturn(new PlayerState(PlayerState.MOVING).changeActive(true));
 		utilServerSteps.when(() -> UtilServerSteps.checkCommandIsFromCurrentPlayer(any(), any())).thenReturn(true);
+		StepStack stepStack = mock(StepStack.class);
+		when(gameState.getStepStack()).thenReturn(stepStack);
+		when(gameState.getPassState()).thenReturn(mock(PassState.class));
+		Select select = givenSelectGenerator();
 		StepSelectBlitzTarget step = initSelectBlitzTarget();
 
 		step.handleCommand(new ReceivedCommand(new ClientCommandActingPlayer("squig", PlayerAction.SQUIG_RAGE, false),
@@ -194,19 +200,9 @@ class BlitzTargetAfterSquigRageTest {
 		assertTrue(actingPlayer.isAwaitingActionDeclaration());
 		verify(game).setTurnMode(TurnMode.REGULAR);
 		utilServerDialog.verify(() -> UtilServerDialog.hideDialog(gameState));
-		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
-		assertEquals(END_LABEL, step.getResult().getNextActionParameter());
-	}
-
-	@Test
-	void selectionIsWaitedForAgainAfterTheBlitzHasBeenWithdrawn() {
-		actingPlayer.setPlayerAction(PlayerAction.SQUIG_RAGE);
-		actingPlayer.setAwaitingActionDeclaration(true);
-		Select select = givenSelectGenerator();
-
-		new StepSelectBlitzTargetEnd(gameState).start();
-
+		verify(stepStack).clear();
 		verify(select).pushSequence(any(Select.SequenceParams.class));
+		assertEquals(StepAction.NEXT_STEP, step.getResult().getNextAction());
 	}
 
 	private StepSelectBlitzTarget selectBlitzTarget(String playerId) {

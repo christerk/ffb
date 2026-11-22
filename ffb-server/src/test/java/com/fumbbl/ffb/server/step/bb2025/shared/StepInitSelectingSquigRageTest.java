@@ -27,6 +27,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.skill.bb2025.SquigRage;
 import org.eclipse.jetty.websocket.api.Session;
 import org.junit.jupiter.api.AfterEach;
@@ -218,6 +219,7 @@ class StepInitSelectingSquigRageTest {
 		actingPlayer.setOldPlayerState(new PlayerState(PlayerState.STANDING).changeActive(true));
 		actingPlayer.setPlayerAction(PlayerAction.MOVE);
 		when(fieldModel.getPlayerState(squig)).thenReturn(MOVING);
+		when(gameState.getPassState()).thenReturn(mock(PassState.class));
 
 		StepCommandStatus status = step.handleCommand(
 			command(new ClientCommandActingPlayer("squig", PlayerAction.SQUIG_RAGE, false)));

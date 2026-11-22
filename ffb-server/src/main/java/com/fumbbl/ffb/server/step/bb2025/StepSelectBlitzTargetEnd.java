@@ -121,10 +121,6 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
         sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
         getGameState().getStepStack().push(sequence.getSequence());
       }
-    } else if (squigRageService.isAwaitingActionDeclaration(actingPlayer)) {
-      // the blitz has been withdrawn after rolling for Squig Rage, so a different action has to be declared
-      ((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-        .pushSequence(new Select.SequenceParams(getGameState(), false));
     }
 
     getResult().setNextAction(StepAction.NEXT_STEP);

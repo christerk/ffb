@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.shared;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -10,6 +11,12 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 import com.fumbbl.ffb.util.bb2025.SquigRageService;
@@ -26,10 +33,15 @@ public class DeclaredActionChange {
 	 * Whether the command asks to withdraw the action declared by the acting player.
 	 */
 	public boolean isRequested(Game game, ClientCommandActingPlayer command) {
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		return command.getPlayerAction() == PlayerAction.SQUIG_RAGE && command.getPlayerId() != null
-			&& command.getPlayerId().equals(actingPlayer.getPlayerId())
-			&& squigRageService.canChangeDeclaredAction(actingPlayer);
+			&& command.getPlayerId().equals(game.getActingPlayer().getPlayerId()) && canChange(game);
+	}
+
+	/**
+	 * Whether the acting player may still withdraw their declared action.
+	 */
+	public boolean canChange(Game game) {
+		return squigRageService.canChangeDeclaredAction(game.getActingPlayer());
 	}
 
 	/**
@@ -61,6 +73,9 @@ public class DeclaredActionChange {
 			UtilServerGame.undoPickUpPartner(gameState, actingPlayer, carrySkill);
 		}
 
+		// a bomb declaration remembers the bombardier
+		gameState.getPassState().reset();
+
 		UtilActingPlayer.changeActingPlayer(game, player.getId(), PlayerAction.SQUIG_RAGE, false);
 		// standing up is only prepared when an action is declared
 		actingPlayer.setCurrentMove(0);
@@ -72,5 +87,20 @@ public class DeclaredActionChange {
 		fieldModel.clearTrackNumbers();
 		fieldModel.clearDiceDecorations();
 		gameState.resetStalling();
+	}
+
+	/**
+	 * Withdraws the declared action from within the sequence started for it, which is dropped in favour of a new
+	 * selection where a different action can be declared.
+	 */
+	public void returnToActionSelection(IStep step) {
+		GameState gameState = step.getGameState();
+		withdraw(gameState);
+		UtilServerDialog.hideDialog(gameState);
+		gameState.getStepStack().clear();
+		SequenceGeneratorFactory factory = gameState.getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+			.pushSequence(new Select.SequenceParams(gameState, false));
+		step.getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 }

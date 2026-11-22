@@ -104,8 +104,7 @@ public class SquigRageService {
 	 */
 	public boolean canChangeDeclaredAction(ActingPlayer actingPlayer) {
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		// actions dispatched right away are already being performed
-		return actingPlayer.getPlayer() != null && playerAction != null && !playerAction.forceDispatch()
+		return actingPlayer.getPlayer() != null && playerAction != null && playerAction != PlayerAction.SQUIG_RAGE
 			&& hasRolled(actingPlayer) && !actingPlayer.isMustCompleteAction() && !hasActedApartFromRoll(actingPlayer);
 	}
 
