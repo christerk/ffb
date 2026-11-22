@@ -84,7 +84,7 @@ public class UtilServerGame {
 		boolean playerChanged = UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping);
 		if (pPlayerAction != null) {
 			boolean differentAction = (oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType());
-			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			GameMechanic mechanic = game.getMechanic(Mechanic.Type.GAME);
 			// the actual action of a player activated without declaring one is declared later on
 			boolean declaredAfterActivation = differentAction && mechanic.isActivationWithoutDeclaredAction(oldPlayerAction);
 			if ((playerChanged && differentAction) || declaredAfterActivation || pPlayerAction.forceLog()) {

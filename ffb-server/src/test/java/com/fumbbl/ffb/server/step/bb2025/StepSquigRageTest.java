@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerAction;
@@ -13,7 +12,6 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
-import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -119,7 +117,6 @@ class StepSquigRageTest {
 		teamMate = mock(Player.class);
 		FantasyFootballServer server = mock(FantasyFootballServer.class);
 		StepStack stepStack = mock(StepStack.class);
-		MechanicsFactory mechanicsFactory = mock(MechanicsFactory.class);
 		GameMechanic gameMechanic = mock(GameMechanic.class);
 
 		when(gameState.getGame()).thenReturn(game);
@@ -134,8 +131,7 @@ class StepSquigRageTest {
 		when(game.getTurnMode()).thenReturn(TurnMode.REGULAR);
 		when(game.getActingTeam()).thenReturn(team);
 		when(game.getOtherTeam(team)).thenReturn(otherTeam);
-		doReturn(mechanicsFactory).when(game).getFactory(FactoryType.Factory.MECHANIC);
-		when(mechanicsFactory.forName(Mechanic.Type.GAME.name())).thenReturn(gameMechanic);
+		doReturn(gameMechanic).when(game).getMechanic(Mechanic.Type.GAME);
 		when(gameMechanic.isBlockActionAllowed(TurnMode.REGULAR)).thenReturn(true);
 		when(team.getId()).thenReturn("team");
 

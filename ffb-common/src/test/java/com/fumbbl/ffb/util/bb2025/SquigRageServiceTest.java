@@ -1,12 +1,10 @@
 package com.fumbbl.ffb.util.bb2025;
 
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -51,7 +49,6 @@ class SquigRageServiceTest {
 		fieldModel = mock(FieldModel.class);
 		actingPlayer = mock(ActingPlayer.class);
 		gameMechanic = mock(GameMechanic.class);
-		MechanicsFactory mechanicsFactory = mock(MechanicsFactory.class);
 		squigRage = mock(Skill.class);
 		Team team = mock(Team.class);
 		Team otherTeam = mock(Team.class);
@@ -62,8 +59,7 @@ class SquigRageServiceTest {
 		when(game.getFieldModel()).thenReturn(fieldModel);
 		when(game.getActingPlayer()).thenReturn(actingPlayer);
 		when(game.getTurnMode()).thenReturn(TurnMode.REGULAR);
-		when(game.getFactory(FactoryType.Factory.MECHANIC)).thenReturn(mechanicsFactory);
-		when(mechanicsFactory.forName(Mechanic.Type.GAME.name())).thenReturn(gameMechanic);
+		doReturn(gameMechanic).when(game).getMechanic(Mechanic.Type.GAME);
 		when(gameMechanic.isBlockActionAllowed(TurnMode.REGULAR)).thenReturn(true);
 		when(game.getOtherTeam(team)).thenReturn(otherTeam);
 

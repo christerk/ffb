@@ -1,10 +1,8 @@
 package com.fumbbl.ffb.util;
 
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -45,7 +43,6 @@ class UtilActingPlayerTest {
 		squigRage.postConstruct();
 		game = mock(Game.class);
 		mechanic = mock(GameMechanic.class);
-		MechanicsFactory mechanicsFactory = mock(MechanicsFactory.class);
 		FieldModel fieldModel = mock(FieldModel.class);
 		squig = mock(Player.class);
 		other = mock(Player.class);
@@ -57,8 +54,7 @@ class UtilActingPlayerTest {
 		when(game.getPlayers()).thenReturn(new Player<?>[]{squig, other});
 		when(game.getFieldModel()).thenReturn(fieldModel);
 		when(game.getTurnMode()).thenReturn(TurnMode.REGULAR);
-		doReturn(mechanicsFactory).when(game).getFactory(FactoryType.Factory.MECHANIC);
-		when(mechanicsFactory.forName(Mechanic.Type.GAME.name())).thenReturn(mechanic);
+		doReturn(mechanic).when(game).getMechanic(Mechanic.Type.GAME);
 		when(mechanic.isActivationWithoutDeclaredAction(PlayerAction.SQUIG_RAGE)).thenReturn(true);
 
 		when(fieldModel.getPlayerState(any())).thenAnswer(invocation -> states.get(invocation.<Player<?>>getArgument(0)));

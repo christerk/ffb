@@ -129,7 +129,7 @@ public class UtilActingPlayer {
 	}
 
 	private static GameMechanic mechanic(Game game) {
-		return (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		return game.getMechanic(Mechanic.Type.GAME);
 	}
 
 }

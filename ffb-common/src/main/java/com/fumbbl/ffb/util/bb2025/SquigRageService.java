@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.util.bb2025;
 
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
@@ -124,7 +123,7 @@ public class SquigRageService {
 		if (playerState == null || !playerState.isActive()) {
 			return new Player<?>[0];
 		}
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		GameMechanic mechanic = game.getMechanic(Mechanic.Type.GAME);
 		if (!mechanic.isBlockActionAllowed(game.getTurnMode())) {
 			return new Player<?>[0];
 		}
