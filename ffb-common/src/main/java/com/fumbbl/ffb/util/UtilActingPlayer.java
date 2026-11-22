@@ -94,6 +94,14 @@ public class UtilActingPlayer {
 				if (currentState.getBase() != PlayerState.MOVING) {
 					fieldModel.setPlayerState(newPlayer, currentState.changeBase(PlayerState.MOVING));
 				}
+			} else if (!mechanic(pGame).isActivationWithoutDeclaredAction(actingPlayer.getPlayerAction())
+				&& mechanic(pGame).isActivationWithoutDeclaredAction(pPlayerAction)) {
+				// withdrawing the declared action restores the base the player was activated with
+				PlayerState currentState = fieldModel.getPlayerState(newPlayer);
+				PlayerState oldState = actingPlayer.getOldPlayerState();
+				if (oldState != null && currentState.getBase() == PlayerState.MOVING) {
+					fieldModel.setPlayerState(newPlayer, currentState.changeBase(oldState.getBase()));
+				}
 			}
 			actingPlayer.setPlayerAction(pPlayerAction);
 			actingPlayer.setJumping(jumping);

@@ -35,6 +35,11 @@ public class MoveLogicModule extends LogicModule {
 	}
 
 	@Override
+	protected boolean supportsChangeAction() {
+		return true;
+	}
+
+	@Override
 	public ClientStateId getId() {
 		return ClientStateId.MOVE;
 	}

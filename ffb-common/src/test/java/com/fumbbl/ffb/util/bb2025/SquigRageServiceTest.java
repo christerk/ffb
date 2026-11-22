@@ -288,4 +288,39 @@ class SquigRageServiceTest {
 		when(actingPlayer.getPlayerAction()).thenReturn(PlayerAction.THROW_BOMB);
 		assertFalse(service.isBlockForced(actingPlayer));
 	}
+	@Test
+	void declaredActionMayBeChangedAfterTheRollUntilThePlayerActs() {
+		givenActionDeclaredAfterRoll(PlayerAction.MOVE);
+
+		assertTrue(service.canChangeDeclaredAction(actingPlayer));
+
+		when(actingPlayer.hasActedIgnoring(squigRage)).thenReturn(true);
+		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+	}
+
+	@Test
+	void declaredActionMayNotBeChangedWithoutRollOrWhenForcedToBlock() {
+		givenActionDeclaredAfterRoll(PlayerAction.BLOCK);
+		when(actingPlayer.isMustCompleteAction()).thenReturn(true);
+		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+
+		when(actingPlayer.isMustCompleteAction()).thenReturn(false);
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(false);
+		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+	}
+
+	@Test
+	void activationWithoutDeclaredActionOrDispatchedActionMayNotBeChanged() {
+		givenActionDeclaredAfterRoll(PlayerAction.SQUIG_RAGE);
+		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+
+		givenActionDeclaredAfterRoll(PlayerAction.PUNT);
+		assertFalse(service.canChangeDeclaredAction(actingPlayer));
+	}
+
+	private void givenActionDeclaredAfterRoll(PlayerAction playerAction) {
+		doReturn(squig).when(actingPlayer).getPlayer();
+		when(actingPlayer.getPlayerAction()).thenReturn(playerAction);
+		when(actingPlayer.isSkillUsed(squigRage)).thenReturn(true);
+	}
 }

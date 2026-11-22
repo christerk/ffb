@@ -12,6 +12,11 @@ public abstract class AbstractBlockLogicModule extends LogicModule {
 	}
 
 	@Override
+	protected boolean supportsChangeAction() {
+		return true;
+	}
+
+	@Override
 	public ClientStateId getId() {
 		return ClientStateId.BLOCK;
 	}

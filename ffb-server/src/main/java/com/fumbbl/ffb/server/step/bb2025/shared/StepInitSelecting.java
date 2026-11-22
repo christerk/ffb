@@ -65,6 +65,7 @@ public final class StepInitSelecting extends AbstractStep {
 	private final StallingExtension stallingExtension = new StallingExtension();
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 	private final SquigRageService squigRageService = new SquigRageService();
+	private final DeclaredActionChange declaredActionChange = new DeclaredActionChange();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -122,6 +123,12 @@ public final class StepInitSelecting extends AbstractStep {
 					// a block forced by Squig Rage has to be performed
 					if (squigRageService.isBlockForced(actingPlayer)) {
 						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
+					// after rolling for Squig Rage the declared action may be changed until the player does anything else
+					if (declaredActionChange.isRequested(game, actingPlayerCommand)) {
+						declaredActionChange.withdraw(getGameState());
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 						break;
 					}
 					// after rolling for Squig Rage the player stays activated until they declare an action or end the activation

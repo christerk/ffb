@@ -98,4 +98,6 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_4;
 
 	int KEY_SQUIG_RAGE = KeyEvent.VK_5;
+
+	int KEY_CHANGE_ACTION = KeyEvent.VK_6;
 }

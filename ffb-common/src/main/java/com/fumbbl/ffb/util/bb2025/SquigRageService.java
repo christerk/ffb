@@ -99,6 +99,17 @@ public class SquigRageService {
 	}
 
 	/**
+	 * Whether the acting player declared an action after rolling for Squig Rage but has not done anything else yet, so
+	 * they may still declare a different action instead.
+	 */
+	public boolean canChangeDeclaredAction(ActingPlayer actingPlayer) {
+		PlayerAction playerAction = actingPlayer.getPlayerAction();
+		// actions dispatched right away are already being performed
+		return actingPlayer.getPlayer() != null && playerAction != null && !playerAction.forceDispatch()
+			&& hasRolled(actingPlayer) && !actingPlayer.isMustCompleteAction() && !hasActedApartFromRoll(actingPlayer);
+	}
+
+	/**
 	 * Whether a prone acting player has only been activated by the Squig Rage roll and never stood up.
 	 */
 	public boolean isOnlyActivatedWhileProne(ActingPlayer actingPlayer) {

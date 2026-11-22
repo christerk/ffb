@@ -19,6 +19,7 @@ import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -36,6 +37,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2025.shared.DeclaredActionChange;
 import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
@@ -57,6 +59,7 @@ import java.util.Arrays;
 public class StepSelectBlitzTarget extends AbstractStep {
 
 	private final SquigRageService squigRageService = new SquigRageService();
+	private final DeclaredActionChange declaredActionChange = new DeclaredActionChange();
 	private String gotoLabelOnEnd;
 	private String selectedPlayerId;
 	private boolean confirmed, endPlayerAction, endTurn, checkForgo;
@@ -172,6 +175,18 @@ public class StepSelectBlitzTarget extends AbstractStep {
 					sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
 					getGameState().getStepStack().push(sequence.getSequence());
 					getResult().setNextAction(StepAction.NEXT_STEP);
+					break;
+				case CLIENT_ACTING_PLAYER:
+					// after rolling for Squig Rage the blitz may be changed into a different action before selecting a target
+					Game game = getGameState().getGame();
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)
+						&& declaredActionChange.isRequested(game, (ClientCommandActingPlayer) pReceivedCommand.getCommand())) {
+						declaredActionChange.withdraw(getGameState());
+						game.setTurnMode(game.getLastTurnMode());
+						UtilServerDialog.hideDialog(getGameState());
+						getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+						status = StepCommandStatus.SKIP_STEP;
+					}
 					break;
 				case CLIENT_CONFIRM: // confirms ending blitz action
 					confirmed = true;

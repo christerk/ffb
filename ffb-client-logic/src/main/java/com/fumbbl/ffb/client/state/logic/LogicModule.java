@@ -71,7 +71,10 @@ public abstract class LogicModule {
 	}
 
 	public final void perform(Player<?> player, ClientAction action) {
-		if (availableActions().contains(action)) {
+		if (action == ClientAction.CHANGE_ACTION && isChangeActionAvailable(player)) {
+			actionForChangingDeclaredAction(getActingPlayer())
+				.ifPresent(playerAction -> client.getCommunication().sendActingPlayer(player, playerAction, false));
+		} else if (availableActions().contains(action)) {
 			performAvailableAction(player, action);
 		} else {
 			client.logError(
@@ -80,6 +83,28 @@ public abstract class LogicModule {
 	}
 
 	protected abstract void performAvailableAction(Player<?> player, ClientAction action);
+
+	/**
+	 * Whether the acting player may withdraw their declared action to choose a different one.
+	 */
+	public boolean isChangeActionAvailable(Player<?> player) {
+		ActingPlayer actingPlayer = getActingPlayer();
+		return supportsChangeAction() && player != null && player == actingPlayer.getPlayer()
+			&& actionForChangingDeclaredAction(actingPlayer).isPresent();
+	}
+
+	/**
+	 * Whether the declared action can be withdrawn while this module is active, i.e. the server is still waiting for
+	 * the action to be started.
+	 */
+	protected boolean supportsChangeAction() {
+		return false;
+	}
+
+	private Optional<PlayerAction> actionForChangingDeclaredAction(ActingPlayer actingPlayer) {
+		GameMechanic mechanic = client.getGame().getMechanic(Mechanic.Type.GAME);
+		return mechanic.actionForChangingDeclaredAction(actingPlayer);
+	}
 
 	public void endTurn() {
 	}

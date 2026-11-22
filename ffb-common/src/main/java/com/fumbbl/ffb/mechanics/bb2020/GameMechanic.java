@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -193,6 +194,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isActivationWithoutDeclaredAction(PlayerAction playerAction) {
 		return false;
+	}
+
+	@Override
+	public Optional<PlayerAction> actionForChangingDeclaredAction(ActingPlayer actingPlayer) {
+		return Optional.empty();
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package com.fumbbl.ffb.server.step.bb2025.shared;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -43,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -204,6 +207,26 @@ class StepInitSelectingSquigRageTest {
 
 		assertEquals(StepCommandStatus.EXECUTE_STEP, status);
 		assertTrue(isPublished(StepParameterKey.END_PLAYER_ACTION));
+	}
+
+	@Test
+	void selectingSquigRageAgainWithdrawsTheDeclaredAction() {
+		givenPassedRoll();
+		GameMechanic mechanic = mock(GameMechanic.class);
+		doReturn(mechanic).when(game).getMechanic(Mechanic.Type.GAME);
+		when(mechanic.isActivationWithoutDeclaredAction(PlayerAction.SQUIG_RAGE)).thenReturn(true);
+		actingPlayer.setOldPlayerState(new PlayerState(PlayerState.STANDING).changeActive(true));
+		actingPlayer.setPlayerAction(PlayerAction.MOVE);
+		when(fieldModel.getPlayerState(squig)).thenReturn(MOVING);
+
+		StepCommandStatus status = step.handleCommand(
+			command(new ClientCommandActingPlayer("squig", PlayerAction.SQUIG_RAGE, false)));
+
+		assertEquals(StepCommandStatus.EXECUTE_STEP, status);
+		assertEquals(PlayerAction.SQUIG_RAGE, actingPlayer.getPlayerAction());
+		assertTrue(actingPlayer.isAwaitingActionDeclaration());
+		assertEquals(PlayerState.STANDING, restoredState().getBase());
+		assertFalse(isPublished(StepParameterKey.END_PLAYER_ACTION));
 	}
 
 	private void givenPassedRoll() {

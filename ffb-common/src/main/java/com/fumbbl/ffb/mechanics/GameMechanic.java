@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class GameMechanic implements Mechanic {
@@ -69,6 +70,12 @@ public abstract class GameMechanic implements Mechanic {
 	 * stood up.
 	 */
 	public abstract boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer);
+
+	/**
+	 * The activation without a declared action the acting player returns to when changing their declared action, if
+	 * they may still do so.
+	 */
+	public abstract Optional<PlayerAction> actionForChangingDeclaredAction(ActingPlayer actingPlayer);
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
 

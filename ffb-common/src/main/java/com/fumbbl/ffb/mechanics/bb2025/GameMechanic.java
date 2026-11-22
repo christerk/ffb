@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -203,6 +204,12 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer) {
 		return squigRageService.isOnlyActivatedWhileProne(actingPlayer);
+	}
+
+	@Override
+	public Optional<PlayerAction> actionForChangingDeclaredAction(ActingPlayer actingPlayer) {
+		return squigRageService.canChangeDeclaredAction(actingPlayer) ? Optional.of(PlayerAction.SQUIG_RAGE)
+			: Optional.empty();
 	}
 
 	@Override

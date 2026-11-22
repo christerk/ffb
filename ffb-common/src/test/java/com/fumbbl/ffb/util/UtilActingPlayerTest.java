@@ -161,4 +161,17 @@ class UtilActingPlayerTest {
 		assertEquals(PlayerState.STANDING, states.get(squig).getBase());
 		assertTrue(states.get(squig).isActive());
 	}
+	@Test
+	void withdrawingDeclaredActionRestoresBase() {
+		states.put(squig, PRONE);
+		UtilActingPlayer.changeActingPlayer(game, "squig", PlayerAction.SQUIG_RAGE, false);
+		actingPlayer.markSkillUsed(squigRage);
+		UtilActingPlayer.changeActingPlayer(game, "squig", PlayerAction.MOVE, false);
+
+		UtilActingPlayer.changeActingPlayer(game, "squig", PlayerAction.SQUIG_RAGE, false);
+
+		assertEquals(PlayerState.PRONE, states.get(squig).getBase());
+		assertTrue(states.get(squig).isActive());
+		assertEquals(PlayerAction.SQUIG_RAGE, actingPlayer.getPlayerAction());
+	}
 }

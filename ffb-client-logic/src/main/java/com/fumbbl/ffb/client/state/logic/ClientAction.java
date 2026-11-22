@@ -15,6 +15,7 @@ public enum ClientAction {
 	CHAINSAW,
 	CHOMP,
 	END_MOVE,
+	CHANGE_ACTION,
 	FRENZIED_RUSH,
 	FORGO,
 	FOUL,
