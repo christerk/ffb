@@ -51,6 +51,8 @@ import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFact
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -317,10 +319,13 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	private ActionStatus offerRescue(Player<?> player, int minimumRoll) {
 		Game game = getGameState().getGame();
 		setReRolledAction(ReRolledActions.PICK_UP);
-		// Secure the Ball is not an Agility Test and retains its existing re-roll prompt.
+		// Secure the Ball is not an Agility Test and retains its existing re-roll prompt, but skill re-rolls
+		// such as Sure Hands may not be used for it.
 		if (secureTheBall) {
-			awaitingRescue = !reRollUsed && UtilServerReRoll.askForReRollIfAvailable(getGameState(), player,
-				ReRolledActions.PICK_UP, minimumRoll, false);
+			awaitingRescue = !reRollUsed && getGameState().getReRollService().askForReRollIfAvailable(
+				ReRollRequest.forPlayer(getGameState(), player, ReRolledActions.PICK_UP, minimumRoll)
+					.ignoreSkills(new HashSet<>(Arrays.asList(UtilCards.findAllSkills(player))))
+					.build());
 		} else {
 			List<ModifierChoiceOption> options = selectionService.findOptions(game, player, pickupRoll);
 			ReRollSource skillReRoll = reRollUsed ? null : (player == game.getActingPlayer().getPlayer()
