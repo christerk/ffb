@@ -13,10 +13,13 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModifierCollection {
 
+	public static final String SCATTER_MODIFIER_NAME = "Inaccurate Pass or Scatter";
+
 	public CatchModifierCollection() {
 		super();
 
-		add(new CatchModifier("Inaccurate Pass or Scatter", 1, ModifierType.REGULAR) {
+		// the name is how reports of stored games refer to this modifier, only the reporting string may change
+		add(new CatchModifier(SCATTER_MODIFIER_NAME, "Scatter", 1, ModifierType.REGULAR) {
 			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = 6752365907656902172L;
 

@@ -1,6 +1,9 @@
 package com.fumbbl.ffb.test.pass;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
@@ -54,6 +57,23 @@ class InaccuratePassCatchTest {
 
 		assertEquals(4, catchRoll.getMinimumRoll());
 		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("receiver")));
+		assertEquals(1, catchRoll.getRollModifiers().length);
+		assertEquals("Scatter", catchRoll.getRollModifiers()[0].getReportString());
+	}
+
+	@Test
+	void storedScatterModifierIsLoadedUnderItsOriginalName() {
+		GameState state = inaccuratePass(TARGET);
+		ReportCatchRoll catchRoll = singleCatchRoll(state, 3, 1, 5, 1, 5, 4);
+		JsonObject json = catchRoll.toJsonValue();
+		// reports of stored games (replays, resumed games) name the modifier like this
+		assertEquals(new JsonArray().add("Inaccurate Pass or Scatter"), IJsonOption.ROLL_MODIFIERS.getFrom(null, json));
+
+		ReportCatchRoll loaded = new ReportCatchRoll().initFrom(state.getGame().getRules(), json);
+
+		assertEquals(1, loaded.getRollModifiers().length);
+		assertEquals(catchRoll.getRollModifiers()[0], loaded.getRollModifiers()[0]);
+		assertEquals("Scatter", loaded.getRollModifiers()[0].getReportString());
 	}
 
 	@Test
