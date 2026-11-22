@@ -40,7 +40,7 @@ class SquigRestraintTest {
 		SquigRestraint squigRestraint = new SquigRestraint();
 		squigRestraint.postConstruct();
 		game = mock(Game.class);
-		fieldModel = mock(FieldModel.class);
+		fieldModel = new FieldModel(game);
 		actingPlayer = mock(ActingPlayer.class);
 		team = mock(Team.class);
 		otherTeam = mock(Team.class);
@@ -52,6 +52,9 @@ class SquigRestraintTest {
 		when(game.getTurnMode()).thenReturn(TurnMode.REGULAR);
 
 		when(squig.getId()).thenReturn("squig");
+		when(restrainer.getId()).thenReturn("restrainer");
+		when(game.getPlayerById("squig")).thenAnswer(invocation -> squig);
+		when(game.getPlayerById("restrainer")).thenAnswer(invocation -> restrainer);
 		when(squig.getTeam()).thenReturn(team);
 		when(squig.getSkillWithProperty(NamedProperties.requiresRageRollBeforeDeclaringAction)).thenReturn(squigRage);
 		when(restrainer.getTeam()).thenReturn(team);
@@ -60,8 +63,8 @@ class SquigRestraintTest {
 		when(team.getPlayers()).thenReturn(new Player<?>[]{squig, restrainer});
 		when(otherTeam.getPlayers()).thenReturn(new Player<?>[0]);
 
-		when(fieldModel.getPlayerCoordinate(squig)).thenReturn(SQUIG_COORDINATE);
-		when(fieldModel.getPlayerState(squig)).thenReturn(STANDING);
+		fieldModel.setPlayerCoordinate(squig, SQUIG_COORDINATE);
+		fieldModel.setPlayerState(squig, STANDING);
 		givenRestrainer(new FieldCoordinate(13, 7), STANDING);
 	}
 
@@ -122,6 +125,7 @@ class SquigRestraintTest {
 	void playerDoesNotRestrainThemself() {
 		when(squig.hasSkillProperty(NamedProperties.preventsRageRollOfNearbyTeamMates)).thenReturn(true);
 		when(team.getPlayers()).thenReturn(new Player<?>[]{squig});
+		fieldModel.remove(restrainer);
 
 		assertTrue(service.requiresRoll(game, squig));
 	}
@@ -136,7 +140,7 @@ class SquigRestraintTest {
 	}
 
 	private void givenRestrainer(FieldCoordinate coordinate, PlayerState state) {
-		when(fieldModel.getPlayerCoordinate(restrainer)).thenReturn(coordinate);
-		when(fieldModel.getPlayerState(restrainer)).thenReturn(state);
+		fieldModel.setPlayerCoordinate(restrainer, coordinate);
+		fieldModel.setPlayerState(restrainer, state);
 	}
 }

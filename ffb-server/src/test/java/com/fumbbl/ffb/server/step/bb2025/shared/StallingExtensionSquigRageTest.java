@@ -54,12 +54,14 @@ class StallingExtensionSquigRageTest {
 		when(squig.getSkillsIncludingTemporaryOnes()).thenReturn(Collections.<Skill>singleton(squigRage));
 		when(restrainer.getTeam()).thenReturn(team);
 		when(team.getPlayers()).thenReturn(new Player<?>[]{squig, restrainer});
-		when(fieldModel.getPlayerCoordinate(squig)).thenReturn(new FieldCoordinate(10, 7));
-		when(fieldModel.getPlayerCoordinate(restrainer)).thenReturn(new FieldCoordinate(11, 7));
+		FieldCoordinate squigCoordinate = new FieldCoordinate(10, 7);
+		when(fieldModel.getPlayerCoordinate(squig)).thenReturn(squigCoordinate);
 		when(fieldModel.getPlayerState(restrainer)).thenReturn(STANDING);
 
 		utilPlayer = mockStatic(UtilPlayer.class);
 		utilPlayer.when(() -> UtilPlayer.hasBall(game, squig)).thenReturn(true);
+		utilPlayer.when(() -> UtilPlayer.findStandingOrPronePlayers(game, team, squigCoordinate, 3))
+			.thenReturn(new Player<?>[]{restrainer});
 		// a marking opponent ends the check right after the exemption, so no path finding is needed
 		utilPlayer.when(() -> UtilPlayer.findAdjacentPlayersWithTacklezones(any(), any(), any(), anyBoolean()))
 			.thenReturn(new Player<?>[]{mock(Player.class)});
