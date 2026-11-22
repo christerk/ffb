@@ -8,9 +8,12 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -29,6 +32,8 @@ import com.fumbbl.ffb.test.TestServer;
 import com.fumbbl.ffb.util.UtilPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -344,6 +349,66 @@ class PickupModifierChoiceTest {
 		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
 		assertNull(game.getDialogParameter());
 		assertFalse(game.getPlayerById("runner").isUsed(professional(state)));
+	}
+
+	private StepPickUp startSecureTheBall(GameState state, int roll) {
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
+		Game game = state.getGame();
+		game.getActingPlayer().setPlayerAction(PlayerAction.SECURE_THE_BALL);
+		game.getFieldModel().setBallCoordinate(new FieldCoordinate(12, 7));
+		game.getFieldModel().setBallMoving(true);
+		StepPickUp step = new StepPickUp(state);
+		StepParameterSet parameters = new StepParameterSet();
+		parameters.add(new StepParameter(StepParameterKey.GOTO_LABEL_ON_FAILURE, "failure"));
+		step.init(parameters);
+		TestRolls.on(state).general(roll);
+		step.start();
+		return step;
+	}
+
+	@Test
+	void secureTheBallMoveDoesNotUseSureHandsAutomatically() {
+		GameState state = buildState("Sure Hands");
+		state.getGame().getFieldModel().setBallMoving(true);
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.SECURE_THE_BALL));
+		TestRolls.on(state).general(1, 6);
+		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(12, 7), new FieldCoordinate(11, 7)));
+		Game game = state.getGame();
+		assertEquals(1, reportCount(state, ReportId.PICK_UP_ROLL));
+		assertEquals(0, reportCount(state, ReportId.RE_ROLL));
+		assertFalse(UtilPlayer.hasBall(game, game.getPlayerById("runner")));
+		assertFalse(game.isHomePlaying());
+	}
+
+	private long reportCount(GameState state, ReportId reportId) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report.getId() == reportId)
+			.count();
+	}
+
+	@Test
+	void secureTheBallDoesNotUseSureHands() {
+		GameState state = buildState("Sure Hands");
+		StepPickUp step = startSecureTheBall(state, 1);
+		Game game = state.getGame();
+		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
+		assertNull(game.getDialogParameter());
+		assertFalse(UtilPlayer.hasBall(game, game.getPlayerById("runner")));
+		assertFalse(game.getActingPlayer().isSkillUsed(game.getRules().getSkillFactory().forName("Sure Hands")));
+	}
+
+	@Test
+	void secureTheBallOffersTeamReRollButNotSureHands() {
+		GameState state = buildState("Sure Hands");
+		state.getGame().getTurnData().setReRolls(1);
+		startSecureTheBall(state, 1);
+		DialogReRollPropertiesParameter dialog = (DialogReRollPropertiesParameter) state.getGame().getDialogParameter();
+		assertTrue(dialog.hasProperty(ReRollProperty.TRR));
+		assertNull(dialog.getReRollSkill());
 	}
 
 	@Test

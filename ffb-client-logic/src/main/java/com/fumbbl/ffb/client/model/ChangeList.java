@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.5.0")
+			.addBugfix("Secure the Ball: A failed roll offered a Sure Hands re-roll")
 		);
 
 		versions.add(new VersionChangeList("3.4.0")
