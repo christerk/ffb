@@ -347,6 +347,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		switch (fCatchScatterThrowInMode) {
 			case CATCH_BOMB:
+			case CATCH_MISSED_BOMB:
 			case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
 			case CATCH_ACCURATE_BOMB:
 				if (askForDivingCatch(fieldModel, game)) {
@@ -375,6 +376,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				break;
 			case CATCH_KICKOFF:
 			case CATCH_ACCURATE_PASS:
+			// an inaccurate pass keeps its mode for the catch roll, it is not caught as a scattered ball
+			case CATCH_MISSED_PASS:
 				if (askForDivingCatch(fieldModel, game)) {
 					return;
 				}
@@ -407,7 +410,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				break;
 			case CATCH_THROW_IN:
 			case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
-			case CATCH_MISSED_PASS:
 				if (askForDivingCatch(fieldModel, game)) {
 					return;
 				}
@@ -770,7 +772,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	 */
 	private boolean mayUseSkillReRollAutomatically() {
 		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER
-			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_BOMB) {
+			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_MISSED_PASS
+			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_BOMB
+			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_MISSED_BOMB) {
 			return false;
 		}
 		Game game = getGameState().getGame();

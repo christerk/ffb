@@ -54,7 +54,7 @@ public class StepResolvePass extends AbstractStep {
 					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						state.getCatcherId() == null ? CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE
-							: CatchScatterThrowInMode.CATCH_BOMB));
+							: CatchScatterThrowInMode.CATCH_MISSED_BOMB));
 				} else {
 					game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
@@ -87,7 +87,7 @@ public class StepResolvePass extends AbstractStep {
 				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
 					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
 					publishParameter(
-						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_BOMB));
 					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 					game.getFieldModel().setBombMoving(true);
 				} else {
