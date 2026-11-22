@@ -9,7 +9,7 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("3.5.0")
+		versions.add(new VersionChangeList("3.4.1")
 			.addBugfix("Secure the Ball: A failed roll offered a Sure Hands re-roll")
 			.addBugfix("Catch: Catching an inaccurate pass or bomb wrongly applied a -1 modifier")
 		);
