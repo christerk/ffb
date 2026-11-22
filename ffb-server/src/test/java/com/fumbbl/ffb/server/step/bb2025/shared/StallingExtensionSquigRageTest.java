@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.when;
  * A ball carrier with Squig Rage is only exempt from stalling while they have to roll for it at activation.
  */
 class StallingExtensionSquigRageTest {
-	private static final PlayerState STANDING = new PlayerState(PlayerState.STANDING).changeActive(true);
 
 	private final StallingExtension stallingExtension = new StallingExtension();
 	private Game game;
@@ -56,11 +54,10 @@ class StallingExtensionSquigRageTest {
 		when(team.getPlayers()).thenReturn(new Player<?>[]{squig, restrainer});
 		FieldCoordinate squigCoordinate = new FieldCoordinate(10, 7);
 		when(fieldModel.getPlayerCoordinate(squig)).thenReturn(squigCoordinate);
-		when(fieldModel.getPlayerState(restrainer)).thenReturn(STANDING);
 
 		utilPlayer = mockStatic(UtilPlayer.class);
 		utilPlayer.when(() -> UtilPlayer.hasBall(game, squig)).thenReturn(true);
-		utilPlayer.when(() -> UtilPlayer.findStandingOrPronePlayers(game, team, squigCoordinate, 3))
+		utilPlayer.when(() -> UtilPlayer.findStandingPlayers(game, team, squigCoordinate, 3))
 			.thenReturn(new Player<?>[]{restrainer});
 		// a marking opponent ends the check right after the exemption, so no path finding is needed
 		utilPlayer.when(() -> UtilPlayer.findAdjacentPlayersWithTacklezones(any(), any(), any(), anyBoolean()))

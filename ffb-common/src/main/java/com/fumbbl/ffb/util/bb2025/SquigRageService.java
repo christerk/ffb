@@ -58,9 +58,8 @@ public class SquigRageService {
 		if (player.getTeam() == null || !FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
 			return false;
 		}
-		return Arrays.stream(UtilPlayer.findStandingOrPronePlayers(game, player.getTeam(), coordinate, RESTRAINT_RANGE))
-			.filter(teamMate -> teamMate.hasSkillProperty(NamedProperties.preventsRageRollOfNearbyTeamMates))
-			.anyMatch(teamMate -> fieldModel.getPlayerState(teamMate).isStanding());
+		return Arrays.stream(UtilPlayer.findStandingPlayers(game, player.getTeam(), coordinate, RESTRAINT_RANGE))
+			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.preventsRageRollOfNearbyTeamMates));
 	}
 
 	/**

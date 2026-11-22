@@ -211,6 +211,17 @@ public class UtilPlayer {
 		return players.toArray(new Player[0]);
 	}
 
+	/**
+	 * Players of the given team within the given distance that are standing (including moving or blocked players).
+	 */
+	public static Player<?>[] findStandingPlayers(Game game, Team team, FieldCoordinate coordinate, int distance) {
+		FieldModel fieldModel = game.getFieldModel();
+		return Arrays.stream(fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD, distance, false))
+			.map(fieldModel::getPlayer)
+			.filter(player -> player != null && player.getTeam() == team && fieldModel.getPlayerState(player).isStanding())
+			.toArray(Player<?>[]::new);
+	}
+
 	public static Player<?>[] findAdjacentPlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
