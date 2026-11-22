@@ -10,6 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.5.0")
+			.addFeature("Squig Rage")
+			.addFeature("Squig Restraint")
 		);
 
 		versions.add(new VersionChangeList("3.4.0")

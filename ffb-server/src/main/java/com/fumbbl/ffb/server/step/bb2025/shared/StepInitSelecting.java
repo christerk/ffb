@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 /**
@@ -63,6 +64,8 @@ public final class StepInitSelecting extends AbstractStep {
 
 	private final StallingExtension stallingExtension = new StallingExtension();
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+	private final SquigRageService squigRageService = new SquigRageService();
+	private final DeclaredActionChange declaredActionChange = new DeclaredActionChange();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -106,6 +109,10 @@ public final class StepInitSelecting extends AbstractStep {
 			TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_CONFIRM: // confirms ending target select action like blitz or gaze
+					// a block forced by Squig Rage has to be performed
+					if (squigRageService.isBlockForced(actingPlayer)) {
+						break;
+					}
 					fEndPlayerAction = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -113,11 +120,28 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
+					// a block forced by Squig Rage has to be performed
+					if (squigRageService.isBlockForced(actingPlayer)) {
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
+					// after rolling for Squig Rage the declared action may be changed until the player does anything else
+					if (declaredActionChange.isRequested(game, actingPlayerCommand)) {
+						declaredActionChange.withdraw(getGameState());
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+						break;
+					}
+					// after rolling for Squig Rage the player stays activated until they declare an action or end the activation
+					if (squigRageService.isActivationBlocked(actingPlayer, selectedPlayer)) {
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()
 						// the moving player of a pass block is the one whose action was interrupted by a dump-off
 						&& !(game.getTurnMode().isPassBlock() && playerState.getBase() == PlayerState.MOVING)
-						&& turnActionLimitService.isActionAvailable(game, selectedPlayer, actingPlayerCommand.getPlayerAction())) {
+						&& turnActionLimitService.isActionAvailable(game, selectedPlayer, actingPlayerCommand.getPlayerAction())
+						&& squigRageService.requiresRoll(game, selectedPlayer) == (actingPlayerCommand.getPlayerAction() == PlayerAction.SQUIG_RAGE)) {
 						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
 						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
@@ -171,6 +195,10 @@ public final class StepInitSelecting extends AbstractStep {
 									PlayerState oldState = targetSelectionState.getOldActingPlayerState();
 									if (onlyMarkedAsStandingUp) {
 										oldState = oldState.changeBase(PlayerState.PRONE);
+									}
+									// the player has been activated by rolling for Squig Rage, so the activation is used anyway
+									if (squigRageService.hasRolled(actingPlayer)) {
+										oldState = oldState.changeActive(false);
 									}
 									fieldModel.setPlayerState(actingPlayer.getPlayer(), oldState);
 								}
@@ -339,7 +367,9 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_END_TURN:
 					TurnMode turnMode = ((ClientCommandEndTurn) pReceivedCommand.getCommand()).getTurnMode();
-					boolean ignoreCommand = turnMode != null && turnMode != game.getTurnMode();
+					// a block forced by Squig Rage has to be performed before the turn can be ended
+					boolean ignoreCommand = (turnMode != null && turnMode != game.getTurnMode())
+						|| squigRageService.isBlockForced(actingPlayer);
 
 					if (!ignoreCommand && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;

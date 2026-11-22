@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2025.shared.DeclaredActionChange;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -48,6 +49,7 @@ public class StepInitPunt extends AbstractStep {
 	private FieldCoordinate coordinateTo;
 	private Boolean puntToCrowd;
 	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+	private final DeclaredActionChange declaredActionChange = new DeclaredActionChange();
 
 	public StepInitPunt(GameState pGameState) {
 		super(pGameState);
@@ -83,6 +85,13 @@ public class StepInitPunt extends AbstractStep {
 					break;
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
+					// after rolling for Squig Rage the punt may be changed into a different action before choosing a direction
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)
+						&& declaredActionChange.isRequested(getGameState().getGame(), actingPlayerCommand)) {
+						declaredActionChange.returnToActionSelection(this);
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						break;
+					}
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 						Game game = getGameState().getGame();
 						if (!turnActionLimitService.isActionAvailable(game, game.getPlayerById(actingPlayerCommand.getPlayerId()),

@@ -23,6 +23,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Kalimar
@@ -54,6 +55,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fellFromRush;
 	private boolean hasTriggeredEffect;
 	private boolean forgone;
+	private boolean awaitingActionDeclaration;
 	private PlayerState oldPlayerState;
 	private final Set<String> initialAdjacentPartnerIds = new HashSet<>();
 	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
@@ -98,6 +100,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fellFromRush = false;
 		hasTriggeredEffect = false;
 		forgone = false;
+		awaitingActionDeclaration = false;
 		initialAdjacentPartnerIds.clear();
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
@@ -177,6 +180,21 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		this.heldInPlace = heldInPlace;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HELD_IN_PLACE, heldInPlace);
+	}
+
+	/**
+	 * Whether the player has been activated without declaring an action and the server now waits for the declaration.
+	 */
+	public boolean isAwaitingActionDeclaration() {
+		return awaitingActionDeclaration;
+	}
+
+	public void setAwaitingActionDeclaration(boolean awaitingActionDeclaration) {
+		if (this.awaitingActionDeclaration == awaitingActionDeclaration) {
+			return;
+		}
+		this.awaitingActionDeclaration = awaitingActionDeclaration;
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_AWAITING_ACTION_DECLARATION, awaitingActionDeclaration);
 	}
 
 	public PlayerAction getPlayerAction() {
@@ -462,13 +480,32 @@ public class ActingPlayer implements IJsonSerializable {
 	}
 
 	public boolean hasActed() {
-		return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect || !fUsedSkills.isEmpty() ||
-			isForgone());
+		return hasActedCounting(skill -> true);
 	}
 
+	/**
+	 * Like {@link #hasActed()} but ignores the usage of the given skill.
+	 */
+	public boolean hasActedIgnoring(Skill ignoredSkill) {
+		return hasActedCounting(skill -> skill != ignoredSkill);
+	}
+
+	/**
+	 * Like {@link #hasActed()} but ignores the usage of negative traits and triggered effects.
+	 */
 	public boolean hasActedIgnoringNegativeTraits() {
-		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() ||
-			fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait() || isForgone());
+		return hasActedIgnoringTriggeredEffects(skill -> !skill.isNegativeTrait());
+	}
+
+	// whether the player has acted, where only used skills matching the given predicate count as acting
+	private boolean hasActedCounting(Predicate<Skill> countedSkill) {
+		return hasTriggeredEffect || hasActedIgnoringTriggeredEffects(countedSkill);
+	}
+
+	// like hasActedCounting, but triggered effects (e.g. a committed blitz target) do not count as acting
+	private boolean hasActedIgnoringTriggeredEffects(Predicate<Skill> countedSkill) {
+		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || isForgone()
+			|| fUsedSkills.stream().anyMatch(countedSkill);
 	}
 
 	public StatBasedRollModifier statBasedModifier(ISkillProperty property) {
@@ -556,6 +593,7 @@ public class ActingPlayer implements IJsonSerializable {
 		snapshot.fellFromRush = fellFromRush;
 		snapshot.hasTriggeredEffect = hasTriggeredEffect;
 		snapshot.forgone = forgone;
+		snapshot.awaitingActionDeclaration = awaitingActionDeclaration;
 		snapshot.oldPlayerState = oldPlayerState;
 		snapshot.initialAdjacentPartnerIds.addAll(initialAdjacentPartnerIds);
 		skillsGrantedBy.forEach((skill, players) -> snapshot.skillsGrantedBy.put(skill, new ArrayList<>(players)));
@@ -590,6 +628,7 @@ public class ActingPlayer implements IJsonSerializable {
 		setFellFromRush(snapshot.fellFromRush);
 		setHasTriggeredEffect(snapshot.hasTriggeredEffect);
 		setForgone(snapshot.forgone);
+		setAwaitingActionDeclaration(snapshot.awaitingActionDeclaration);
 		setOldPlayerState(snapshot.oldPlayerState);
 		setInitialAdjacentPartnerIds(snapshot.getInitialAdjacentPartnerIds());
 		for (Skill skill : snapshot.getUsedSkills()) {
@@ -637,6 +676,7 @@ public class ActingPlayer implements IJsonSerializable {
 		IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
 		IJsonOption.FELL_FROM_RUSH.addTo(jsonObject, fellFromRush);
 		IJsonOption.HAS_TRIGGERED_EFFECT.addTo(jsonObject, hasTriggeredEffect);
+		IJsonOption.AWAITING_ACTION_DECLARATION.addTo(jsonObject, awaitingActionDeclaration);
 		IJsonOption.INITIAL_ADJACENT_PARTNER_IDS.addTo(jsonObject, initialAdjacentPartnerIds);
 		return jsonObject;
 	}
@@ -683,6 +723,9 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		if (IJsonOption.HAS_TRIGGERED_EFFECT.isDefinedIn(jsonObject)) {
 			hasTriggeredEffect = IJsonOption.HAS_TRIGGERED_EFFECT.getFrom(source, jsonObject);
+		}
+		if (IJsonOption.AWAITING_ACTION_DECLARATION.isDefinedIn(jsonObject)) {
+			awaitingActionDeclaration = IJsonOption.AWAITING_ACTION_DECLARATION.getFrom(source, jsonObject);
 		}
 		if (IJsonOption.INITIAL_ADJACENT_PARTNER_IDS.isDefinedIn(jsonObject)) {
 			initialAdjacentPartnerIds.clear();

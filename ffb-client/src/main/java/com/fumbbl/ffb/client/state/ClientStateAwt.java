@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -312,6 +313,9 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		}
 		prePerform(pMenuKey);
 		ClientAction action = actionMapping(popupIndexes.get(popupIndexIndex)).get(pMenuKey);
+		if (action == null && pMenuKey == IPlayerPopupMenuKeys.KEY_CHANGE_ACTION) {
+			action = ClientAction.CHANGE_ACTION;
+		}
 		if (action != null) {
 			logicModule.perform(player, action);
 		}
@@ -458,6 +462,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	protected Map<Integer, List<JMenuItem>> menuItems(ActionContext actionContext) {
 		Map<ClientAction, MenuItemConfig> configs = new HashMap<>(itemConfigs(actionContext));
+		configs.putIfAbsent(ClientAction.CHANGE_ACTION,
+			new MenuItemConfig("Change action", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_CHANGE_ACTION));
 
 		influencedItemConfigs().entrySet().stream().filter(entry -> actionContext.getInfluences()
 				.contains(entry.getKey())) // filter for influences present in current context
@@ -467,7 +473,9 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			.forEach(entry -> configs.put(entry.getKey(), entry.getValue()));
 
 		return actionContext.getActions().stream()
-			.collect(Collectors.groupingBy(this::menuIndex)).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+			// changing the action belongs to the first menu, like ending the activation
+			.collect(Collectors.groupingBy(action -> action == ClientAction.CHANGE_ACTION ? 0 : menuIndex(action)))
+			.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
 				entry -> entry.getValue().stream().map(configs::get).map(this::menuItem).collect(Collectors.toList())));
 	}
 
@@ -481,6 +489,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext,
 																								 List<JMenuItem> prepopulated) {
+		// after rolling for Squig Rage the declared action may be changed as long as nothing else has been done
+		if (logicModule.isChangeActionAvailable(pPlayer) && !actionContext.getActions().contains(ClientAction.CHANGE_ACTION)) {
+			actionContext.add(ClientAction.CHANGE_ACTION);
+		}
 		Map<Integer, List<JMenuItem>> menuItemMap = menuItems(actionContext);
 		List<Integer> indexes = menuItemMap.keySet().stream().sorted().collect(Collectors.toList());
 		popupIndexes.clear();

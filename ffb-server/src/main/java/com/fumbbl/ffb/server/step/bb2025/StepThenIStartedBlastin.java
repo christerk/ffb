@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.report.mixed.ReportThenIStartedBlastin;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -33,6 +34,8 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2025.shared.DeclaredActionChange;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
@@ -44,6 +47,7 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 	private String gotoLabelOnEnd;
 	private int roll;
 	private TurnMode oldTurnMode;
+	private final DeclaredActionChange declaredActionChange = new DeclaredActionChange();
 
 	public StepThenIStartedBlastin(GameState pGameState) {
 		super(pGameState);
@@ -78,6 +82,15 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 						stepCommandStatus = StepCommandStatus.SKIP_STEP;
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						getResult().addReport(new ReportThenIStartedBlastin(actingPlayer.getPlayerId(), game.getDefenderId(), 0, true, false));
+					}
+					break;
+				case CLIENT_ACTING_PLAYER:
+					// after rolling for Squig Rage the action may be changed until a target is selected
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)
+						&& declaredActionChange.isRequested(game, (ClientCommandActingPlayer) pReceivedCommand.getCommand())) {
+						restoreTurnModes(game);
+						declaredActionChange.returnToActionSelection(this);
+						stepCommandStatus = StepCommandStatus.SKIP_STEP;
 					}
 					break;
 				case CLIENT_END_TURN:

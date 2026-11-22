@@ -44,6 +44,7 @@ import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.SquigRage;
 import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.ThrowKeg;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
@@ -405,6 +406,11 @@ public final class StepEndSelecting extends AbstractStep {
         Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
         Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
         treacherousGenerator.pushSequence(treacherousParams);
+        break;
+      case SQUIG_RAGE:
+        selectGenerator.pushSequence(selectParams);
+        SquigRage squigRageGenerator = (SquigRage) factory.forName(SequenceGenerator.Type.SquigRage.name());
+        squigRageGenerator.pushSequence(new SquigRage.SequenceParams(getGameState(), IStepLabel.END_SELECTING));
         break;
       case RAIDING_PARTY:
         selectGenerator.pushSequence(selectParams);

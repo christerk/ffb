@@ -1,11 +1,10 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.server.injury.modification.OldProModification;
+import com.fumbbl.ffb.server.injury.modification.bb2025.OldProModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.mixed.special.OldPro;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class OldProBehaviour extends SkillBehaviour<OldPro> {
 

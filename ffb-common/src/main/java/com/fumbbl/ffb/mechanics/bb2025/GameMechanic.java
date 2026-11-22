@@ -3,6 +3,7 @@ package com.fumbbl.ffb.mechanics.bb2025;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -10,6 +11,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
@@ -26,11 +28,13 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.skill.bb2025.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.util.bb2025.SquigRageService;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +44,8 @@ import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
+
+	private final SquigRageService squigRageService = new SquigRageService();
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {
@@ -188,6 +194,22 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return "No weather at all, but the intro screen shown by the client.";
 		}
 
+	}
+
+	@Override
+	public boolean isActivationWithoutDeclaredAction(PlayerAction playerAction) {
+		return playerAction == PlayerAction.SQUIG_RAGE;
+	}
+
+	@Override
+	public boolean remainsProneWhenDeactivated(ActingPlayer actingPlayer) {
+		return squigRageService.isOnlyActivatedWhileProne(actingPlayer);
+	}
+
+	@Override
+	public Optional<PlayerAction> actionForChangingDeclaredAction(ActingPlayer actingPlayer) {
+		return squigRageService.canChangeDeclaredAction(actingPlayer) ? Optional.of(PlayerAction.SQUIG_RAGE)
+			: Optional.empty();
 	}
 
 	@Override

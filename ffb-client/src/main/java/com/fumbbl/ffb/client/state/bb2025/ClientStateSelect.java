@@ -18,6 +18,7 @@ import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.NetCommand;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,8 +27,42 @@ import java.util.Map;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 
+	// the player the action menu was opened for automatically after passing the Squig Rage roll
+	private String menuShownForPlayerId;
+
 	public ClientStateSelect(FantasyFootballClientAwt pClient) {
 		super(pClient, new SelectLogicModule(pClient));
+	}
+
+	@Override
+	public void setUp() {
+		super.setUp();
+		showMenuAfterSquigRage();
+	}
+
+	@Override
+	public void tearDown() {
+		menuShownForPlayerId = null;
+		super.tearDown();
+	}
+
+	@Override
+	public void handleCommand(NetCommand netCommand) {
+		super.handleCommand(netCommand);
+		showMenuAfterSquigRage();
+	}
+
+	// once the Squig Rage roll is passed the action menu is opened, so the player can declare an action right away
+	private void showMenuAfterSquigRage() {
+		Player<?> player = logicModule.playerAwaitingActionDeclaration();
+		if (player == null) {
+			menuShownForPlayerId = null;
+			return;
+		}
+		if (getClient().getGame().getDialogParameter() == null && !player.getId().equals(menuShownForPlayerId)) {
+			menuShownForPlayerId = player.getId();
+			clickOnPlayer(player);
+		}
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
@@ -74,6 +109,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 				put(IPlayerPopupMenuKeys.KEY_CHOMP, ClientAction.CHOMP);
 				put(IPlayerPopupMenuKeys.KEY_PUNT, ClientAction.PUNT);
+				put(IPlayerPopupMenuKeys.KEY_SQUIG_RAGE, ClientAction.SQUIG_RAGE);
 			} else {
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, ClientAction.SHOT_TO_NOTHING);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, ClientAction.SHOT_TO_NOTHING_BOMB);
@@ -86,6 +122,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
 				put(IPlayerPopupMenuKeys.KEY_FORGO, ClientAction.FORGO);
 				put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+				put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			}
 		}};
 	}
@@ -214,6 +251,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				case PLAYER_ACTION_FORGO:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FORGO);
 					break;
+				case PLAYER_ACTION_END_MOVE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_END_MOVE);
+					break;
 				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					break;
@@ -310,10 +350,14 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL));
 		configs.put(ClientAction.FORGO,
 			new MenuItemConfig("Forgo Activation", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_FORGO));
+		configs.put(ClientAction.END_MOVE,
+			new MenuItemConfig("End Activation", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		configs.put(ClientAction.THEN_I_STARTED_BLASTIN,
 			new MenuItemConfig("\"Blastin' Solves Everything\"", IIconProperty.ACTION_STARTED_BLASTIN,
 				IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 		configs.put(ClientAction.CHOMP, new MenuItemConfig("Chomp", IIconProperty.ACTION_CHOMP, IPlayerPopupMenuKeys.KEY_CHOMP));
+		configs.put(ClientAction.SQUIG_RAGE,
+			new MenuItemConfig("Roll for Squig Rage", IIconProperty.ACTION_SQUIG_RAGE, IPlayerPopupMenuKeys.KEY_SQUIG_RAGE));
 		configs.put(ClientAction.PUNT, new MenuItemConfig("Punt", IIconProperty.ACTION_PUNT, IPlayerPopupMenuKeys.KEY_PUNT));
 
 		return configs;

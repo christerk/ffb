@@ -51,6 +51,7 @@ public class ReRolledActions {
 	public static final ReRolledAction CHAINSAW = new ReRolledAction("Chainsaw");
 	public static final ReRolledAction CHOMP = new ReRolledAction("Chomp");
 	public static final ReRolledAction BLOOD_LUST = new ReRolledAction("Bloodlust");
+	public static final ReRolledAction SQUIG_RAGE = new ReRolledAction("Squig Rage");
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction("Hypnotic Gaze");
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);

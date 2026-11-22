@@ -24,6 +24,11 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 	}
 
 	@Override
+	protected boolean supportsChangeAction() {
+		return true;
+	}
+
+	@Override
 	public ClientStateId getId() {
 		return ClientStateId.THEN_I_STARTED_BLASTIN;
 	}

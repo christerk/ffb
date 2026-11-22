@@ -15,7 +15,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
 	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
 	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat"), DWARFEN_WISDOM("dwarfenWisdom", false),
-	ILL_CARRY_YOU("illCarryYou"), CATCH("catch");
+	ILL_CARRY_YOU("illCarryYou"), CATCH("catch"), SQUIG_RAGE("squigRage");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -75,6 +75,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ANIMAL_SAVAGERY:
 				header.append("Select a player to lash out against");
+				break;
+			case SQUIG_RAGE:
+				header.append("Select a team-mate to knock down or skip to become distracted");
 				break;
 			case DECLARE_DIVING_CATCH:
 				header.append("Select ALL players that should try to catch the ball");
@@ -178,6 +181,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ANIMAL_SAVAGERY:
 				title.append("Animal Savagery");
 				break;
+			case SQUIG_RAGE:
+				title.append("Squig Rage");
+				break;
 			case DECLARE_DIVING_CATCH:
 				title.append("Declare Diving Catch");
 				break;
@@ -278,6 +284,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ANIMAL_SAVAGERY:
 				message.append("Waiting for coach to choose a player to lash out against.");
+				break;
+			case SQUIG_RAGE:
+				message.append("Waiting for coach to choose a team-mate to knock down.");
 				break;
 			case DECLARE_DIVING_CATCH:
 				message.append("Waiting for coach to choose all players to use Diving Catch.");
