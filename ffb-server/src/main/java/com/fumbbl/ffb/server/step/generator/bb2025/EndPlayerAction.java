@@ -34,7 +34,9 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.FEEDING));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.STALLING_PLAYER, IStepLabel.END_FEEDING);
-		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
+		// the stalling rock never causes a turnover, so a successful roll must not override END_TURN/END_PLAYER_ACTION from INIT_FEEDING
+		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER),
+			from(StepParameterKey.REVERT_END_TURN, false));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
