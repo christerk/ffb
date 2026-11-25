@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.4.1")
 			.addBugfix("Secure the Ball: A failed roll offered a Sure Hands re-roll")
 			.addBugfix("Catch: Catching an inaccurate pass or bomb wrongly applied a -1 modifier")
+			.addBugfix("Stalling: Game got stuck when a stalling player that received a pass that turn got hit by a rock and stayed on their feet with Steady Footing")
 		);
 
 		versions.add(new VersionChangeList("3.4.0")

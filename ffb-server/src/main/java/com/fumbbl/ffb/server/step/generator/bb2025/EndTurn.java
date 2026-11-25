@@ -22,7 +22,9 @@ public class EndTurn extends com.fumbbl.ffb.server.step.generator.EndTurn {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.FORGONE_STALLING, from(StepParameterKey.CHECK_FORGO, params.isCheckForgo()));
-		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
+		// the stalling rock never causes a turnover, so a successful roll must not publish END_TURN/END_PLAYER_ACTION
+		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER),
+			from(StepParameterKey.REVERT_END_TURN, false));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
