@@ -8,6 +8,8 @@ import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
@@ -49,8 +51,10 @@ class DialogReRollPropertiesTest {
 
 
 		when(client.getUserInterface()).thenReturn(userInterface);
-		when(userInterface.getPitchDimensionProvider()).thenReturn(new PitchDimensionProvider(new LayoutSettings(
-			ClientLayout.LANDSCAPE, 1.0)));
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
+		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+		when(userInterface.getPitchDimensionProvider()).thenReturn(new PitchDimensionProvider(layoutSettings, pitchViewport));
 		when(client.getGame().getRules().getSkillFactory()).thenReturn(mock(SkillFactory.class));
 		InducementType inducementType = mock(
 			InducementType.class);

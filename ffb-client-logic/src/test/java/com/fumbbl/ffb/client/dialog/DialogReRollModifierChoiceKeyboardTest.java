@@ -7,6 +7,8 @@ import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
+import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -86,8 +88,10 @@ class DialogReRollModifierChoiceKeyboardTest {
 
 	private DialogReRollModifierChoice dialog(List<ReRollProperty> properties) {
 		FantasyFootballClient client = mock(FantasyFootballClient.class, RETURNS_DEEP_STUBS);
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		PitchViewport viewport = new PitchViewport(new UiDimensionProvider(layoutSettings), layoutSettings);
 		when(client.getUserInterface().getPitchDimensionProvider()).thenReturn(
-			new PitchDimensionProvider(new LayoutSettings(ClientLayout.LANDSCAPE, 1.0)));
+			new PitchDimensionProvider(layoutSettings, viewport));
 		when(client.getUserInterface().getIconCache().getIconByProperty(any(), any()))
 			.thenReturn(new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB));
 		Skill skill = new ConsummateProfessional();

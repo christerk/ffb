@@ -4,11 +4,10 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 /**
@@ -17,62 +16,19 @@ import java.awt.event.MouseEvent;
  */
 public class UtilClientPlayerDrag {
 
-	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
-			boolean pBoxMode) {
-		UiDimensionProvider uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
-		Dimension fieldDimension = uiDimensionProvider.dimension(Component.FIELD);
-		Dimension boxComponentSize = uiDimensionProvider.dimension(Component.BOX);
-		PitchDimensionProvider pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
-		FieldCoordinate coordinate;
-		if (pBoxMode) {
-			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY(), uiDimensionProvider);
-			if ((coordinate == null) && (pMouseEvent.getX() >= boxComponentSize.width)) {
-				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY(), pitchDimensionProvider);
-			}
-		} else {
-			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY(), pitchDimensionProvider);
-			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
-				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY(), uiDimensionProvider);
-			}
-		}
-		return coordinate;
-	}
+	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent) {
+		UserInterface userInterface = pClient.getUserInterface();
+		Point contentPoint = userInterface.toClientContentPoint(
+			(java.awt.Component) pMouseEvent.getSource(),
+			pMouseEvent.getPoint()
+		);
+		int boxTitleOffset = userInterface.getSideBarHome().getBoxComponent().getMaxTitleOffset();
 
-	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY, PitchDimensionProvider dimensionProvider) {
-
-		int actualX = pMouseX;
-		int actualY = pMouseY;
-
-		if (dimensionProvider.isPitchPortrait()) {
-			//noinspection SuspiciousNameCombination
-			actualY = pMouseX;
-			actualX = fieldDimension.height - pMouseY;
-		}
-
-		if ((actualX >= 0) && (actualX < fieldDimension.width) && (actualY >= 0)
-			&& (actualY < fieldDimension.height)) {
-			return new FieldCoordinate((actualX / dimensionProvider.fieldSquareSize()), (actualY / dimensionProvider.fieldSquareSize()));
-		} else {
-			return null;
-		}
-	}
-
-	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY, UiDimensionProvider dimensionProvider) {
-		Dimension boxSquareSie = dimensionProvider.dimension(Component.BOX_SQUARE);
-		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
-		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
-			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
-			int y = (((pMouseY - boxTitleOffset) / boxSquareSie.height) * 3)
-				+ (pMouseX / boxSquareSie.width);
-			if ((y >= 0) && (y < BoxComponent.MAX_BOX_ELEMENTS)) {
-				return new FieldCoordinate(FieldCoordinate.RSV_HOME_X, y);
-			}
-		}
-		return null;
+		return userInterface.getSetupDragHitTester().toFieldCoordinate(contentPoint, boxTitleOffset);
 	}
 
 	public static void mousePressed(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
-		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent, pBoxMode);
+		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent);
 		initPlayerDragging(pClient, coordinate, pBoxMode);
 	}
 
@@ -114,7 +70,7 @@ public class UtilClientPlayerDrag {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
-		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent, pBoxMode);
+		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent);
 		if ((coordinate != null) && pClient.getClientState().isDragAllowed(coordinate)) {
 			if (clientData.getDragStartPosition() == null) {
 				initPlayerDragging(pClient, coordinate, pBoxMode);
